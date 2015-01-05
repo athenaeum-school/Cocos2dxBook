@@ -70,11 +70,11 @@ void CollisionManager::addForceToWisp(){
 }
 
 void CollisionManager::addForceToWispX(float nextPos, float vector){
-	//_main->cSetwispNextPositionX(vector);
-	ObjectSprite* will = static_cast<ObjectSprite *>(_main->getWispTag());
-	will->setVector(ccp(nextPos, vector));
+	_main->cSetwispNextPositionX(vector);
+	//ObjectSprite* will = static_cast<ObjectSprite *>(_main->getWispTag());
+	//will->setVector(ccp(nextPos, vector));
 }
 
 void CollisionManager::addForceToWispY(float nextPos, float vector){
-	_main->cSetwispNextPositionX(vector);
+	_main->cSetwispNextPositionY(vector);
 }
