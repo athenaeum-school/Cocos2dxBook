@@ -27,11 +27,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	//すべての端末で画面サイズを320 * 480として扱う
 	pEGLView->setDesignResolutionSize(320, 480, ResolutionPolicy::kResolutionShowAll);
 	
-	//Resources/images,Resources/bgm,Resources/seをファイルパスに追加する
+	//Resources/images,Resources/soundsをファイルパスに追加する
 	CCFileUtils::sharedFileUtils()->addSearchPath("images");
 	CCFileUtils::sharedFileUtils()->addSearchPath("sounds");
-	//CCFileUtils::sharedFileUtils()->addSearchPath("se");
-
+	
     // create a scene. it's an autorelease object
     CCScene *pScene = MainScene::createScene();
 
