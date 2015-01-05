@@ -1,3 +1,14 @@
+/*
+* MainScene.cpp
+* willYard
+*
+* All Rights Reserved by Athenaeum Society
+*
+* Written by Nadd3564 on 2015/01/04.
+*
+*/
+
+
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
 #include "CollisionManager.h"
@@ -83,6 +94,8 @@ void MainScene::update(float dt) {
 	setWispVector(ccpMult(_wispVector, 0.98f));
 	//ウィスプに力を加える
 	addForceToWisp();
+	//_cm->addForceToWispX(_wispNextPosition.x, _wispVector.x);
+	//_cm->addForceToWispX(_wispNextPosition.y, _wispVector.y);
 	//当たり判定
 	float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
 	//敵NPCの設定
@@ -118,6 +131,24 @@ void MainScene::update(float dt) {
 	_enemy->setPosition(_enemy->getNextPosition());
 	_wisp->setPosition(_wisp->getNextPosition());
 
+}
+
+
+float MainScene::cGetWispVectorX(){
+	return this->_wispVector.x;
+}
+
+float MainScene::cGetWispVectorY(){
+	return this->_wispVector.y;
+}
+
+
+void MainScene::cSetwispNextPositionX(float f){
+	this->_wispNextPosition.x += f;
+}
+
+void MainScene::cSetwispNextPositionY(float f){
+	this->_wispNextPosition.y += f;
 }
 
 CCNode* MainScene::getWispTag(){

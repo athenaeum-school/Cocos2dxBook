@@ -1,3 +1,14 @@
+/*
+* MainScene.h
+* willYard
+*
+* All Rights Reserved by Athenaeum Society
+*
+* Written by Nadd3564 on 2015/01/04.
+*
+*/
+
+
 #ifndef __WillYard__MainScene__
 #define __WillYard__MainScene__
 
@@ -69,9 +80,10 @@ public:
 	void onCollision(float distOne, float distTwo, float radius);
 	cocos2d::CCNode * getWispTag();
 	cocos2d::CCNode * getEnemyTag();
-
-
-
+	void cSetwispNextPositionX(float f);
+	void cSetwispNextPositionY(float f);
+	float cGetWispVectorX();
+	float cGetWispVectorY();
 };
 
 typedef MainScene Main;

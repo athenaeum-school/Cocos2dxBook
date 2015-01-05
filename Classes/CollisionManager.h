@@ -1,3 +1,14 @@
+/*
+* CollisionManager.cpp
+* willYard
+*
+* All Rights Reserved by Athenaeum Society
+*
+* Written by Nadd3564 on 2015/01/04.
+*
+*/
+
+
 #ifndef __WillYard__CollisionManager__
 #define __WillYard__CollisionManager__
 
@@ -37,6 +48,8 @@ public:
 	void collisionBlockNorth();
 	void collisionBlockSouth();
 	void addForceToWisp();
+	void addForceToWispX(float nextPos, float vector);
+	void addForceToWispY(float nextPos, float vector);
 	float CalcDiff(float nextPos, float getPos);
 	float Calc(float powOne, float powTwo);
 	bool isLessThanDist(float dist, float radius);

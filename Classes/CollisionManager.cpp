@@ -1,3 +1,14 @@
+/*
+* CollisionManager.cpp
+* willYard
+*
+* All Rights Reserved by Athenaeum Society
+*
+* Written by Nadd3564 on 2015/01/04.
+*
+*/
+
+
 #include "CollisionManager.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
@@ -51,4 +62,19 @@ float CollisionManager::CalcDiff(float nextPos, float getPos){
 float CollisionManager::Calc(float powOne, float powTwo){
 	float dist = powOne + powTwo;
 	return dist;
+}
+
+void CollisionManager::addForceToWisp(){
+	_main->cSetwispNextPositionX(_main->cGetWispVectorX());
+	_main->cSetwispNextPositionY(_main->cGetWispVectorY());
+}
+
+void CollisionManager::addForceToWispX(float nextPos, float vector){
+	//_main->cSetwispNextPositionX(vector);
+	ObjectSprite* will = static_cast<ObjectSprite *>(_main->getWispTag());
+	will->setVector(ccp(nextPos, vector));
+}
+
+void CollisionManager::addForceToWispY(float nextPos, float vector){
+	_main->cSetwispNextPositionX(vector);
 }
