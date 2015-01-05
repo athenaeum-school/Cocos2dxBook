@@ -94,9 +94,7 @@ void MainScene::update(float dt) {
 	setWispVector(ccpMult(_wispVector, 0.98f));
 	//ウィスプに力を加える
 	addForceToWisp();
-    //_cm->addForceToWispX(_wispNextPosition.x, _wispVector.x);
-	//_cm->addForceToWispY(_wispNextPosition.y, _wispVector.y);
-	//当たり判定
+    //当たり判定
 	float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
 	//敵NPCの設定
 	setEnemyNextPosition(_enemy->getNextPosition());
