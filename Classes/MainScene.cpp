@@ -17,6 +17,8 @@
 USING_NS_CC;
 using namespace CocosDenshion;
 
+//ショットパワー倍率
+const float SHOT_POWER = 0.5;
 //ウィスプの稼動範囲
 const float WISP_EXTEND = 50;
 
@@ -71,10 +73,9 @@ bool MainScene::init()
 
 	//敵NPC配置
 	_enemy = ObjectSprite::create("enemy3.png");
-	_enemy->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5 - 2 * _enemy->radius()));
+	_enemy->setPosition(ccp(_screenSize.width * SHOT_POWER, _screenSize.height * SHOT_POWER - 2 * _enemy->radius()));
 	_enemy->setTag(2);
 	this->addChild(_enemy, z_enemy);
-
 
 	//シングルタップモード
 	this->setTouchMode(kCCTouchesOneByOne);
@@ -236,8 +237,6 @@ void MainScene::ccTouchMoved(CCTouch* touch, CCEvent* event){
 		CCPoint extPos = extendPos(wisp);
 		//鎖を引くポイントと鎖を表示
 		setChainOne(initChainOne(chain), extPos);
-		//ショット中の操作を不可に
-		setCanFire(false);
 	}
 
 }
@@ -251,6 +250,8 @@ void MainScene::ccTouchEnded(CCTouch* touch, CCEvent* event){
 	_wisp->setVector(force);
 	//鎖を削除し、ウィスプに力を加える
 	//removeAndAdd(wisp, touch);
+	//ショット中の操作を不可に
+	setCanFire(false);
 }
 
 float MainScene::extendAngle(CCNode* wisp){
@@ -295,6 +296,50 @@ void MainScene::removeAndAdd(CCNode* wisp, CCTouch* touch){
 	}
 }
 
+void MainScene::damageToEnemy(){
+	CCLOG("damage");
+	//ダメージ時、スターエフェクト表示
+	CCSprite *star = CCSprite::create("star1.png");
+	star->setPosition(_wisp->getPosition());
+	addChild(star, z_star);
+
+	CCAnimation *animation = CCAnimation::create();
+	animation->addSpriteFrameWithFileName("star1.png");
+	animation->addSpriteFrameWithFileName("star2.png");
+	animation->addSpriteFrameWithFileName("star3.png");
+	animation->addSpriteFrameWithFileName("star4.png");
+	animation->setDelayPerUnit(0.1);
+
+	CCSpawn *spawn = CCSpawn::create(CCAnimate::create(animation), CCFadeOut::create(0.45), nullptr);
+	CCSequence *starSequence = CCSequence::create(spawn, CCRemoveSelf::create(), nullptr);
+
+	star->runAction(CCScaleTo::create(0.4, 2));
+	star->runAction(starSequence);
+	
+	//ダメージ時、敵NPCをスイング
+	CCRepeat *swing = CCRepeat::create(CCSequence::create(CCRotateTo::create(0.1, -10), CCRotateTo::create(0.1, 10), NULL), 4);
+	_enemy->runAction(CCSequence::create(swing, CCRotateTo::create(0, 0.125), NULL));
+
+	
+	//ダメージ時、爆発エフェクト表示
+	CCSprite *ex = CCSprite::create("explode1.png");
+	ex->setPosition(_enemy->getPosition());
+	addChild(ex, z_explode);
+
+	CCAnimation *explode = CCAnimation::create();
+	explode->addSpriteFrameWithFileName("explode1.png");
+	explode->addSpriteFrameWithFileName("explode2.png");
+	explode->addSpriteFrameWithFileName("explode3.png");
+	explode->addSpriteFrameWithFileName("explode4.png");
+	explode->setDelayPerUnit(0.1);
+
+	CCSpawn *exSpawn = CCSpawn::create(CCAnimate::create(explode), CCFadeOut::create(0.45), nullptr);
+	CCSequence *exSequence = CCSequence::create(exSpawn, CCRemoveSelf::create(), nullptr);
+
+	ex->runAction(exSequence);
+
+}
+
 
 //衝突と減速処理
 void MainScene::onCollision(float distOne, float distTwo, float radius){
@@ -302,8 +347,9 @@ void MainScene::onCollision(float distOne, float distTwo, float radius){
 	CCPoint wispPosition = _wisp->getPosition();
 	CCRect enemyRect = _enemy->boundingBox();
 	bool isContact = enemyRect.containsPoint(wispPosition);
-	if (isContact){
+	if (isContact && _wispVector.x > 0.1f && _wispVector.y > 0.1f){
 		CCLOG("firstHit");
+		damageToEnemy();
 	}
 		
 	//衝突判定2（バウンド時）
@@ -328,6 +374,7 @@ void MainScene::onCollision(float distOne, float distTwo, float radius){
 		_wispNextPosition.x = _enemyNextPosition.x + (_enemy->radius() + _wisp->radius() + force) * cos(angle);
 		_wispNextPosition.y = _enemyNextPosition.y + (_enemy->radius() + _wisp->radius() + force) * sin(angle);
 
+		damageToEnemy();
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system48.mp3");
 	}
 }

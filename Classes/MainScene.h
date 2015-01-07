@@ -35,6 +35,8 @@ public:
 	{
 		z_enemy = 0,
 		z_wisp,
+		z_explode,
+		z_star,
 	};
 
 	static MainScene* getInstance()
@@ -92,6 +94,7 @@ public:
 	float cGetWispVectorX();
 	float cGetWispVectorY();
 	float calcVector();
+	void damageToEnemy();
 };
 
 typedef MainScene Main;
