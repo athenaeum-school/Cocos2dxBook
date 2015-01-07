@@ -301,14 +301,14 @@ void MainScene::onCollision(float distOne, float distTwo, float radius){
 	//衝突判定1（通過時）
 	CCPoint wispPosition = _wisp->getPosition();
 	CCRect enemyRect = _enemy->boundingBox();
-	bool isHit = enemyRect.containsPoint(wispPosition);
-	if (isHit){
+	bool isContact = enemyRect.containsPoint(wispPosition);
+	if (isContact){
 		CCLOG("firstHit");
 	}
 		
 	//衝突判定2（バウンド時）
 	if (_cm->isLessThanDist(distOne, radius) || _cm->isLessThanDist(distTwo, radius)) {
-		CCLOG("hit2");
+		CCLOG("secondHit");
 
 		//ウィスプとエネミーの距離を取得
 		float diffx = _cm->CalcDiff(_wispNextPosition.x, _enemy->getPositionX());
