@@ -26,6 +26,7 @@ MainScene::MainScene()
 : _enemy(NULL)
 , _wisp(NULL)
 , _cm(NULL)
+, _canFire(true)
 {
 }
 
@@ -69,7 +70,7 @@ bool MainScene::init()
 	this->addChild(_wisp, z_wisp);
 
 	//敵NPC配置
-	_enemy = ObjectSprite::create("pipo-enemy034.png");
+	_enemy = ObjectSprite::create("enemy3.png");
 	_enemy->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5 - 2 * _enemy->radius()));
 	_enemy->setTag(2);
 	this->addChild(_enemy, z_enemy);
@@ -87,14 +88,28 @@ bool MainScene::init()
 
 //一定速度以上なら接触判定
 float MainScene::calcVector(){
-	if (_wispVector.x < 10, _wispVector.y < 10)
+	/*if ((float)(_wisp->getPositionX() - _wispNextPosition.x <= 1)){
+		if ((float)(_wisp->getPositionY() - _wispNextPosition.y <= 1)){
+			if (_wispVector.x > 5, _wispVector.y > 5){
+				float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
+				return squared_radius;
+			}
+		}
+	}else*/ 
+	if (_wispVector.x < 10, _wispVector.y < 10){
 		return 0;
+	}
 
 		float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
 		return squared_radius;
 }
 
 void MainScene::update(float dt) {
+
+	if (_wispVector.x < 0.1f && _wispVector.y < 0.1f && !_canFire) {
+		setWispVector(ccp(0, 0));
+		setCanFire(true);
+	}
 
 	//ウィスプの状態を更新
 	setWispNextPosition(_wisp->getNextPosition());
@@ -199,6 +214,7 @@ CCPoint MainScene::calcRetPos(CCPoint touch, int dist){
 bool MainScene::ccTouchBegan(CCTouch* touch, CCEvent* event){
 
 	bool ret = false;
+	if (!_canFire) return false;
 	if (touch) {
 		//タッチ位置を取得
 		_touchPoint = touch->getLocation();
@@ -220,6 +236,8 @@ void MainScene::ccTouchMoved(CCTouch* touch, CCEvent* event){
 		CCPoint extPos = extendPos(wisp);
 		//鎖を引くポイントと鎖を表示
 		setChainOne(initChainOne(chain), extPos);
+		//ショット中の操作を不可に
+		setCanFire(false);
 	}
 
 }
@@ -280,7 +298,17 @@ void MainScene::removeAndAdd(CCNode* wisp, CCTouch* touch){
 
 //衝突と減速処理
 void MainScene::onCollision(float distOne, float distTwo, float radius){
+	//衝突判定1（通過時）
+	CCPoint wispPosition = _wisp->getPosition();
+	CCRect enemyRect = _enemy->boundingBox();
+	bool isHit = enemyRect.containsPoint(wispPosition);
+	if (isHit){
+		CCLOG("firstHit");
+	}
+		
+	//衝突判定2（バウンド時）
 	if (_cm->isLessThanDist(distOne, radius) || _cm->isLessThanDist(distTwo, radius)) {
+		CCLOG("hit2");
 
 		//ウィスプとエネミーの距離を取得
 		float diffx = _cm->CalcDiff(_wispNextPosition.x, _enemy->getPositionX());
@@ -305,15 +333,15 @@ void MainScene::onCollision(float distOne, float distTwo, float radius){
 }
 
 //ウィスプの半径が壁を超えたら、衝突する判定を返す
-bool MainScene::gThanRadius(float ballNextPos){
-	if (ballNextPos < _wisp->radius())
+bool MainScene::gThanRadius(float wispNextPos){
+	if (wispNextPos < _wisp->radius())
 		return true;
 	return false;
 }
 
 //ウィスプの半径が壁を超えたら、衝突する判定を返す
-bool MainScene::lessThanRadius(float ballNextPos, float screenwh){
-	if (ballNextPos > screenwh - _wisp->radius())
+bool MainScene::lessThanRadius(float wispNextPos, float screenwh){
+	if (wispNextPos > screenwh - _wisp->radius())
 		return true;
 	return false;
 }

@@ -61,6 +61,7 @@ public:
 	CC_SYNTHESIZE_RETAIN(ObjectSprite *, _enemy, Enemy);
 	CC_SYNTHESIZE_RETAIN(ObjectSprite *, _wisp, Wisp);
 	CC_SYNTHESIZE_RETAIN(CollisionManager *, _cm, Cm);
+	CC_SYNTHESIZE(bool, _canFire, CanFire);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
 	CC_SYNTHESIZE(cocos2d::CCSize, _screenSize, ScreenSize);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
