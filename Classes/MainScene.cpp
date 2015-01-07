@@ -30,6 +30,7 @@ MainScene::MainScene()
 }
 
 MainScene:: ~MainScene(){
+	
 }
 
 CCScene* MainScene::createScene()
@@ -65,15 +66,14 @@ bool MainScene::init()
 	_wisp = ObjectSprite::create("wisp_1.png");
 	_wisp->setPosition(ccp(_screenSize.width * 0.5, _wisp->radius() * 2));
 	_wisp->setTag(1);
-	this->addChild(_wisp);
+	this->addChild(_wisp, z_wisp);
 
 	//敵NPC配置
-	_enemy = ObjectSprite::create("enemy1.png");
+	_enemy = ObjectSprite::create("pipo-enemy034.png");
 	_enemy->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5 - 2 * _enemy->radius()));
 	_enemy->setTag(2);
-	this->addChild(_enemy);
+	this->addChild(_enemy, z_enemy);
 
-	
 
 	//シングルタップモード
 	this->setTouchMode(kCCTouchesOneByOne);
@@ -83,6 +83,15 @@ bool MainScene::init()
 	this->scheduleUpdate();
 
     return true;
+}
+
+//一定速度以上なら接触判定
+float MainScene::calcVector(){
+	if (_wispVector.x < 10, _wispVector.y < 10)
+		return 0;
+
+		float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
+		return squared_radius;
 }
 
 void MainScene::update(float dt) {
@@ -95,7 +104,7 @@ void MainScene::update(float dt) {
 	//ウィスプに力を加える
 	addForceToWisp();
     //当たり判定
-	float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
+	//float squared_radius = pow(_enemy->radius() + _wisp->radius(), 2);
 	//敵NPCの設定
 	setEnemyNextPosition(_enemy->getNextPosition());
 	setEnemyVector(_enemy->getVector());
@@ -107,7 +116,8 @@ void MainScene::update(float dt) {
 	float distTwo = _cm->Calc(pow(_wisp->getPositionX() - _enemyNextPosition.x, 2), pow(_wisp->getPositionY() - _enemyNextPosition.y, 2));
 
 	//衝突
-	onCollision(distOne, distTwo, squared_radius);
+	//onCollision(distOne, distTwo, squared_radius);
+	onCollision(distOne, distTwo, calcVector());
 
 
 	//ウィスプと壁の衝突判定
@@ -272,13 +282,16 @@ void MainScene::removeAndAdd(CCNode* wisp, CCTouch* touch){
 void MainScene::onCollision(float distOne, float distTwo, float radius){
 	if (_cm->isLessThanDist(distOne, radius) || _cm->isLessThanDist(distTwo, radius)) {
 
+		//ウィスプとエネミーの距離を取得
 		float diffx = _cm->CalcDiff(_wispNextPosition.x, _enemy->getPositionX());
 		float diffy = _cm->CalcDiff(_wispNextPosition.y, _enemy->getPositionY());
+		//ウィスプと敵NPCの衝突時の運動量を計算
+		float mag_wisp = _cm->Calc(pow(_wispVector.x, 2), pow(_wispVector.y, 2));
+		float mag_enemy = _cm->Calc(pow(_enemyVector.x, 2), pow(_enemyVector.y, 2));
 
-		float mag_ball = _cm->Calc(pow(_wispVector.x, 2), pow(_wispVector.y, 2));
-		float mag_player = _cm->Calc(pow(_enemyVector.x, 2), pow(_enemyVector.y, 2));
-
-		float force = sqrt(mag_ball + mag_player);
+		//衝突時の摩擦調整
+		//float force = sqrt(mag_wisp + mag_enemy) * 0.5;
+		float force = sqrt(mag_wisp + mag_enemy) * 0.8f;
 		float angle = atan2(diffy, diffx);
 
 		_wispVector.x = force * cos(angle);

@@ -24,7 +24,7 @@ public:
 
 	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
-	
+
 	static ObjectSprite* create(const char * fileName);
 	virtual void setPosition(const cocos2d::CCPoint& pos);
 	float radius();

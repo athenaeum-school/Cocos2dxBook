@@ -31,6 +31,12 @@ private:
 
 public:
 
+	enum zOrder
+	{
+		z_enemy = 0,
+		z_wisp,
+	};
+
 	static MainScene* getInstance()
 	{
 		if (s_pInstance == 0)
@@ -84,6 +90,7 @@ public:
 	void cSetwispNextPositionY(float f);
 	float cGetWispVectorX();
 	float cGetWispVectorY();
+	float calcVector();
 };
 
 typedef MainScene Main;
