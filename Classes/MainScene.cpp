@@ -29,6 +29,7 @@ MainScene::MainScene()
 , _wisp(NULL)
 , _cm(NULL)
 , _canFire(true)
+, _isContacted(false)
 {
 }
 
@@ -217,6 +218,7 @@ bool MainScene::ccTouchBegan(CCTouch* touch, CCEvent* event){
 	bool ret = false;
 	if (!_canFire) return false;
 	if (touch) {
+		_isContacted = false;
 		//タッチ位置を取得
 		_touchPoint = touch->getLocation();
 		//ウィスプに触れているなら次の処理へ
@@ -347,9 +349,13 @@ void MainScene::onCollision(float distOne, float distTwo, float radius){
 	CCPoint wispPosition = _wisp->getPosition();
 	CCRect enemyRect = _enemy->boundingBox();
 	bool isContact = enemyRect.containsPoint(wispPosition);
-	if (isContact && _wispVector.x > 0.1f && _wispVector.y > 0.1f){
+	if (isContact && !_isContacted){
 		CCLOG("firstHit");
 		damageToEnemy();
+		_isContacted = true;
+	}
+	else if (!isContact){
+		_isContacted = false;
 	}
 		
 	//衝突判定2（バウンド時）
