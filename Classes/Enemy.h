@@ -25,8 +25,18 @@ private:
 public:
 
 	virtual void stateUpdate(float dt);
-
+	
 	static Enemy* create(const char* fileName, float xPos, float yPos);
+	void attack();
+	bool isEnemyState();
+	void hitCheck();
+	void starEffect();
+	void swingEffect();
+	void explodeEffect();
+	void damageEffect();
+
+	CC_SYNTHESIZE(bool, _isHit, IsHit);
+	
 	Enemy(MainScene *main);
 	~Enemy(void);
 };

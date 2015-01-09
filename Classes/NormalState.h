@@ -49,8 +49,11 @@ private:
 	std::vector<Enemy *> enemys;
 	static const std::string s_normalID;
     
-	void onCollision(float distOne, float distTwo, float radius);
-	float calcVector();
+	//void onCollision(float distOne, float distTwo, float radius);
+	//float calcVector();
+	void onCollision(float distOne, float distTwo, float radius, Enemy *enemy);
+	float calcVector(Enemy *enemy);
+	void nextTurn();
 };
 
 

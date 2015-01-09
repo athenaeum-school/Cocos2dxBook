@@ -17,6 +17,7 @@
 #include <cocos2d.h>
 #include "Player.h"
 #include "Enemy.h"
+#include "MainScene.h"
 
 
 class EnemyState : public GameState
@@ -36,10 +37,12 @@ public:
 	~EnemyState();
 
 private:
+	int _timer;
 
 	static const std::string s_enemyID;
 	static void s_enemyToNormal();
 	static void s_enemyToIdle();
+	
 
 };
 

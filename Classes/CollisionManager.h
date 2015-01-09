@@ -40,23 +40,10 @@ public:
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
 	CC_SYNTHESIZE(cocos2d::CCSize, _screenSize, ScreenSize);
 	
-	void execute(ObjectSprite *_wisp, ObjectSprite *_player);
-	bool gThanRadius(float ballNextPos);
-	bool lessThanRadius(float ballNextPos, float screenwh);
-	void collisionBlockWest();
-	void collisionBlockEast();
-	void collisionBlockNorth();
-	void collisionBlockSouth();
 	float CalcDiff(float nextPos, float getPos);
 	float Calc(float powOne, float powTwo);
 	bool isLessThanDist(float dist, float radius);
-	void onCollision(float distOne, float distTwo, float radius);
-	void damageToEnemy();
-	void starEffect();
-	void swingEffect();
-	void explodeEffect();
-
-
+	
 private:
 
 	MainScene *_main;

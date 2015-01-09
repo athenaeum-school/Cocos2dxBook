@@ -21,6 +21,7 @@ public:
     StateMachine();
     ~StateMachine();
     
+	std::vector<GameState*> getStates(){ return m_gameStates; }
     void pushState(GameState* pState);
     void changeState(GameState* pState);
     void popState();

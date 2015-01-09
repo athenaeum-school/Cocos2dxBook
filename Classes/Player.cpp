@@ -11,6 +11,8 @@
 
 #include "Player.h"
 #include "MainScene.h"
+#include "EnemyState.h"
+#include "ObjectManager.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -20,13 +22,17 @@ Player::Player(MainScene *main)
 	:GameObject(main)
 	, _canFire(true)
 	, _isContacted(false)
-	, _touchPoint(ccp(NULL, NULL))
+	, _touchPoint(ccp(0, 0))
+	, _timer(0)
 {
+	_nextPosition = ccp(0, 0);
+	_vector = ccp(0, 0);
 }
 
 
 Player::~Player()
 {
+	
 }
 
 Player* Player::create(){
@@ -57,17 +63,10 @@ Player* Player::initWisp()
 }
 
 void Player::stateUpdate(float dt){
-	stopWithSet();
 
+	
 	onCollisionPassing();
-	/*Player * wisp = static_cast<Player *>(_main->getWispTag());
-
-	//ウィスプの状態を更新
-	setWispNextPosition(wisp->getNextPosition());
-	//ウィスプの推進力
-	setWispVector(wisp->getVector());
-	setWispVector(ccpMult(_wispVector, 0.98f)); */
-
+	
 	//ウィスプに力を加える
 	addForceToWisp();
 	//ウィスプと壁の衝突判定
@@ -79,24 +78,10 @@ void Player::stateUpdate(float dt){
 	collisionBlockNorth();
 	//南
 	collisionBlockSouth();
-
-	/*//最後に、ウィスプの推進力と次の目標地点に設定
-	setVector(_wispVector);
-	setNextPosition(_wispNextPosition);
-
-	//次の目標地点へ移動
-	//_enemy->setPosition(_enemy->getNextPosition());
-	wisp->setPosition(wisp->getNextPosition());*/
+	//発射後、敵ターンへのカウント開始
+	startTimer();
 }
 
-//運動量が0.1以下ならTrue
-bool Player::isStop(){
-	if (_vector.x < 0.1f && _vector.y < 0.1f)
-	{
-	return true;
-	}
-	return false;
-}
 
 //ウィスプに力を加える
 void Player::addForceToWisp(){
@@ -104,13 +89,6 @@ void Player::addForceToWisp(){
 	_nextPosition.y += _vector.y;
 }
 
-
-//止まったら、再度アタック可能に
-void Player::stopWithSet(){
-	if (isStop() && !_canFire) {
-		this->setCanFire(true);
-	}
-}
 
 bool Player::wispTouchBegan(){
 	CCTouch *touch = _main->getBeganTouch();
@@ -148,17 +126,26 @@ void Player::wispTouchEnded(){
 	CCNode* wisp = _main->getChildByTag(kTag_wisp);
 	CCPoint endPoint = touch->getLocation();
 	CCPoint force = CCPoint(_touchPoint.x - endPoint.x, _touchPoint.y - endPoint.y) * 0.5;
+	_force = force;
+	CCLOG("pos%d", getPosition());
+	CCLOG("force : %d", _force.x);
 	this->setVector(force);
+	CCLOG("vector : %d", _vector.x);
 	//ショット中の操作を不可に
 	setCanFire(false);
 	//if (_enemy != nullptr)
 	//_enemy->removeFromParentAndCleanup(true);
 }
 
+void Player::startTimer(){
+	if (!getCanFire())
+		++_timer;
+}
+
 void Player::collisionBlockWest(){
 	if (gThanRadius(_nextPosition.x)) {
 		_nextPosition.x = this->radius();
-		_vector.x *= -0.8f;
+		_vector.x *= -0.73f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
@@ -167,7 +154,7 @@ void Player::collisionBlockEast(){
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	if (lessThanRadius(_nextPosition.x, screenSize.width)) {
 		_nextPosition.x = screenSize.width - this->radius();
-		_vector.x *= -0.8f;
+		_vector.x *= -0.73f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
@@ -176,7 +163,7 @@ void Player::collisionBlockNorth(){
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	if (lessThanRadius(_nextPosition.y, screenSize.height)) {
 		_nextPosition.y = screenSize.height - this->radius();
-		_vector.y *= -0.8f;
+		_vector.y *= -0.73f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
@@ -184,9 +171,9 @@ void Player::collisionBlockNorth(){
 void Player::collisionBlockSouth(){
 	if (gThanRadius(_nextPosition.y)) {
 		_nextPosition.y = this->radius();
-		_vector.y *= -0.8f;
+		_vector.y *= -0.73f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
-	}
+	} 
 }
 
 //ウィスプの半径が壁を超えたら、衝突する判定を返す
@@ -205,7 +192,26 @@ bool Player::lessThanRadius(float wispNextPos, float screenwh){
 
 //衝突判定（通過時）
 void Player::onCollisionPassing(){
-	CCPoint wispPosition = this->getPosition();
+	
+	/*std::vector<GameObject*> _gObjects = Om::getInstance()->getGameObjects();
+	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
+		if ((*it)->getTag() == kTag_enemy){
+			CCPoint wispPosition = this->getPosition();
+			Enemy *enemy = static_cast<Enemy *>((*it));
+			CCRect enemyRect = enemy->boundingBox();
+			bool isContact = enemyRect.containsPoint(wispPosition);
+			if (isContact && !_isContacted && !enemy->getIsHit()){
+				CCLOG("firstHit");
+				Cm::getInstance()->starEffect();
+				_isContacted = true;
+			}
+			else if (!isContact){
+				_isContacted = false;
+			}
+		}
+	}*/
+
+	/*CCPoint wispPosition = this->getPosition();
 	Enemy *enemy = static_cast<Enemy *>(_main->getChildByTag(kTag_enemy));
 	CCRect enemyRect = enemy->boundingBox();
 	bool isContact = enemyRect.containsPoint(wispPosition);
@@ -216,5 +222,5 @@ void Player::onCollisionPassing(){
 	}
 	else if (!isContact){
 		_isContacted = false;
-	}
+	}*/
 }

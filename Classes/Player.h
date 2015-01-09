@@ -23,8 +23,6 @@ private:
 	Player* initWisp();
 	bool gThanRadius(float wispNextPos);
 	bool lessThanRadius(float wispNextPos, float screenwh);
-	bool isStop();
-	void stopWithSet();
 	void addForceToWisp();
 
 public:
@@ -32,8 +30,9 @@ public:
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
+	CC_SYNTHESIZE(int, _timer, Timer);
+
 
 	virtual void stateUpdate(float dt);
 
@@ -49,6 +48,7 @@ public:
 	void collisionBlockSouth();
 
 	void onCollisionPassing();
+	void startTimer();
 
 	Player(MainScene *main);
 	~Player(void);
