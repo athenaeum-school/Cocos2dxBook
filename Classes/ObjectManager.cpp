@@ -139,13 +139,13 @@ void ObjectManager::clean()
 
 }
 
-/*CCSprite* ObjectManager::initBackground(){
+CCSprite* ObjectManager::initBackground(){
 	//背景の設定
-	CCSprite* background = CCSprite::create("background1.png");
-	background->setAnchorPoint(ccp(0.0, 0.5));
-	background->setPosition(ccp(0, WINSIZE.height / 2));
-	background->setTag(_gameL->kTag_Background);
-	background->setZOrder(_gameL->kOrder_Background);
-	_gameL->setSprite(background);
+	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+
+	//背景画像
+	CCSprite * background = CCSprite::create("background0.png");
+	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
+	_main->addChild(background, z_background, kTag_background);
 	return background;
-}*/
+}

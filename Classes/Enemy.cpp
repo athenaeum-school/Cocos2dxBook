@@ -30,7 +30,7 @@ Enemy* Enemy::create(const char* fileName, float xPos, float yPos){
 	if (enemy) {
 		enemy->initEnemy(fileName, xPos, yPos);
 		enemy->autorelease();
-		Main::getInstance()->addChild(enemy);
+		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
 	}
 	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
@@ -46,9 +46,7 @@ Enemy* Enemy::initEnemy(const char* fileName, float xPos, float yPos)
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
 	this->initWithFile(fileName);
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 2 * this->radius()));
-	this->setTag(kTag_enemy);
-	this->setZOrder(z_enemy);
-
+	
 	//Game::getInstance()->addGameObjectMap("wisp", this);
 	//Game::getInstance()->addGameObject(this);
 	return this;

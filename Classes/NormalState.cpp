@@ -19,7 +19,7 @@ const std::string NormalState::s_normalID = "NORMAL";
 NormalState::NormalState() {
     std::cout << "NormalState::NormalState() normal state constructor\n";
 	_main = Main::getInstance();
-	_om = Om::Instance();
+	_om = Om::getInstance();
 }
 
 NormalState::~NormalState() {
@@ -34,7 +34,7 @@ bool NormalState::onStateEnter() {
 	//エネミー生成
 	//Enemy::create(ccp(436, 125), "enemy2.png")->addEnemy();
 	//背景生成
-	//_om->initBackground();
+	_om->initBackground();
 	
 	//コンテナにゲームオブジェクトを代入
 	_gObjects = _om->getGameObjects();
@@ -52,7 +52,7 @@ void NormalState::stateUpdate(float dt) {
 			enemys->update(dt);
 		}*/
 	}
-	
+	_wisp->stateUpdate(dt);
 }
 
 bool NormalState::onTouchBeganEvent(){

@@ -34,7 +34,7 @@ Player* Player::create(){
 	if (wisp){
 		wisp->initWisp();
 		wisp->autorelease();
-		Main::getInstance()->addChild(wisp);
+		Main::getInstance()->addChild(wisp, z_wisp, kTag_wisp);
 		return wisp;
 	}
 	CC_SAFE_DELETE(wisp);
@@ -49,9 +49,7 @@ Player* Player::initWisp()
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
 	this->initWithFile("wisp_1.png");
 	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 2));
-	this->setTag(kTag_wisp);
-	this->setZOrder(z_wisp);
-
+	
 	//Game::getInstance()->addGameObjectMap("wisp", this);
 	//Game::getInstance()->addGameObject(this);
 	return this;

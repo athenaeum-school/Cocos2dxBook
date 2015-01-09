@@ -21,8 +21,8 @@ CollisionManager* CollisionManager::s_pInstance = 0;
 
 
 CollisionManager::CollisionManager()
+	:_main(Main::getInstance())
 {
-	_main = Main::getInstance();
 }
 
 

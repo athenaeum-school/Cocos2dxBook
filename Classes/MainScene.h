@@ -16,18 +16,21 @@
 #include "ObjectSprite.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "ObjectManager.h"
 #include "CollisionManager.h"
 
 
 enum tag
 {
-	kTag_wisp = 1,
+	kTag_background = 1,
+	kTag_wisp,
 	kTag_enemy
 };
 
 enum zOrder
 {
-	z_enemy = 1,
+	z_background = 1,
+	z_enemy,
 	z_wisp,
 	z_explode,
 	z_star,
@@ -43,6 +46,9 @@ protected:
 private:
 
 	static MainScene *s_pInstance;
+	ObjectManager *_om;
+	CollisionManager *_cm;
+
 	bool gThanRadius(float ballNextPos);
 	bool lessThanRadius(float ballNextPos, float screenwh);
 
@@ -69,9 +75,8 @@ public:
 
 	static cocos2d::CCScene* createScene();
     CREATE_FUNC(MainScene);
-	CC_SYNTHESIZE_RETAIN(Enemy *, _enemy, _Enemy);
 	CC_SYNTHESIZE_RETAIN(Player *, _wisp, Wisp);
-	CC_SYNTHESIZE_RETAIN(CollisionManager *, _cm, Cm);
+	CC_SYNTHESIZE_RETAIN(Enemy *, _enemy, _Enemy);
 	CC_SYNTHESIZE(cocos2d::CCTouch *, _beganTouch, BeganTouch);
 	CC_SYNTHESIZE(cocos2d::CCTouch *, _movedTouch, MovedTouch);
 	CC_SYNTHESIZE(cocos2d::CCTouch *, _endedTouch, EndedTouch);
@@ -94,10 +99,6 @@ public:
 	cocos2d::CCPoint extendPos(cocos2d::CCNode* wisp);
 	float extendAngle(cocos2d::CCNode* wisp);
 	void removeAndAdd(cocos2d::CCNode* wisp, cocos2d::CCTouch* touch);
-	void collisionBlockWest();
-	void collisionBlockEast();
-	void collisionBlockNorth();
-	void collisionBlockSouth();
 	void onCollision(float distOne, float distTwo, float radius);
 	float calcVector();
 

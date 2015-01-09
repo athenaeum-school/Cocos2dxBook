@@ -43,6 +43,11 @@ CCScene* MainScene::createScene()
     MainScene *layer = MainScene::create();
 	scene->addChild(layer);
 
+	ObjectManager *om = ObjectManager::getInstance();
+	om->init();
+	scene->addChild(om);
+	layer->_om = om;
+
 	CollisionManager *cm = CollisionManager::getInstance();
 	cm->init();
 	scene->addChild(cm);
@@ -59,14 +64,6 @@ bool MainScene::init()
     }
     
 	MainScene::s_pInstance = this;
-
-	//スクリーンサイズを取得
-	setScreenSize(CCDirector::sharedDirector()->getWinSize());
-    
-	//背景画像
-	CCSprite * background = CCSprite::create("background0.png");
-	background->setPosition(ccp(_screenSize.width / 2.0, _screenSize.height / 2.0));
-	this->addChild(background);
 
 	//ウィスプ（プレイヤー）配置
 	_wisp = Player::create();

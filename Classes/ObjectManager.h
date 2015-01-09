@@ -26,7 +26,7 @@ class ObjectManager : public cocos2d::CCLayer
 {
 public:
     
-    static ObjectManager* Instance()
+    static ObjectManager* getInstance()
     {
         if(s_pInstance == 0)
         {
