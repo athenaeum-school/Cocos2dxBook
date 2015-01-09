@@ -13,22 +13,26 @@
 #define __WillYard__ObjectSprite__
 
 #include "cocos2d.h"
+#include "GameObject.h"
 
 class MainScene;
 
-class ObjectSprite : public cocos2d::CCSprite {
-public:
+class ObjectSprite : public GameObject {
+private:
+	ObjectSprite* initObject();
 
-	ObjectSprite(void);
-	~ObjectSprite(void);
+public:
+	virtual void stateUpdate(float dt);
 
 	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
-
+	static ObjectSprite* create();
 	static ObjectSprite* create(const char * fileName);
 	virtual void setPosition(const cocos2d::CCPoint& pos);
 	float radius();
 
+	ObjectSprite(MainScene *main);
+	~ObjectSprite(void);
 };
 
 #endif /*defined(__WillYard__ObjectSprite__)*/

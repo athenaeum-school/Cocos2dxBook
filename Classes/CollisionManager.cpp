@@ -36,9 +36,13 @@ bool CollisionManager::init()
 	{
 		return false;
 	}
-
-	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
-
+	
+	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
+	audio->preloadEffect("se_maoudamashii_system48.mp3");
+	audio->preloadEffect("se_maoudamashii_system45.mp3");
+	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
+	audio->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
+	
 	return true;
 }
 
@@ -64,17 +68,61 @@ float CollisionManager::Calc(float powOne, float powTwo){
 	return dist;
 }
 
-void CollisionManager::addForceToWisp(){
-	_main->cSetwispNextPositionX(_main->cGetWispVectorX());
-	_main->cSetwispNextPositionY(_main->cGetWispVectorY());
+
+void CollisionManager::starEffect(){
+	Player* wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	//ダメージ時、スターエフェクト表示
+	CCSprite *star = CCSprite::create("star1.png");
+	star->setPosition(wisp->getPosition());
+	addChild(star, z_star);
+
+	CCAnimation *animation = CCAnimation::create();
+	animation->addSpriteFrameWithFileName("star1.png");
+	animation->addSpriteFrameWithFileName("star2.png");
+	animation->addSpriteFrameWithFileName("star3.png");
+	animation->addSpriteFrameWithFileName("star4.png");
+	animation->setDelayPerUnit(0.1);
+
+	CCSpawn *spawn = CCSpawn::create(CCAnimate::create(animation), CCFadeOut::create(0.45), nullptr);
+	CCSequence *starSequence = CCSequence::create(spawn, CCRemoveSelf::create(), nullptr);
+
+	star->runAction(CCScaleTo::create(0.4, 2));
+	star->runAction(starSequence);
 }
 
-void CollisionManager::addForceToWispX(float nextPos, float vector){
-	_main->cSetwispNextPositionX(vector);
-	//ObjectSprite* will = static_cast<ObjectSprite *>(_main->getWispTag());
-	//will->setVector(ccp(nextPos, vector));
+void CollisionManager::swingEffect(){
+	Enemy *enemy = static_cast<Enemy *>(_main->getChildByTag(kTag_enemy));
+	//ダメージ時、敵NPCをスイング
+	CCRepeat *swing = CCRepeat::create(CCSequence::create(CCRotateTo::create(0.1, -10), CCRotateTo::create(0.1, 10), NULL), 4);
+	enemy->runAction(CCSequence::create(swing, CCRotateTo::create(0, 0.125), NULL));
 }
 
-void CollisionManager::addForceToWispY(float nextPos, float vector){
-	_main->cSetwispNextPositionY(vector);
+void CollisionManager::explodeEffect(){
+	Enemy *enemy = static_cast<Enemy *>(_main->getChildByTag(kTag_enemy));
+	//ダメージ時、爆発エフェクト表示
+	CCSprite *ex = CCSprite::create("explode1.png");
+	ex->setPosition(enemy->getPosition());
+	addChild(ex, z_explode);
+
+	CCAnimation *explode = CCAnimation::create();
+	explode->addSpriteFrameWithFileName("explode1.png");
+	explode->addSpriteFrameWithFileName("explode2.png");
+	explode->addSpriteFrameWithFileName("explode3.png");
+	explode->addSpriteFrameWithFileName("explode4.png");
+	explode->setDelayPerUnit(0.1);
+
+	CCSpawn *exSpawn = CCSpawn::create(CCAnimate::create(explode), CCFadeOut::create(0.45), nullptr);
+	CCSequence *exSequence = CCSequence::create(exSpawn, CCRemoveSelf::create(), nullptr);
+
+	ex->runAction(exSequence);
+}
+
+void CollisionManager::damageToEnemy(){
+	CCLOG("damage");
+	//ダメージ時、スターエフェクト表示
+	starEffect();
+	//ダメージ時、敵NPCをスイング
+	swingEffect();
+	//ダメージ時、爆発エフェクト表示
+	explodeEffect();
 }

@@ -47,13 +47,14 @@ public:
 	void collisionBlockEast();
 	void collisionBlockNorth();
 	void collisionBlockSouth();
-	void addForceToWisp();
-	void addForceToWispX(float nextPos, float vector);
-	void addForceToWispY(float nextPos, float vector);
 	float CalcDiff(float nextPos, float getPos);
 	float Calc(float powOne, float powTwo);
 	bool isLessThanDist(float dist, float radius);
 	void onCollision(float distOne, float distTwo, float radius);
+	void damageToEnemy();
+	void starEffect();
+	void swingEffect();
+	void explodeEffect();
 
 
 private:
@@ -63,6 +64,6 @@ private:
 	
 };
 
-typedef CollisionManager COLL;
+typedef CollisionManager Cm;
 
 #endif /*defined(__WillYard__CollisionManager__)*/

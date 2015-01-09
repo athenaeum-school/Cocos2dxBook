@@ -14,7 +14,24 @@
 
 #include "cocos2d.h"
 #include "ObjectSprite.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "CollisionManager.h"
+
+
+enum tag
+{
+	kTag_wisp = 1,
+	kTag_enemy
+};
+
+enum zOrder
+{
+	z_enemy = 1,
+	z_wisp,
+	z_explode,
+	z_star,
+};
 
 class MainScene : public cocos2d::CCLayer
 {
@@ -30,14 +47,6 @@ private:
 	bool lessThanRadius(float ballNextPos, float screenwh);
 
 public:
-
-	enum zOrder
-	{
-		z_enemy = 0,
-		z_wisp,
-		z_explode,
-		z_star,
-	};
 
 	static MainScene* getInstance()
 	{
@@ -60,9 +69,12 @@ public:
 
 	static cocos2d::CCScene* createScene();
     CREATE_FUNC(MainScene);
-	CC_SYNTHESIZE_RETAIN(ObjectSprite *, _enemy, Enemy);
-	CC_SYNTHESIZE_RETAIN(ObjectSprite *, _wisp, Wisp);
+	CC_SYNTHESIZE_RETAIN(Enemy *, _enemy, _Enemy);
+	CC_SYNTHESIZE_RETAIN(Player *, _wisp, Wisp);
 	CC_SYNTHESIZE_RETAIN(CollisionManager *, _cm, Cm);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, _beganTouch, BeganTouch);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, _movedTouch, MovedTouch);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, _endedTouch, EndedTouch);
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
@@ -86,16 +98,9 @@ public:
 	void collisionBlockEast();
 	void collisionBlockNorth();
 	void collisionBlockSouth();
-	void addForceToWisp();
 	void onCollision(float distOne, float distTwo, float radius);
-	cocos2d::CCNode * getWispTag();
-	cocos2d::CCNode * getEnemyTag();
-	void cSetwispNextPositionX(float f);
-	void cSetwispNextPositionY(float f);
-	float cGetWispVectorX();
-	float cGetWispVectorY();
 	float calcVector();
-	void damageToEnemy();
+
 };
 
 typedef MainScene Main;

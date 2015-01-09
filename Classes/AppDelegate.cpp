@@ -1,7 +1,9 @@
 #include "AppDelegate.h"
 #include "MainScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 AppDelegate::AppDelegate() {
 
@@ -15,6 +17,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     CCDirector* pDirector = CCDirector::sharedDirector();
     CCEGLView* pEGLView = CCEGLView::sharedOpenGLView();
+	SimpleAudioEngine* pAudio = SimpleAudioEngine::sharedEngine();
 
     pDirector->setOpenGLView(pEGLView);
 	
