@@ -47,8 +47,9 @@ Enemy* Enemy::initEnemy(const char* fileName, float xPos, float yPos)
 	this->initWithFile(fileName);
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 2 * this->radius()));
 	
-	//Game::getInstance()->addGameObjectMap("wisp", this);
-	//Game::getInstance()->addGameObject(this);
+	Om::getInstance()->addGameObjectMap("wisp", this);
+	Om::getInstance()->addGameObject(this);
+	
 	return this;
 }
 

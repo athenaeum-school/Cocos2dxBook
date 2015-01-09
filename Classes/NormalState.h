@@ -18,7 +18,6 @@
 #include "Player.h"
 #include "Enemy.h"
 
-using namespace cocos2d;
 
 class NormalState : public GameState
 {
@@ -35,6 +34,11 @@ public:
     NormalState();
     ~NormalState();
     
+	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyVector, EnemyVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyNextPosition, EnemyNextPosition);
+
 private:
     float _tileWidth;
     float _tileHeight;
@@ -45,6 +49,8 @@ private:
 	std::vector<Enemy *> enemys;
 	static const std::string s_normalID;
     
+	void onCollision(float distOne, float distTwo, float radius);
+	float calcVector();
 };
 
 

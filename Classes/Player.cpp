@@ -50,8 +50,9 @@ Player* Player::initWisp()
 	this->initWithFile("wisp_1.png");
 	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 2));
 	
-	//Game::getInstance()->addGameObjectMap("wisp", this);
-	//Game::getInstance()->addGameObject(this);
+	Om::getInstance()->addGameObjectMap("wisp", this);
+	Om::getInstance()->addGameObject(this);
+
 	return this;
 }
 

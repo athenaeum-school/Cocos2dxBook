@@ -37,12 +37,6 @@ bool CollisionManager::init()
 		return false;
 	}
 	
-	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
-	audio->preloadEffect("se_maoudamashii_system48.mp3");
-	audio->preloadEffect("se_maoudamashii_system45.mp3");
-	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
-	audio->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
-	
 	return true;
 }
 

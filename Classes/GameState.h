@@ -20,6 +20,7 @@ using namespace cocos2d;
 
 class MainScene;
 class ObjectManager;
+class CollisionManager;
 
 class GameState : public CCNode
 {
@@ -43,9 +44,12 @@ private:
 	
  
 protected:
+
 	MainScene* _main;
 	ObjectManager* _om;
+	CollisionManager* _cm;
 	std::vector<GameObject*> _gObjects;
+
 };
 
 #endif /* defined(__WillYard__GameState__) */
