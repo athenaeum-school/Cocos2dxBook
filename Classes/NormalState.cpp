@@ -10,6 +10,7 @@
 
 
 #include "NormalState.h"
+#include "EnemyState.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
 
@@ -50,7 +51,7 @@ bool NormalState::onStateEnter() {
 void NormalState::stateUpdate(float dt) {
 	//_gObjectsに追加されたゲームオブジェクトから関数を呼び出す
 	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
-		// Game::Instance()->getStateMachine()->changeState(new AlarmState());
+		
 		(*it)->stateUpdate(dt);
 		/*GameObject * enemys = _gm->findGameObject("enemy");
 		if (enemys){
@@ -58,7 +59,7 @@ void NormalState::stateUpdate(float dt) {
 		}*/
 	}
 
-
+	
 	//ウィスプの状態を更新
 	setWispNextPosition(_wisp->getNextPosition());
 	//ウィスプの推進力
@@ -85,6 +86,7 @@ void NormalState::stateUpdate(float dt) {
 	//次の目標地点へ移動
 	//_enemy->setPosition(_enemy->getNextPosition());
 	_wisp->setPosition(_wisp->getNextPosition());
+	_om->getStateMachine()->changeState(new EnemyState());
 }
 
 bool NormalState::onTouchBeganEvent(){
