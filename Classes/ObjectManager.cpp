@@ -22,6 +22,7 @@ using namespace CocosDenshion;
 ObjectManager* ObjectManager::s_pInstance = 0;
 
 ObjectManager::ObjectManager():
+_raidHp(0),
 m_pStateMachine(0),
 m_playerLives(3),
 m_bLevelComplete(false)
@@ -34,6 +35,7 @@ m_bLevelComplete(false)
 
 ObjectManager::~ObjectManager()
 {
+
 }
 
 bool ObjectManager::init()
@@ -42,17 +44,17 @@ bool ObjectManager::init()
 	initAudio();
 	
 	//ウィスプ生成
-	Player::create();
+	Player::create(100);
 	//エネミー生成
-	Enemy::create("enemy1.png", 0.2, 0.5);
-	Enemy::create("enemy3.png", 0.5, 1);
-	Enemy::create("enemy2.png", 0.7, 0.5);
+	Enemy::create("enemy1.png", 10, 0.2, 0.5);
+	Enemy::create("enemy3.png", 10, 0.5, 0.8);
+	Enemy::create("enemy2.png", 10, 0.7, 0.5);
 	//背景生成
 	initBackground();
 
 	//初期状態を追加し、状態を初期化
 	m_pStateMachine->pushState(new NormalState());
-	//m_pStateMachine->changeState(new NormalState());
+
 	return true;
 }
 
@@ -156,4 +158,12 @@ CCSprite* ObjectManager::initBackground(){
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	_main->addChild(background, z_background, kTag_background);
 	return background;
+}
+
+void ObjectManager::initRaidHp(int hp){
+	_raidHp += hp;
+}
+
+void ObjectManager::damageRaidHp(int hp){
+	_raidHp -= hp;
 }

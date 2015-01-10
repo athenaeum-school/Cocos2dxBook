@@ -43,6 +43,8 @@ public:
     bool handleBeganEvents();
 	void handleMovedEvents();
 	void handleEndedEvents();
+	void initRaidHp(int hp);
+	void damageRaidHp(int damage);
 
     void setGameObjectPosition(const cocos2d::CCPoint &pts);
     void setTileMap(cocos2d::CCTMXTiledMap* tileMap);
@@ -58,6 +60,7 @@ public:
     
     StateMachine* getStateMachine() { return m_pStateMachine; }
     
+	CC_SYNTHESIZE(int, _raidHp, RaidHp);
     CC_SYNTHESIZE(int, m_playerLives, PlayerLives);
     CC_SYNTHESIZE(int, m_nextLevel, NextLevel);
     CC_SYNTHESIZE(bool, m_bLevelComplete, LevelComplete);
