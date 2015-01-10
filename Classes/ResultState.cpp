@@ -19,7 +19,6 @@ using namespace CocosDenshion;
 const std::string ResultState::s_resultID = "RESULT";
 
 void ResultState::s_resultToNormal() {
-	CCLOG("NormalState : changed");
 	Om::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
@@ -69,20 +68,22 @@ bool ResultState::onStateExit() {
 }
 
 void ResultState::onResult(){
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
-	//もう一度遊ぶボタン
+	//リトライボタン
 	CCMenuItemImage *replayButton = CCMenuItemImage::create("retry_button.png",
 		"retry_button.png", this, menu_selector(ResultState::retry));
 
 
-	//２つのボタンからメニューを作成する
+	//ボタンからメニューを作成する
 	CCMenu *menu = CCMenu::create(replayButton, NULL);
-	//たてに並べる
-	menu->setPosition(ccp(winSize.width / 2.0, winSize.height / 2.0));
+	
+	//画面の真ん中へ表示
+	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	_om->addChild(menu, kTag_retry, z_retry);
 }
 
+//ボタン押下時、NormalStateへ遷移するコールバック関数
 void ResultState::retry(CCObject *pSender){
 	s_resultToNormal();
 }
