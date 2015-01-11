@@ -29,6 +29,7 @@ public:
 	virtual void onTouchEndedEvent();
 	
 	virtual std::string getStateID() { return s_resultID; }
+	virtual std::vector<GameObject*> getGameStateObjects(){ return _gObjects; }
 
 	ResultState();
 	~ResultState();
@@ -42,7 +43,6 @@ private:
 
 	void onResult();
 	void retry(cocos2d::CCObject* pSender);
-	//void retry();
 
 };
 

@@ -11,7 +11,6 @@
 
 #include "ResultState.h"
 #include "NormalState.h"
-#include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 
 using namespace CocosDenshion;
@@ -38,6 +37,21 @@ ResultState::~ResultState() {
 
 }
 
+bool ResultState::onStateEnter() {
+	CCLOG("Changed : resultState");
+	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+
+	CCSprite *back = CCSprite::create("HelloWorld.png");
+	back->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+	back->setOpacity(0);
+	_om->addChild(back, z_background, kTag_background);
+	back->runAction(CCFadeIn::create(2));
+
+	onResult();
+
+	return true;
+}
+
 void ResultState::stateUpdate(float dt) {
 
 }
@@ -48,22 +62,17 @@ bool ResultState::onTouchBeganEvent(){
 }
 
 void ResultState::onTouchMovedEvent(){
-
+	
 }
 
 void ResultState::onTouchEndedEvent(){
-
-}
-
-bool ResultState::onStateEnter() {
-	CCLOG("Changed : resultState");
-	onResult();
-	return true;
+	
 }
 
 bool ResultState::onStateExit() {
 	CCLOG("ResultToNormal");
-	_om->removeAllChildren();
+	_om->removeChildByTag(kTag_background);
+	_om->removeChildByTag(kTag_retry);
 	return true;
 }
 
@@ -80,7 +89,9 @@ void ResultState::onResult(){
 	
 	//画面の真ん中へ表示
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	_om->addChild(menu, kTag_retry, z_retry);
+	menu->setOpacity(0);
+	_om->addChild(menu, z_retry, kTag_retry);
+	menu->runAction(CCFadeIn::create(2));
 }
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数
