@@ -25,19 +25,26 @@ private:
 public:
 
 	virtual void stateUpdate(float dt);
-	
-	static Enemy* create(const char* fileName, float xPos, float yPos);
+	virtual void damage();
+	virtual void died();
+
+	static Enemy* create(const char* fileName, int hp, float xPos, float yPos);
 	void attack();
 	bool isEnemyState();
+	bool isDeadOrAttacked();
 	void hitCheck();
 	void starEffect();
 	void swingEffect();
 	void explodeEffect();
 	void damageEffect();
+	void diedEffect();
+	void initAnimation();
 
-	CC_SYNTHESIZE(bool, _isHit, IsHit);
+	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);
+	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
+	CC_SYNTHESIZE(bool, _isDead, IsDead);
 	
-	Enemy(MainScene *main);
+	Enemy(MainScene *main, int hp);
 	~Enemy(void);
 };
 

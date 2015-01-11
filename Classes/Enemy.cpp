@@ -11,13 +11,18 @@
 
 #include "Enemy.h"
 #include "MainScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
-Enemy::Enemy(MainScene *main)
-:GameObject(main)
-, _isHit(false)
+Enemy::Enemy(MainScene *main, int hp) 
+: GameObject(main, hp)
+, _isAttacked(false)
+, _isContacted(false)
+, _isDead(false)
 {
+	
 }
 
 
@@ -25,9 +30,9 @@ Enemy::~Enemy()
 {
 }
 
-Enemy* Enemy::create(const char* fileName, float xPos, float yPos){
+Enemy* Enemy::create(const char* fileName, int hp, float xPos, float yPos){
 	//エネミー生成
-	Enemy * enemy = new Enemy(Main::getInstance());
+	Enemy * enemy = new Enemy(Main::getInstance(), hp);
 	if (enemy) {
 		enemy->initEnemy(fileName, xPos, yPos);
 		enemy->autorelease();
@@ -46,13 +51,23 @@ Enemy* Enemy::initEnemy(const char* fileName, float xPos, float yPos)
 
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
 	this->initWithFile(fileName);
-	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 2 * this->radius()));
-	
+	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 1 * this->radius()));
+	this->setOpacity(0);
+
+	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - 10 * this->radius())), NULL);
+
+	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, -this->radius() * 0.2)), CCMoveBy::create(2, ccp(0, this->radius() * 0.2)), NULL);
+	CCRepeatForever *repeat = CCRepeatForever::create(seq);
+	this->runAction(fadeIn);
+	this->runAction(repeat);
+
+	Om::getInstance()->initRaidHp(this->getHP());
 	Om::getInstance()->addGameObjectMap("enemy", this);
 	Om::getInstance()->addGameObject(this);
 	
 	return this;
 }
+
 
 void Enemy::stateUpdate(float dt){
 	attack();
@@ -60,11 +75,21 @@ void Enemy::stateUpdate(float dt){
 
 }
 
+
+
 void Enemy::attack(){
-	if (isEnemyState())
-	{
-		CCLOG("ATTACKING");
+	if (isDeadOrAttacked() || !isEnemyState()){
+		return;
 	}
+		CCLOG("ATTACKING");
+		setIsAttacked(true);
+}
+
+bool Enemy::isDeadOrAttacked(){
+	if (_isDead || _isAttacked){
+		return true;
+	}
+	return false;
 }
 
 bool Enemy::isEnemyState(){
@@ -72,7 +97,6 @@ bool Enemy::isEnemyState(){
 	{
 		return true;
 	}
-
 	return false;
 }
 
@@ -81,16 +105,38 @@ void Enemy::hitCheck(){
 	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
 	CCRect wispRect = wisp->boundingBox();
 	bool isContact = wispRect.containsPoint(enemyPosition);
-	if (isContact && !_isHit){
+	if (isContact && !_isContacted && !_isDead){
 		CCLOG("enemyHit");
+		damage();
 		damageEffect();
-		_isHit = true;
+		_isContacted = true;
 	}
 	else if (!isContact){
-		_isHit = false;
+		_isContacted = false;
+	}
+
+}
+
+void Enemy::damage(){
+	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	int playerAtk = wisp->getAtk();
+	_hp -= playerAtk;
+	Om::getInstance()->damageRaidHp(playerAtk);
+	CCLOG("hp : %d", _hp);
+
+	if (_hp <= 0){
+		setIsDead(true);
+		setHP(0);
+		died();
 	}
 }
 
+void Enemy::died(){
+	if (_isDead){
+		diedEffect();
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
+	}
+}
 
 void Enemy::damageEffect(){
 	CCLOG("damage");
@@ -100,7 +146,34 @@ void Enemy::damageEffect(){
 	swingEffect();
 	//ダメージ時、爆発エフェクト表示
 	explodeEffect();
-	//this->setVisible(false);
+}
+
+void Enemy::diedEffect(){
+	//敵NPCを蒸発
+	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), nullptr);
+	CCSequence *diedSequence = CCSequence::create(diedSpawn, nullptr);
+	
+	this->runAction(diedSequence);
+	this->runAction(CCMoveBy::create(1, ccp(0, 20)));
+
+	//消滅エフェクト
+	CCSprite *vanish = CCSprite::create("dying1.png");
+	vanish->setPosition(this->getPosition());
+	_main->addChild(vanish, z_vanish);
+
+	CCAnimation *vanishing = CCAnimation::create();
+	vanishing->addSpriteFrameWithFileName("dying1.png");
+	vanishing->addSpriteFrameWithFileName("dying2.png");
+	vanishing->addSpriteFrameWithFileName("dying3.png");
+	vanishing->addSpriteFrameWithFileName("dying4.png");
+	vanishing->addSpriteFrameWithFileName("dying5.png");
+	vanishing->setDelayPerUnit(0.2);
+
+	CCSpawn *vanishSpawn = CCSpawn::create(CCAnimate::create(vanishing), CCFadeOut::create(1.0), nullptr);
+	CCSequence *vanishSequence = CCSequence::create(vanishSpawn, CCRemoveSelf::create(), nullptr);
+
+	vanish->runAction(vanishSequence);
+
 }
 
 void Enemy::starEffect(){
