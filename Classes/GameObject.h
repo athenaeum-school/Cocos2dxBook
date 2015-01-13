@@ -22,9 +22,15 @@ class GameObject : public cocos2d::CCSprite
 {
 public:
    
+	virtual void onStateEnter() = 0;
+	virtual void onStateExit() = 0;
 	virtual void stateUpdate(float dt) = 0;
-	
+	virtual void died() = 0;
+
 	CC_SYNTHESIZE(MainScene *, _main, _Main);
+	CC_SYNTHESIZE(int, _hp, HP);
+	CC_SYNTHESIZE(int, _maxHp, MaxHP);
+	CC_SYNTHESIZE(int, _atk, Atk);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
 	virtual void setPosition(const cocos2d::CCPoint& pos);
@@ -32,6 +38,7 @@ public:
 
 	GameObject(MainScene* main);
 	~GameObject();
+
 };
 
 
