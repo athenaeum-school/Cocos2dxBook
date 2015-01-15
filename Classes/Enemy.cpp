@@ -10,19 +10,25 @@
 
 
 #include "Enemy.h"
+#include "EnemyAttack.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
+#include "ObjectManager.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
 
-Enemy::Enemy(MainScene *main, int hp) 
-: GameObject(main, hp)
-, _isAttacked(false)
+Enemy::Enemy(MainScene *main) 
+: GameObject(main)
+, _isAttacked(true)
 , _isContacted(false)
 , _isDead(false)
+
 {
-	
+	setAtk(0);
+	setHP(0);
+	setMaxHP(0);
+	_om = Om::getInstance();
 }
 
 
@@ -30,11 +36,11 @@ Enemy::~Enemy()
 {
 }
 
-Enemy* Enemy::create(const char* fileName, int hp, float xPos, float yPos){
+Enemy* Enemy::create(enemyType type, float xPos, float yPos){
 	//エネミー生成
-	Enemy * enemy = new Enemy(Main::getInstance(), hp);
+	Enemy * enemy = new Enemy(Main::getInstance());
 	if (enemy) {
-		enemy->initEnemy(fileName, xPos, yPos);
+		enemy->initEnemy(type, xPos, yPos);
 		enemy->autorelease();
 		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
@@ -45,43 +51,193 @@ Enemy* Enemy::create(const char* fileName, int hp, float xPos, float yPos){
 	return NULL;
 }
 
-Enemy* Enemy::initEnemy(const char* fileName, float xPos, float yPos)
+Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
-	this->initWithFile(fileName);
+	this->initWithFile(fileNameInit(type).c_str());
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 1 * this->radius()));
 	this->setOpacity(0);
 
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - 10 * this->radius())), NULL);
-
-	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, -this->radius() * 0.2)), CCMoveBy::create(2, ccp(0, this->radius() * 0.2)), NULL);
-	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	this->runAction(fadeIn);
-	this->runAction(repeat);
-
-	Om::getInstance()->initRaidHp(this->getHP());
-	Om::getInstance()->addGameObjectMap("enemy", this);
-	Om::getInstance()->addGameObject(this);
+	animationInit(type);
+	
+	_om->initRaidHp(this->getHP());
+	_om->addEnemyCount();
+	_om->addGameObjectMap("enemy", this);
+	_om->addGameObject(this);
 	
 	return this;
 }
 
+std::string Enemy::fileNameInit(enemyType type){
+	std::string fileName;
 
-void Enemy::stateUpdate(float dt){
-	attack();
-	hitCheck();
+	switch (type)
+	{
+	case enemyType::kTag_rat1:
+		fileName = "enemy1.png";
+		this->setEtype(type);
+		this->setHP(30);
+		this->setMaxHP(30);
+		this->setAtk(5);
+		break;
+	case enemyType::kTag_rat2:
+		this->setEtype(type);
+		fileName = "enemy2.png";
+		this->setHP(60);
+		this->setMaxHP(60);
+		this->setAtk(10);
+		break;
+	case enemyType::kTag_vampire:
+		this->setEtype(type);
+		fileName = "enemy3.png";
+		this->setHP(100);
+		this->setMaxHP(100);
+		this->setAtk(20);
+		break;
+	default:
+		break;
+	}
+
+	return fileName;
+}
+
+void Enemy::animationInit(enemyType type){
+	
+	switch (type)
+	{ 
+		{
+	case enemyType::kTag_rat1:
+	case enemyType::kTag_rat2:
+		_hud->getAnime()->enemyIdleAnime(this);
+		break;
+		}
+
+		{
+	case enemyType::kTag_vampire:
+		_hud->getAnime()->enemy_vamp_idleAnime(this);
+		break;
+		}
+
+		{
+	default:
+		break;
+		}
+	}
 
 }
 
+
+void Enemy::onStateEnter(){
+	if (_isDead){
+		return;
+	}
+
+	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	_stateID = _om->getStateMachine()->getStates().back()->getStateID();
+
+	if (isNormalState())
+	{
+		setIsContacted(false);
+	}
+	else if (isEnemyState())
+	{
+		onEnemyStateEnter();
+	}
+	else if (isResultState()){
+		
+	}
+}
+
+void Enemy::stateUpdate(float dt){
+	if (_isDead){
+		return;
+	}
+
+	attack();
+	hitCheck();
+}
+
+void Enemy::onStateExit(){
+	if (getIsDead()){
+		return;
+	}
+
+	if (isEnemyState()){
+		setIsContacted(false);
+	}
+	else if (isResultState()){
+		resultExit();
+	}
+}
+
+
+bool Enemy::isNormalState(){
+	if (_stateID == "NORMAL")
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Enemy::isEnemyState(){
+	if (_stateID == "ENEMY")
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Enemy::isResultState(){
+	if (_stateID == "RESULT")
+	{
+		return true;
+	}
+	return false;
+}
+
+void Enemy::onEnemyStateEnter(){
+	//敵NPCの数が減るほど、攻撃する確率が上昇する
+	if (randomAttack(2.0) < 1)
+	{
+		setIsAttacked(false);
+	}
+	else if (_om->getEnemyCount() == 1)
+	{
+		if (randomAttack(1.3) < 1){
+			setIsAttacked(false);
+		}
+	}
+}
+
+int Enemy::randomAttack(int value){
+	int random = _om->getEnemyCount() % calcRandom(1, _om->getEnemyCount() * value);
+	return random;
+}
+
+
+void Enemy::resultExit(){
+		CCLOG("enemyOnStateExit:result");
+		setHP(0);
+		setIsDead(true);
+		Om::getInstance()->setEnemyCount(0);
+		this->runAction(CCFadeOut::create(0));
+}
+
+int Enemy::calcRandom(int min, int max)
+{
+	return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
+}
 
 
 void Enemy::attack(){
 	if (isDeadOrAttacked() || !isEnemyState()){
 		return;
 	}
-		CCLOG("ATTACKING");
+		EnemyAttack::create(this)->attack(this);
 		setIsAttacked(true);
 }
 
@@ -92,135 +248,90 @@ bool Enemy::isDeadOrAttacked(){
 	return false;
 }
 
-bool Enemy::isEnemyState(){
-	if (Om::getInstance()->getStateMachine()->getStates().back()->getStateID() == "ENEMY")
-	{
+void Enemy::hitCheck(){
+	if (_stateID == "ENEMY"){
+		return;
+	}
+
+	CCPoint enemyPosition = this->getPosition();
+	CCRect wispRect = _wisp->boundingBox();
+	
+	bool isContact = setEnemyRect().intersectsRect(wispRect);
+	
+	if (isContanctWithContacted(isContact) && isDeadWithAttacking()){
+		damage();
+		_hud->getAnime()->enemyDamageAnime(this);
+		setIsContacted(true);
+	}
+	else if (!isContact){
+		setIsContacted(false);
+	}
+
+}
+
+
+bool Enemy::isDeadWithAttacking(){
+	if (!_isDead && _wisp->getIsAttacking()){
 		return true;
 	}
 	return false;
 }
 
-void Enemy::hitCheck(){
-	CCPoint enemyPosition = this->getPosition();
-	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-	CCRect wispRect = wisp->boundingBox();
-	bool isContact = wispRect.containsPoint(enemyPosition);
-	if (isContact && !_isContacted && !_isDead){
-		CCLOG("enemyHit");
-		damage();
-		damageEffect();
-		_isContacted = true;
+bool Enemy::isContanctWithContacted(bool isContact){
+	if (isContact && !_isContacted){
+		return true;
 	}
-	else if (!isContact){
-		_isContacted = false;
-	}
+	return false;
+}
 
+CCRect Enemy::setEnemyRect(){
+	CCRect enemyRect = CCRectMake(this->getPositionX() - (this->getContentSize().width / 4),
+									this->getPositionY() - (this->getContentSize().height / 4),
+									this->getContentSize().width / 2, this->getContentSize().height / 2);
+	return enemyRect;
 }
 
 void Enemy::damage(){
-	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-	int playerAtk = wisp->getAtk();
-	_hp -= playerAtk;
-	Om::getInstance()->damageRaidHp(playerAtk);
-	CCLOG("hp : %d", _hp);
+	
+	int playerAtk = _wisp->getAtk();
+
+	_hud->damageToString(this->getPosition(), _wisp->getAtk());
+	_hud->addComboCount();
+
+	if (playerAtk <= this->_hp){
+		//通常ダメージ
+		normalDamage(playerAtk);
+	}
+	else if (playerAtk > this->_hp){
+		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
+		overDamage();
+	}
+	
+	CCLOG("EnemyHP : %d", _hp);
 
 	if (_hp <= 0){
 		setIsDead(true);
-		setHP(0);
 		died();
 	}
 }
 
+//通常ダメージ
+void Enemy::normalDamage(int playerAtk){
+	_hp -= playerAtk;
+	_om->damageRaidHp(playerAtk);
+}
+
+void Enemy::overDamage(){
+	//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
+	int margeDamage = _hp;
+	_hp -= margeDamage;
+	_om->damageRaidHp(margeDamage);
+}
+
 void Enemy::died(){
 	if (_isDead){
-		diedEffect();
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
+		setHP(0);
+		_om->drawEnemyCount();
+		_hud->getAnime()->enemyDyingAnime(this);
 	}
-}
-
-void Enemy::damageEffect(){
-	CCLOG("damage");
-	//ダメージ時、スターエフェクト表示
-	starEffect();
-	//ダメージ時、敵NPCをスイング
-	swingEffect();
-	//ダメージ時、爆発エフェクト表示
-	explodeEffect();
-}
-
-void Enemy::diedEffect(){
-	//敵NPCを蒸発
-	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), nullptr);
-	CCSequence *diedSequence = CCSequence::create(diedSpawn, nullptr);
-	
-	this->runAction(diedSequence);
-	this->runAction(CCMoveBy::create(1, ccp(0, 20)));
-
-	//消滅エフェクト
-	CCSprite *vanish = CCSprite::create("dying1.png");
-	vanish->setPosition(this->getPosition());
-	_main->addChild(vanish, z_vanish);
-
-	CCAnimation *vanishing = CCAnimation::create();
-	vanishing->addSpriteFrameWithFileName("dying1.png");
-	vanishing->addSpriteFrameWithFileName("dying2.png");
-	vanishing->addSpriteFrameWithFileName("dying3.png");
-	vanishing->addSpriteFrameWithFileName("dying4.png");
-	vanishing->addSpriteFrameWithFileName("dying5.png");
-	vanishing->setDelayPerUnit(0.2);
-
-	CCSpawn *vanishSpawn = CCSpawn::create(CCAnimate::create(vanishing), CCFadeOut::create(1.0), nullptr);
-	CCSequence *vanishSequence = CCSequence::create(vanishSpawn, CCRemoveSelf::create(), nullptr);
-
-	vanish->runAction(vanishSequence);
-
-}
-
-void Enemy::starEffect(){
-	Player* wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-	//ダメージ時、スターエフェクト表示
-	CCSprite *star = CCSprite::create("star1.png");
-	star->setPosition(wisp->getPosition());
-	_main->addChild(star, z_star);
-
-	CCAnimation *animation = CCAnimation::create();
-	animation->addSpriteFrameWithFileName("star1.png");
-	animation->addSpriteFrameWithFileName("star2.png");
-	animation->addSpriteFrameWithFileName("star3.png");
-	animation->addSpriteFrameWithFileName("star4.png");
-	animation->setDelayPerUnit(0.1);
-
-	CCSpawn *spawn = CCSpawn::create(CCAnimate::create(animation), CCFadeOut::create(0.45), nullptr);
-	CCSequence *starSequence = CCSequence::create(spawn, CCRemoveSelf::create(), nullptr);
-
-	star->runAction(CCScaleTo::create(0.4, 2));
-	star->runAction(starSequence);
-}
-
-void Enemy::swingEffect(){
-	//ダメージ時、敵NPCをスイング
-	CCRepeat *swing = CCRepeat::create(CCSequence::create(CCRotateTo::create(0.1, -10), CCRotateTo::create(0.1, 10), NULL), 4);
-	this->runAction(CCSequence::create(swing, CCRotateTo::create(0, 0.125), NULL));
-}
-
-
-
-void Enemy::explodeEffect(){
-	//ダメージ時、爆発エフェクト表示
-	CCSprite *ex = CCSprite::create("explode1.png");
-	ex->setPosition(this->getPosition());
-	_main->addChild(ex, z_explode);
-
-	CCAnimation *explode = CCAnimation::create();
-	explode->addSpriteFrameWithFileName("explode1.png");
-	explode->addSpriteFrameWithFileName("explode2.png");
-	explode->addSpriteFrameWithFileName("explode3.png");
-	explode->addSpriteFrameWithFileName("explode4.png");
-	explode->setDelayPerUnit(0.1);
-
-	CCSpawn *exSpawn = CCSpawn::create(CCAnimate::create(explode), CCFadeOut::create(0.45), nullptr);
-	CCSequence *exSequence = CCSequence::create(exSpawn, CCRemoveSelf::create(), nullptr);
-
-	ex->runAction(exSequence);
-
 }
