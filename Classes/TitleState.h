@@ -21,6 +21,7 @@
 class TitleState : public GameState
 {
 public:
+
 	virtual void stateUpdate(float dt);
 	virtual bool onStateEnter();
 	virtual bool onStateExit();
@@ -29,16 +30,18 @@ public:
 	virtual void onTouchEndedEvent();
 
 	virtual std::string getStateID() { return s_titleID; }
-	virtual std::vector<GameObject*> getGameStateObjects(){ return _gObjects; }
-
+	
 	TitleState();
 	~TitleState();
 
 private:
+
 	int _timer;
 
 	static const std::string s_titleID;
 	static void s_titleToNormal();
+
+	void initBackground(cocos2d::CCSize screenSize);
 	void play(cocos2d::CCObject *pSender);
 	void onNormal();
 	
