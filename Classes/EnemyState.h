@@ -23,27 +23,30 @@
 class EnemyState : public GameState
 {
 public:
+
 	virtual void stateUpdate(float dt);
 	virtual bool onStateEnter();
 	virtual bool onStateExit();
 	virtual bool onTouchBeganEvent();
 	virtual void onTouchMovedEvent();
 	virtual void onTouchEndedEvent();
-	virtual void onInputEvent(cocos2d::CCPoint* pts);
-
+	
 	virtual std::string getStateID() { return s_enemyID; }
 
 	EnemyState();
 	~EnemyState();
 
 private:
+
 	int _timer;
+	bool _isTurn;
+	Player *_wisp;
 
 	static const std::string s_enemyID;
-	static void s_enemyToNormal();
-	static void s_enemyToIdle();
-	
-
+	void enemyToNormal();
+	void enemyToResult();
+	void turnOnEnemy();
+	void setIsTurn();
 };
 
 #endif /* defined(__WillYard__EnemyState__) */
