@@ -11,71 +11,82 @@
 
 #include "NormalState.h"
 #include "EnemyState.h"
+#include "ResultState.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
+
 
 USING_NS_CC;
 using namespace CocosDenshion;
 
+//状態のID
 const std::string NormalState::s_normalID = "NORMAL";
+//高速ヒットの場合、威力が増加する値
+const int ADD_POWER = 5;
 
-NormalState::NormalState() {
-    std::cout << "NormalState::NormalState() normal state constructor\n";
-	_main = Main::getInstance();
-	_om = Om::getInstance();
-	_cm = Cm::getInstance();
+NormalState::NormalState()
+	:_wisp(NULL)
+{
+	std::cout << "NormalState::NormalState() normal state constructor\n";
 }
 
-NormalState::~NormalState() {
-	//CC_SAFE_RELEASE(_enemy);
-}
-
-	//初期化
-bool NormalState::onStateEnter() {
-    std::cout << "NormalState::onStateEnter()\n";
+NormalState::~NormalState() 
+{
 	
-		//ウィスプ生成
+}
+
+
+	//状態の初期化
+bool NormalState::onStateEnter() 
+{
+		std::cout << "NormalState::onStateEnter()\n";
+		//Readyラベル表示
+		_hud->ready();
+		//Aimラベル表示
+		_hud->aim();
+		//MainSceneからウィスプを取得
 		_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-		//エネミー生成
-		_enemy = static_cast<Enemy *>(_main->getChildByTag(kTag_enemy));
-		
+		//リトライ後の再設定
+		_om->reset(_gObjects);
 		//コンテナにゲームオブジェクトを代入
 		_gObjects = _om->getGameObjects();
-	
+		//ゲームオブジェクトのonStateEnter()を実行
+		for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
+			(*it)->onStateEnter();
+		}
+		
+		return true;
+}
+
+//状態終了時（次の状態へ遷移時）の処理
+bool NormalState::onStateExit()
+{
+	_wisp->setVector(ccp(0, 0));
+	_hud->setComboCount(0);
+	_hud->hide();
+	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
+		(*it)->onStateExit();
+	}
 	return true;
 }
 
-void NormalState::stateUpdate(float dt) {
-	
-	//_gObjectsに追加されたゲームオブジェクトから関数を呼び出す
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
+
+void NormalState::stateUpdate(float dt) 
+{
+	//ゲームオブジェクトのonStateUpdate()を実行
+	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	{
 	(*it)->stateUpdate(dt);
 	}
 
-
-	//ウィスプの状態を更新
+	//ウィスプの状態を更新（この状態内の、計算用メンバーへステータスを代入）
 	setWispNextPosition(_wisp->getNextPosition());
 	//ウィスプの推進力
 	setWispVector(_wisp->getVector());
+	//徐々に減速させる処理（運動量_wispVectorのxとyに、0.98fを掛け続ける）
 	setWispVector(ccpMult(_wispVector, 0.98f));
-	//敵NPCの設定
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it){
-		if ((*it)->getTag() == kTag_enemy){
-			Enemy *enemy = static_cast<Enemy *>((*it));
-
-			setEnemyNextPosition(enemy->getNextPosition());
-			setEnemyVector(enemy->getVector());
-
-			float diffx = _cm->CalcDiff(_wispNextPosition.x, enemy->getPositionX());
-			float diffy = _cm->CalcDiff(_wispNextPosition.y, enemy->getPositionY());
-
-			float distOne = _cm->Calc(pow(diffx, 2), pow(diffy, 2));
-			float distTwo = _cm->Calc(pow(_wisp->getPositionX() - _enemyNextPosition.x, 2), pow(_wisp->getPositionY() - _enemyNextPosition.y, 2));
-
-			//衝突
-			onCollision(distOne, distTwo, calcVector(enemy), enemy);
-		}
-	}
+	//衝突判定
+	calcCollision();
 	
 
 	//最後に、ウィスプの推進力と次の目標地点に設定
@@ -83,80 +94,171 @@ void NormalState::stateUpdate(float dt) {
 	_wisp->setNextPosition(_wispNextPosition);
 
 	//次の目標地点へ移動
-	//_enemy->setPosition(_enemy->getNextPosition());
 	_wisp->setPosition(_wisp->getNextPosition());
-	//敵NPCのターンに遷移
-	nextTurn();
+
+	//次の状態へ遷移
+	switchState();
 
 }
 
-//敵NPCのターンに遷移
-void NormalState::nextTurn(){
-	if (_wisp->getTimer() > 300){
-		_wisp->setCanFire(true);
-		_wisp->setTimer(0);
-		Om::getInstance()->getStateMachine()->changeState(new EnemyState());
+
+//次の状態へ遷移
+void NormalState::switchState()
+{
+	if (isGreaterThanCount(250)){
+		//ウィスプのタイマーが250を超えたら敵NPCのターンへ
+		normalToEnemy();
+	}
+	else if (_om->getRaidHp() <= 0 && isGreaterThanCount(200))
+	{
+		//レイドHPが0かつ、ウィスプのタイマーが200を超えたらリザルト状態へ
+		normalToResult();
 	}
 }
 
-bool NormalState::onTouchBeganEvent(){
+void NormalState::normalToEnemy()
+{
+	//ウィスプを再攻撃可能、タイマーをリセットし、敵NPCのターンへ
+	_wisp->setCanFire(true);
+	_wisp->setTimer(0);
+	_om->getStateMachine()->changeState(new EnemyState());
+}
+
+void NormalState::normalToResult()
+{
+	//レイドHPを0に設定し、リザルト画面へ
+	CCLOG("StageClear");
+	_om->setRaidHp(0);
+	_om->getStateMachine()->changeState(new ResultState());
+}
+
+bool NormalState::isGreaterThanCount(int count)
+{
+	int timer = _wisp->getTimer();
+	//ウィスプのタイマーがカウント以上ならTrue
+	if (timer > count)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool NormalState::onTouchBeganEvent()
+{
+	//isReadyがFalseなら抜ける
+	if (!_om->getIsReady()){
+		return false;
+	}
+	CCLOG("hp:wisp%d", _wisp->getHP());
+	CCLOG("raidHp : %d", _om->getRaidHp());
+	CCLOG("playCount : %d", _om->getPlayCount());
 	return _wisp->wispTouchBegan();
 }
 
-void NormalState::onTouchMovedEvent(){
+void NormalState::onTouchMovedEvent()
+{
 	_wisp->wispTouchMoved();
 }
 
-void NormalState::onTouchEndedEvent(){
+void NormalState::onTouchEndedEvent()
+{
 	_wisp->wispTouchEnded();
 }
 
 
-	//状態遷移時の処理
-bool NormalState::onStateExit() {
-    return true;
+void NormalState::calcCollision()
+{
+	//敵NPCの設定
+	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	{
+		if ((*it)->getTag() == kTag_enemy)
+		{
+			//kTag_enemy付きのゲームオブジェクトを取り出し、Enemy型へキャスト
+			Enemy *enemy = static_cast<Enemy *>((*it));
+
+			setEnemyNextPosition(enemy->getNextPosition());
+			setEnemyVector(enemy->getVector());
+			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
+			float diffx = CalcDiff(_wispNextPosition.x, enemy->getPositionX());
+			float diffy = CalcDiff(_wispNextPosition.y, enemy->getPositionY());
+			//ｘ、ｙの距離を２乗し、足した値を代入
+			float distOne = CalcSum(pow(diffx, 2), pow(diffy, 2));
+			//ウィスプの現在のx、y座標と、敵NPCの次のx、y座標の距離を２乗し、足した値を代入
+			float distTwo = CalcSum(pow(_wisp->getPositionX() - _enemyNextPosition.x, 2), pow(_wisp->getPositionY() - _enemyNextPosition.y, 2));
+
+			//衝突判定(高速時)
+			onCollisionFast(distOne, distTwo, calcVector(enemy), enemy);
+		}
+	}
 }
 
 
-//衝突と減速処理
-void NormalState::onCollision(float distOne, float distTwo, float radius, Enemy *enemy){
+//衝突（高速時）の処理
+void NormalState::onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy){
+	//敵NPCが死亡しているなら、判定を行なわない
+	if (enemy->getIsDead()){
+		return;
+	}
 
-	//衝突判定2（バウンド時）
-	if (_cm->isLessThanDist(distOne, radius) || _cm->isLessThanDist(distTwo, radius)) {
+	//衝突判定（敵NPCとの距離が、（ウィスプ半径+敵NPC半径）の2乗以下なら衝突）
+	if (isLessThanRadius(distOne, radius) || isLessThanRadius(distTwo, radius)) {
 		CCLOG("secondHit");
 
-		//ウィスプとエネミーの距離を取得
-		float diffx = _cm->CalcDiff(_wispNextPosition.x, enemy->getPositionX());
-		float diffy = _cm->CalcDiff(_wispNextPosition.y, enemy->getPositionY());
+		//ウィスプの次の座標とエネミーの現在座標との距離を取得
+		float diffx = CalcDiff(_wispNextPosition.x, enemy->getPositionX());
+		float diffy = CalcDiff(_wispNextPosition.y, enemy->getPositionY());
 		//ウィスプと敵NPCの衝突時の運動量を計算
-		float mag_wisp = _cm->Calc(pow(_wispVector.x, 2), pow(_wispVector.y, 2));
-		float mag_enemy = _cm->Calc(pow(_enemyVector.x, 2), pow(_enemyVector.y, 2));
+		float mag_wisp = CalcSum(pow(_wispVector.x, 2), pow(_wispVector.y, 2));
+		float mag_enemy = CalcSum(pow(_enemyVector.x, 2), pow(_enemyVector.y, 2));
 
-		//衝突時の摩擦調整
-		//float force = sqrt(mag_wisp + mag_enemy) * 0.5;
-		float force = sqrt(mag_wisp + mag_enemy) * 0.8f;
+		//バウンドする方向への運動量
+		float force = sqrt(mag_wisp + mag_enemy);
+		//逆正接を算出（衝突位置から、跳ね返る角度を計算）
 		float angle = atan2(diffy, diffx);
-
+		//angleの角度へ力を加える
 		_wispVector.x = force * cos(angle);
 		_wispVector.y = (force * sin(angle));
-
+		//ウィスプの移動座標を算出
 		_wispNextPosition.x = _enemyNextPosition.x + (enemy->radius() + _wisp->radius() + force) * cos(angle);
 		_wispNextPosition.y = _enemyNextPosition.y + (enemy->radius() + _wisp->radius() + force) * sin(angle);
-
-		enemy->damageEffect();
-
+		//ボーナスダメージを攻撃力に追加
+		_wisp->addPower(ADD_POWER);
+		_hud->getAnime()->enemyDamageAnime(enemy);
+		enemy->damage();
+		//ダメージ後、攻撃力を戻す
+		_wisp->drawPower(ADD_POWER);
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system48.mp3");
 	}
 
 }
 
-//当たり判定
+bool NormalState::isLessThanRadius(float dist, float radius)
+{
+	if (dist <= radius)
+		return true;
+	return false;
+}
+
+float NormalState::CalcDiff(float nextPos, float getPos)
+{
+	float diff = nextPos - getPos;
+	return diff;
+}
+
+float NormalState::CalcSum(float powOne, float powTwo)
+{
+	float dist = powOne + powTwo;
+	return dist;
+}
+
+
+//衝突判定2(高速ヒット時)
 	float NormalState::calcVector(Enemy *enemy){
-		
+		//ウィスプの速度が10以下なら抜ける
 		if (_wispVector.x < 10, _wispVector.y < 10){
 			return 0;
 		}
-
+		//敵NPC、ウィスプの半径を足し、2乗した値を返す
 		float squared_radius = pow(enemy->radius() + _wisp->radius(), 2);
 		return squared_radius;
 	}

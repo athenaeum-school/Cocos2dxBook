@@ -22,6 +22,7 @@
 class NormalState : public GameState
 {
 public:
+
     virtual void stateUpdate(float dt);
     virtual bool onStateEnter();
     virtual bool onStateExit();
@@ -30,30 +31,32 @@ public:
 	virtual void onTouchEndedEvent();
     
     virtual std::string getStateID() { return s_normalID; }
-    
+	
     NormalState();
     ~NormalState();
-    
+
 	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyVector, EnemyVector);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyNextPosition, EnemyNextPosition);
 
 private:
-    float _tileWidth;
-    float _tileHeight;
-    float _mapWidth;
-    float _mapHeight;
-	Player* _wisp;
-	Enemy* _enemy;
-	std::vector<Enemy *> enemys;
-	static const std::string s_normalID;
+   
+	Player *_wisp;
+	
+   static const std::string s_normalID;
     
-	//void onCollision(float distOne, float distTwo, float radius);
-	//float calcVector();
-	void onCollision(float distOne, float distTwo, float radius, Enemy *enemy);
+    void switchState();
+    void normalToEnemy();
+    void normalToResult();
+	void calcCollision();
+	void onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy);
 	float calcVector(Enemy *enemy);
-	void nextTurn();
+	float CalcDiff(float nextPos, float getPos);
+	float CalcSum(float powOne, float powTwo);
+	bool isLessThanRadius(float dist, float radius);
+	bool isGreaterThanCount(int count);
+	
 };
 
 
