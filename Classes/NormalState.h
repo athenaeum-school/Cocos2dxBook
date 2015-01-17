@@ -56,6 +56,7 @@ private:
 	float CalcSum(float powOne, float powTwo);
 	bool isLessThanRadius(float dist, float radius);
 	bool isGreaterThanCount(int count);
+	bool isLessThanZero();
 	
 };
 
