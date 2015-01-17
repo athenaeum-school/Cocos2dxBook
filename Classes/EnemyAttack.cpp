@@ -17,22 +17,21 @@ using namespace CocosDenshion;
 
 EnemyAttack::EnemyAttack()
 	:_atk(0)
+{}
+
+
+EnemyAttack::~EnemyAttack(){}
+
+EnemyAttack* EnemyAttack::create(Enemy *enemy)
 {
-
-}
-
-
-EnemyAttack::~EnemyAttack()
-{
-}
-
-EnemyAttack* EnemyAttack::create(const char* fileName, CCPoint point){
 	//エネミー生成
 	EnemyAttack * enemyAttack = new EnemyAttack();
-	if (enemyAttack) {
-		enemyAttack->initEnemyAttack(fileName, point);
+	if (enemyAttack) 
+	{
+		enemyAttack->initEnemyAttack(enemy, enemy->getPosition());
 		enemyAttack->autorelease();
 		Main::getInstance()->addChild(enemyAttack, z_enemyAttack, kTag_enemyAttack);
+		enemyAttack->attack(enemy);
 		return enemyAttack;
 	}
 	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
@@ -41,23 +40,43 @@ EnemyAttack* EnemyAttack::create(const char* fileName, CCPoint point){
 	return NULL;
 }
 
-EnemyAttack* EnemyAttack::initEnemyAttack(const char* fileName, CCPoint point)
+EnemyAttack* EnemyAttack::initEnemyAttack(Enemy *enemy, CCPoint point)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
-	this->initWithFile(fileName);
+	this->initWithFile(fileNameInit(enemy->getEtype()).c_str());
 	this->setPosition(point);
 	
 	return this;
 }
 
+std::string EnemyAttack::fileNameInit(enemyType type)
+{
+	std::string fileName;
+	
+	switch (type)
+	{
+	case enemyType::kTag_rat1:
+	case enemyType::kTag_rat2:
+		fileName = "attack_rat1.png";
+		break;
+	case enemyType::kTag_vampire:
+		fileName = "attack_vampire1.png";
+		break;
+	default:
+		break;
+	}
 
-void EnemyAttack::attack(Enemy *enemy){
-	++_destroyTimer;
+	return fileName;
+}
+
+void EnemyAttack::attack(Enemy *enemy)
+{
+	//呼び出した敵NPCの攻撃力を代入
 	setAtk(enemy->getAtk());
-	CCLOG("getAtk%d", enemy->getAtk());
 	MainScene *main = Main::getInstance();
+	//タイプによって、攻撃方法を変える
 	switch (enemy->getEtype())
 	{
 		{
@@ -72,11 +91,14 @@ void EnemyAttack::attack(Enemy *enemy){
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
 				Player *wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
+				//ウィスプの座標へ0.7秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(0.7f, ccp(wisp->getPositionX(), wisp->getPositionY()));
+				//スプライトの切り替えと移動を同時に行なう
 				CCSpawn *attackSpawn = CCSpawn::create(CCAnimate::create(attackEffect), attackMove, nullptr);
-
-				this->runAction(attackSpawn);
-				SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_wind02.mp3");
+				//0.5秒後、消滅
+				CCSequence *seq = CCSequence::create(attackSpawn, CCDelayTime::create(0.5), CCRemoveSelf::create(), NULL);
+				this->runAction(seq);
+				SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_retro18.mp3");
 				break;
 		}
 		{
@@ -91,10 +113,13 @@ void EnemyAttack::attack(Enemy *enemy){
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
 				Player *wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
+				//ウィスプの座標へ1.0秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(1.0f, ccp(wisp->getPositionX(), wisp->getPositionY()));
+				//スプライトの切り替えと移動を同時に行なう
 				CCSpawn *attackSpawn = CCSpawn::create(CCAnimate::create(attackEffect), attackMove,nullptr);
-
-				this->runAction(attackSpawn);
+				//0.5秒後、消滅
+				CCSequence *seq = CCSequence::create(attackSpawn, CCDelayTime::create(0.5) ,CCRemoveSelf::create(), NULL);
+				this->runAction(seq);
 				SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_magical23.mp3");
 				break;
 		}
