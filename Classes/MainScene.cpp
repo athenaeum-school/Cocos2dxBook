@@ -11,7 +11,7 @@
 
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
-#include "CollisionManager.h"
+#include "HudLayer.h"
 
 
 USING_NS_CC;
@@ -20,12 +20,14 @@ using namespace CocosDenshion;
 
 MainScene* MainScene::s_pInstance = 0;
 
+
 MainScene::MainScene()
 {
 }
 
 MainScene:: ~MainScene()
 {	
+	_om->clean();
 }
 
 CCScene* MainScene::createScene()
@@ -39,10 +41,10 @@ CCScene* MainScene::createScene()
 	scene->addChild(om);
 	layer->_om = om;
 
-	CollisionManager *cm = CollisionManager::getInstance();
-	cm->init();
-	scene->addChild(cm);
-	layer->_cm = cm;
+	HudLayer *hud = HudLayer::getInstance();
+	hud->init();
+	scene->addChild(hud);
+	layer->_hud = hud;
 
     return scene;
 }
@@ -88,4 +90,3 @@ void MainScene::ccTouchEnded(CCTouch* touch, CCEvent* event){
 	setEndedTouch(touch);
 	_om->handleEndedEvents();
 }
-
