@@ -15,10 +15,11 @@
 #include "cocos2d.h"
 #include "GameObject.h"
 #include "ObjectManager.h"
-//#include "Player.h"
+
 
 class MainScene;
 class Player;
+
 
 enum enemyType
 {
@@ -29,26 +30,9 @@ enum enemyType
 
 };
 
-class Enemy : public GameObject {
-private:
 
-	ObjectManager *_om;
-
-	Player *_wisp;
-
-	Enemy* initEnemy(enemyType type, float xPos, float yPos);
-
-	void attackCheck();
-	void onEnemyStateEnter();
-	int randomAttack(int value);
-	cocos2d::CCRect setEnemyRect();
-	bool isContanctWithContacted(bool isContact);
-	bool isDeadWithAttacking();
-	void normalDamage(int playerAtk);
-	void overDamage();
-	bool isNormalState();
-	bool isEnemyState();
-	bool isResultState();
+class Enemy : public GameObject 
+{
 
 public:
 
@@ -75,6 +59,22 @@ public:
 	
 	Enemy(MainScene *main);
 	~Enemy(void);
+
+private:
+
+	Player *_wisp;
+
+	Enemy* initEnemy(enemyType type, float xPos, float yPos);
+
+	void attackCheck();
+	void onEnemyStateEnter();
+	int randomAttack(int value);
+	cocos2d::CCRect setEnemyRect();
+	bool isContanctWithContacted(bool isContact);
+	bool isDeadWithAttacking();
+	void normalDamage(int playerAtk);
+	void overDamage();
+	
 };
 
 #endif /*defined(__WillYard__Enemy__)*/

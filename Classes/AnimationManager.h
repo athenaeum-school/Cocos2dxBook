@@ -29,9 +29,11 @@ public:
 	void enemyStarAnime();
 	void enemyExplodeAnime(Enemy *enemy);
 	void enemyDamageAnime(Enemy *enemy);
+	void boundSE();
 	void enemyIdleAnime(Enemy *enemy);
 	void enemy_vamp_idleAnime(Enemy *enemy);
 	
+
 	AnimationManager();
 	~AnimationManager();
 

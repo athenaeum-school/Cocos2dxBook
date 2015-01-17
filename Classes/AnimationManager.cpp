@@ -13,42 +13,42 @@
 #include "SimpleAudioEngine.h"
 #include "MainScene.h"
 
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
 
-AnimationManager::AnimationManager()
+AnimationManager::AnimationManager(){}
+
+AnimationManager::~AnimationManager(){}
+
+void AnimationManager::wispInitAnime(Player *wisp)
 {
-	
-}
-
-
-AnimationManager::~AnimationManager()
-{
-}
-
-void AnimationManager::wispInitAnime(Player *wisp){
+	//移動しながらフェードインする
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, wisp->radius())), NULL);
-
+	//縦軸に揺れ続ける
 	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, -wisp->radius() * 0.2)), CCMoveBy::create(2, ccp(0, wisp->radius() * 0.2)), NULL);
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	wisp->runAction(fadeIn);
 	wisp->runAction(repeat);
 }
 
-void AnimationManager::swingAnime(GameObject *obj){
+void AnimationManager::swingAnime(GameObject *obj)
+{
+	//被弾時、左右に揺れる
 	CCRepeat *swing = CCRepeat::create(CCSequence::create(CCRotateTo::create(0.1, -10), CCRotateTo::create(0.1, 10), NULL), 4);
 	obj->runAction(CCSequence::create(swing, CCRotateTo::create(0, 0.125), NULL));
 }
 
-void AnimationManager::wispDyingAnime(Player *wisp){
-	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), CCFadeIn::create(1), nullptr);
+void AnimationManager::wispDyingAnime(Player *wisp)
+{
+	//消滅アニメーション（上方に移動しながら、縮小しフェードアウト）
+	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), CCMoveBy::create(1, ccp(0, 20)), nullptr);
 	CCSequence *diedSequence = CCSequence::create(diedSpawn, nullptr);
 
 	wisp->runAction(diedSequence);
-	wisp->runAction(CCMoveBy::create(1, ccp(0, 20)));
-
-	//消滅エフェクト
+	
+	//消滅エフェクト（風が発生）
 	CCSprite *vanish = CCSprite::create("wisp_dying1.png");
 	vanish->setPosition(wisp->getPosition());
 	Main::getInstance()->addChild(vanish, z_vanish);
@@ -69,15 +69,15 @@ void AnimationManager::wispDyingAnime(Player *wisp){
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire06.mp3");
 }
 
-void AnimationManager::enemyDyingAnime(Enemy *enemy){
-	//敵NPCを蒸発
-	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), nullptr);
+void AnimationManager::enemyDyingAnime(Enemy *enemy)
+{
+	//敵NPCを蒸発（上方に移動しながら、縮小しフェードアウト）
+	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), CCMoveBy::create(1, ccp(0, 20)), nullptr);
 	CCSequence *diedSequence = CCSequence::create(diedSpawn, nullptr);
 
 	enemy->runAction(diedSequence);
-	enemy->runAction(CCMoveBy::create(1, ccp(0, 20)));
-
-	//消滅エフェクト
+	
+	//消滅エフェクト(爆発が発生)
 	CCSprite *vanish = CCSprite::create("dying1.png");
 	vanish->setPosition(enemy->getPosition());
 	Main::getInstance()->addChild(vanish, z_vanish);
@@ -98,7 +98,8 @@ void AnimationManager::enemyDyingAnime(Enemy *enemy){
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
 }
 
-void AnimationManager::enemyStarAnime(){
+void AnimationManager::enemyStarAnime()
+{
 	MainScene *main = Main::getInstance();
 	Player* wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
 	//ダメージ時、スターエフェクト表示
@@ -120,7 +121,8 @@ void AnimationManager::enemyStarAnime(){
 	star->runAction(starSequence);
 }
 
-void AnimationManager::enemyExplodeAnime(Enemy *enemy){
+void AnimationManager::enemyExplodeAnime(Enemy *enemy)
+{
 	//ダメージ時、爆発エフェクト表示
 	CCSprite *ex = CCSprite::create("explode1.png");
 	ex->setPosition(enemy->getPosition());
@@ -139,7 +141,8 @@ void AnimationManager::enemyExplodeAnime(Enemy *enemy){
 	ex->runAction(exSequence);
 }
 
-void AnimationManager::enemyDamageAnime(Enemy *enemy){
+void AnimationManager::enemyDamageAnime(Enemy *enemy)
+{
 	//ダメージ時、スターエフェクト表示
 	enemyStarAnime();
 	//ダメージ時、敵NPCをスイング
@@ -150,14 +153,22 @@ void AnimationManager::enemyDamageAnime(Enemy *enemy){
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_battle18.mp3");
 }
 
+void AnimationManager::boundSE()
+{
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system48.mp3");
+}
 
-void AnimationManager::enemyIdleAnime(Enemy *enemy){
+void AnimationManager::enemyIdleAnime(Enemy *enemy)
+{
+	//縦軸に揺れ続ける
 	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, -enemy->radius() * 0.2)), CCMoveBy::create(2, ccp(0, enemy->radius() * 0.2)), NULL);
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	enemy->runAction(repeat);
 }
 
-void AnimationManager::enemy_vamp_idleAnime(Enemy *enemy){
+void AnimationManager::enemy_vamp_idleAnime(Enemy *enemy)
+{
+	//縦軸に揺れ続ける
 	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, enemy->radius() * 0.2)), CCMoveBy::create(2, ccp(0, -enemy->radius() * 0.2)), NULL);
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	enemy->runAction(repeat);
