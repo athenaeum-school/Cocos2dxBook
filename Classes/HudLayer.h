@@ -34,22 +34,20 @@ public:
 	}
 
 	CC_SYNTHESIZE(int, _comboCount, ComboCount);
-	CC_SYNTHESIZE(AnimationManager *, _anime, Anime);
+	CC_SYNTHESIZE_RETAIN(AnimationManager *, _anime, Anime);
 
 	virtual bool init();
-	void update(float dt);
 	CREATE_FUNC(HudLayer);
 	
-	float CalcDiff(float nextPos, float getPos);
-	float Calc(float powOne, float powTwo);
-	bool isLessThanDist(float dist, float radius);
-	void toString(int value);
 	void damageToString(cocos2d::CCPoint hudPos, int damage);
 	void addComboCount();
 	void hide();
 	void drawMyHpLabel();
 	void setLabelVisible(bool flg);
-
+	void ready();
+	void fire();
+	void aim();
+	
 	HudLayer();
 	~HudLayer();
 
@@ -59,6 +57,7 @@ private:
 	cocos2d::CCLabelTTF *_comboLabel;
 	cocos2d::CCLabelTTF *_hp_label_wisp;
 	MainScene *_main;
+	ObjectManager *_om;
 	static HudLayer *s_pInstance;
 	
 };
