@@ -13,9 +13,11 @@
 #include "NormalState.h"
 #include "SimpleAudioEngine.h"
 
-using namespace CocosDenshion;
 
+using namespace CocosDenshion;
+//ó‘Ô‚ÌID
 const std::string TitleState::s_titleID = "TITLE";
+
 
 void TitleState::s_titleToNormal() 
 {
@@ -24,14 +26,13 @@ void TitleState::s_titleToNormal()
 
 TitleState::TitleState()
 :_timer(0)
-{
-	
-}
+{}
 
 TitleState::~TitleState() {}
 
 bool TitleState::onStateEnter() 
 {
+	//NormalState‚Ö‚Ìƒ{ƒ^ƒ“‚Ì’Ç‰Á
 	onNormal();
 	return true;
 }
@@ -57,15 +58,16 @@ bool TitleState::onStateExit()
 	return true;
 }
 
-//”wŒi‰æ‘œ‚ÌÝ’è
+
 void TitleState::initBackground(CCSize screenSize)
 {
+	//”wŒi‰æ‘œ‚ÌÝ’è
 	CCSprite *background = CCSprite::create("title_background.png");
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	_hud->addChild(background, z_background, kTag_background);
 }
 
-//NormalState‚Ö‚Ìƒ{ƒ^ƒ“‚ÌÝ’è
+
 void TitleState::onNormal()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
