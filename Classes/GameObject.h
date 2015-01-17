@@ -17,6 +17,8 @@
 
 
 class MainScene;
+class HudLayer;
+class ObjectManager;
 
 class GameObject : public cocos2d::CCSprite
 {
@@ -25,19 +27,30 @@ public:
 	virtual void onStateEnter() = 0;
 	virtual void onStateExit() = 0;
 	virtual void stateUpdate(float dt) = 0;
-	virtual void died() = 0;
-
-	CC_SYNTHESIZE(MainScene *, _main, _Main);
-	CC_SYNTHESIZE(int, _hp, HP);
-	CC_SYNTHESIZE(int, _maxHp, MaxHP);
-	CC_SYNTHESIZE(int, _atk, Atk);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
+	
 	virtual void setPosition(const cocos2d::CCPoint& pos);
 	virtual float radius();
 
 	GameObject(MainScene* main);
 	~GameObject();
+
+	CC_SYNTHESIZE(int, _hp, HP);
+	CC_SYNTHESIZE(int, _maxHp, MaxHP);
+	CC_SYNTHESIZE(int, _atk, Atk);
+	CC_SYNTHESIZE(std::string, _stateID, StateID);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
+
+protected:
+
+	MainScene *_main;
+	HudLayer *_hud;
+	ObjectManager *_om;
+
+	void setStateID();
+	bool isNormalState();
+	bool isEnemyState();
+	bool isResultState();
 
 };
 

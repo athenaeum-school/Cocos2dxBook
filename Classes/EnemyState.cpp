@@ -11,11 +11,9 @@
 
 #include "EnemyState.h"
 #include "NormalState.h"
-#include "SimpleAudioEngine.h"
 #include "ResultState.h"
 
 
-using namespace CocosDenshion;
 //状態のID
 const std::string EnemyState::s_enemyID = "ENEMY";
 
@@ -34,28 +32,20 @@ void EnemyState::enemyToResult()
 EnemyState::EnemyState()
 	:_timer(0)
 	, _isTurn(false)
-{
-}
+{}
 
-EnemyState::~EnemyState()
-{	
-}
+EnemyState::~EnemyState(){}
 
 bool EnemyState::onStateEnter()
 {
 	CCLOG("Changed : enemyState");
 	//ターン開始ラベル表示
 	turnOnEnemy();
-
 	//コンテナにゲームオブジェクトを代入
-	_gObjects = _om->getGameObjects();
-
+	setGameObjects();
 	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
-	{
-		(*it)->onStateEnter();
-	}
+	//ゲームオブジェクトのonStateEnter()を実行
+	objectStateEnter();
 
 	return true;
 }
@@ -71,27 +61,10 @@ void EnemyState::stateUpdate(float dt)
 	{
 		return;
 	}
-	
-	//kTag_enemyタグがついたゲームオブジェクトをコンテナから取得し、Updateする
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
-	{
-		(*it)->stateUpdate(dt);
-	}
-
-	
-	if (_wisp->getIsDead() && ++_timer > 90)
-	{
-		//ウィスプが消滅し、_timerが190を超えたらResultStateへ
-		if (++_timer > 190)
-		{
-			enemyToResult();
-		}
-	}
-	else if (++_timer > 100)
-	{
-		_timer = 0;
-		enemyToNormal();
-	}
+	//ゲームオブジェクトのStateUpdate()を実行
+	objectStateUpdate(dt);
+	//次の状態へ
+	switchState();
 }
 
 bool EnemyState::onTouchBeganEvent()
@@ -125,4 +98,31 @@ void EnemyState::setIsTurn()
 {
 	//フラグをtrueにし、stateUpdate()を開始
 	_isTurn = true;
+}
+
+void EnemyState::switchState()
+{
+	if (_wisp->getIsDead() && isGreaterThanCount(90))
+	{
+		//ウィスプが消滅し、タイマーが190を超えたらResultStateへ
+		if (isGreaterThanCount(190))
+		{
+			enemyToResult();
+		}
+	}
+	else if (isGreaterThanCount(100))
+	{
+		//タイマーが100を超えたらプレイヤーのターンへ
+		_timer = 0;
+		enemyToNormal();
+	}
+}
+
+bool EnemyState::isGreaterThanCount(int count)
+{
+	if (++_timer > count)
+	{
+		return true;
+	}
+	return false;
 }

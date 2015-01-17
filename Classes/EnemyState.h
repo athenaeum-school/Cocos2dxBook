@@ -43,10 +43,14 @@ private:
 	Player *_wisp;
 
 	static const std::string s_enemyID;
+
 	void enemyToNormal();
 	void enemyToResult();
 	void turnOnEnemy();
 	void setIsTurn();
+	void switchState();
+	bool isGreaterThanCount(int count);
+
 };
 
 #endif /* defined(__WillYard__EnemyState__) */

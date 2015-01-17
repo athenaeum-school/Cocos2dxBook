@@ -12,7 +12,6 @@
 #ifndef __WillYard__GameState__
 #define __WillYard__GameState__
 
-//#include <iostream>
 #include "cocos2d.h"
 #include "GameObject.h"
 
@@ -20,9 +19,9 @@ using namespace cocos2d;
 
 class MainScene;
 class ObjectManager;
-class CollisionManager;
+class HudLayer;
 
-class GameState : public CCNode
+class GameState : public CCSprite
 {
 public:
     virtual void stateUpdate(float dt) = 0;
@@ -33,23 +32,27 @@ public:
 	virtual void onTouchEndedEvent() = 0;
 
     virtual std::string getStateID() = 0;
-    
+
     GameState();
     ~GameState();
     
+protected:
+
+	MainScene* _main;
+	ObjectManager* _om;
+	HudLayer* _hud;
+	std::vector<GameObject*> _gObjects;
+
+	void setGameObjects();
+	void objectStateEnter();
+	void objectStateExit();
+	void objectStateUpdate(float dt);
+
 private:
     
     bool m_loadingComplete;
     bool m_exiting;
 	
- 
-protected:
-
-	MainScene* _main;
-	ObjectManager* _om;
-	CollisionManager* _cm;
-	std::vector<GameObject*> _gObjects;
-
 };
 
 #endif /* defined(__WillYard__GameState__) */

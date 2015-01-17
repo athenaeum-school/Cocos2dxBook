@@ -187,7 +187,7 @@ void Enemy::onStateExit()
 
 void Enemy::onEnemyStateEnter()
 {
-	//“GNPC‚Ìc‘¶”‚É‰‚¶‚ÄAUŒ‚‚·‚éŠm—¦‚ªã¸‚·‚é
+	//50%‚ÌŠm—¦‚ÅUŒ‚‚ª¬Œ÷
 	if (randomAttack(2.0) < 1)
 	{
 		setIsAttacked(false);
@@ -204,7 +204,7 @@ void Enemy::onEnemyStateEnter()
 
 int Enemy::randomAttack(int value)
 {
-	//“GNPC‚Ìc‘¶”‚É‰‚¶‚ÄAUŒ‚‚·‚éŠm—§‚ªã¸
+	//“GNPC‚ÌÅ‘å” * value‚Ü‚Å‚Ì—”‚ğ•Ô‚·
 	int enemyCount = _om->getEnemyCount();
 	int random = enemyCount % calcRandom(1, enemyCount * value);
 	return random;

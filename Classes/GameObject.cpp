@@ -10,31 +10,74 @@
 
 
 #include "GameObject.h"
+#include "HudLayer.h"
+#include "MainScene.h"
 
 USING_NS_CC;
 
 GameObject::GameObject(MainScene* main)
-	: _vector(ccp(0, 0))
+	: _main(Main::getInstance())
+	, _hud(Hud::getInstance())
+	, _om(Om::getInstance())
+	,_vector(ccp(0, 0))
 	, _nextPosition(ccp(0, 0))
 {
-	set_Main(main);
 }
 
 GameObject::~GameObject(){}
 
-//void GameObject::damage(){}
-
-float GameObject::radius(){
-	if (_hp == 0){
-		return 0.0;
-	}
-
-	return getTexture()->getContentSize().width * 0.5f;
+void GameObject::setStateID()
+{
+	//現在の状態のIDを代入
+	_stateID = _om->getStateMachine()->getStates().back()->getStateID();
 }
 
-void GameObject::setPosition(const CCPoint& pos){
+bool GameObject::isNormalState()
+{
+	//プレイヤーターンか確認
+	if (_stateID == "NORMAL")
+	{
+		return true;
+	}
+	return false;
+}
+
+bool GameObject::isEnemyState()
+{
+	//敵NPCターンか確認
+	if (_stateID == "ENEMY")
+	{
+		return true;
+	}
+	return false;
+}
+
+bool GameObject::isResultState()
+{
+	//リザルト状態か確認
+	if (_stateID == "RESULT")
+	{
+		return true;
+	}
+	return false;
+}
+
+float GameObject::radius()
+{
+	if (_hp <= 0)
+	{
+		return 0.0;
+	}
+	//画像サイズの半径を返す
+	return getTexture()->getContentSize().width * 0.5;
+}
+
+void GameObject::setPosition(const CCPoint& pos)
+{
 	CCSprite::setPosition(pos);
-	if (!_nextPosition.equals(pos)) {
+	//次の目標座標を設定する
+	if (!_nextPosition.equals(pos)) 
+	{
 		_nextPosition = pos;
 	}
 }
