@@ -15,7 +15,7 @@ StateMachine::StateMachine() {
 }
 
 StateMachine::~StateMachine() {
-    
+	
 }
 
 void StateMachine::pushState(GameState* pState) {

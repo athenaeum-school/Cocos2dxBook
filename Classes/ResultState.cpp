@@ -11,90 +11,109 @@
 
 #include "ResultState.h"
 #include "NormalState.h"
+#include "TitleState.h"
 #include "SimpleAudioEngine.h"
 
-using namespace CocosDenshion;
 
+using namespace CocosDenshion;
+//状態のID
 const std::string ResultState::s_resultID = "RESULT";
 
-void ResultState::s_resultToNormal() {
-	Om::getInstance()->getStateMachine()->changeState(new NormalState());
-}
-
-void ResultState::s_resultToIdle() {
-	//Game::Instance()->getStateMachine()->changeState(new IdleState());
-}
 
 ResultState::ResultState()
 	:_timer(0)
+{}
+
+ResultState::~ResultState(){}
+
+void ResultState::resultToNormal()
 {
-	_main = Main::getInstance();
-	_om = Om::getInstance();
-	_cm = Cm::getInstance();
+	Om::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
-ResultState::~ResultState() {
-
+void ResultState::resultToTitle() 
+{
+	Om::getInstance()->getStateMachine()->changeState(new TitleState());
 }
 
-bool ResultState::onStateEnter() {
+bool ResultState::onStateEnter()
+{
 	CCLOG("Changed : resultState");
-	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-
-	CCSprite *back = CCSprite::create("HelloWorld.png");
-	back->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
-	back->setOpacity(0);
-	_om->addChild(back, z_background, kTag_background);
-	back->runAction(CCFadeIn::create(2));
-
+	//プレイカウントを増加
+	_om->addPlayCount();
+	//_gObjectsへ、コンテナを代入
+	setGameObjects();
+	//ゲームオブジェクトのonStateEnter()を実行
+	objectStateEnter();
+	//retryとbackボタンを表示
 	onResult();
 
 	return true;
 }
 
-void ResultState::stateUpdate(float dt) {
+void ResultState::stateUpdate(float dt) {}
 
+bool ResultState::onTouchBeganEvent()
+{
+	return false;
 }
 
-bool ResultState::onTouchBeganEvent(){
-	CCLOG("TouchBegan");
-	return true;
-}
+void ResultState::onTouchMovedEvent(){}
 
-void ResultState::onTouchMovedEvent(){
-	
-}
+void ResultState::onTouchEndedEvent(){}
 
-void ResultState::onTouchEndedEvent(){
-	
-}
-
-bool ResultState::onStateExit() {
+bool ResultState::onStateExit() 
+{
 	CCLOG("ResultToNormal");
-	_om->removeChildByTag(kTag_background);
-	_om->removeChildByTag(kTag_retry);
+	//ボタンを削除
+	_hud->removeChildByTag(kTag_retry);
+	//ゲームオブジェクトのonStateExit()を実行
+	objectStateExit();
+
+	_om->setIsReady(false);
+	_om->setRaidHp(0);
+	//ウィスプのHPラベルを非表示に
+	_hud->setLabelVisible(false);
 	return true;
 }
 
-void ResultState::onResult(){
+
+void ResultState::onResult()
+{
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//リトライボタン
-	CCMenuItemImage *replayButton = CCMenuItemImage::create("retry_button.png",
-		"retry_button.png", this, menu_selector(ResultState::retry));
-
+	CCMenuItemImage *retryButton = CCMenuItemImage::create("result_button_retry_normal.png",
+														   "result_button_retry_selected.png", 
+														   this,
+														   menu_selector(ResultState::retry));
+	//バックボタン
+	CCMenuItemImage *backButton = CCMenuItemImage::create("result_button_back_normal.png",
+														  "result_button_back_selected.png", 
+														  this, 
+														  menu_selector(ResultState::back));
 
 	//ボタンからメニューを作成する
-	CCMenu *menu = CCMenu::create(replayButton, NULL);
+	CCMenu *menu = CCMenu::create(retryButton, backButton, NULL);
 	
 	//画面の真ん中へ表示
+	menu->alignItemsVerticallyWithPadding(30);
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
+	//フェードインするため、透明に
 	menu->setOpacity(0);
-	_om->addChild(menu, z_retry, kTag_retry);
+	_hud->addChild(menu, z_retry, kTag_retry);
 	menu->runAction(CCFadeIn::create(2));
 }
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数
 void ResultState::retry(CCObject *pSender){
-	s_resultToNormal();
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
+	resultToNormal();
+}
+
+//ボタン押下時、TitleStateへ遷移するコールバック関数
+void ResultState::back(CCObject *pSender){
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
+	SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+	resultToTitle();
 }

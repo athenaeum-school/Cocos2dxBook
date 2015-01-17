@@ -21,6 +21,7 @@
 class ResultState : public GameState
 {
 public:
+
 	virtual void stateUpdate(float dt);
 	virtual bool onStateEnter();
 	virtual bool onStateExit();
@@ -29,21 +30,22 @@ public:
 	virtual void onTouchEndedEvent();
 	
 	virtual std::string getStateID() { return s_resultID; }
-	virtual std::vector<GameObject*> getGameStateObjects(){ return _gObjects; }
-
+	
 	ResultState();
 	~ResultState();
 
 private:
-	int _timer;
 
+	int _timer;
 	static const std::string s_resultID;
-	static void s_resultToNormal();
-	static void s_resultToIdle();
+
+	void resultToNormal();
+	void resultToTitle();
 
 	void onResult();
 	void retry(cocos2d::CCObject* pSender);
-
+	void back(cocos2d::CCObject* pSender);
+	
 };
 
 #endif /* defined(__WillYard__ResultState__) */
