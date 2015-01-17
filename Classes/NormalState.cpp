@@ -59,7 +59,7 @@ bool NormalState::onStateEnter()
 	//MainSceneからウィスプを取得
 	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
 	//リトライ後の再設定
-	_om->reset(_gObjects);
+	_om->reset();
 	//コンテナにゲームオブジェクトを代入
 	setGameObjects();
 	//ゲームオブジェクトのonStateEnter()を実行

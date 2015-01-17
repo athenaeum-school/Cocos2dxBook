@@ -19,6 +19,7 @@
 #include "StateMachine.h"
 #include "GameObject.h"
 
+
 USING_NS_CC;
 
 
@@ -37,6 +38,14 @@ public:
         return s_pInstance;
     }
     
+	CC_SYNTHESIZE(int, _raidHp, RaidHp);
+	CC_SYNTHESIZE(int, _enemyCount, EnemyCount);
+	CC_SYNTHESIZE(int, _playCount, PlayCount);
+	CC_SYNTHESIZE(int, m_playerLives, PlayerLives);
+	CC_SYNTHESIZE(int, m_nextLevel, NextLevel);
+	CC_SYNTHESIZE(bool, m_bLevelComplete, LevelComplete);
+	CC_SYNTHESIZE(bool, isReady, IsReady);
+
     bool init();
     void update(float dt);
     void clean();
@@ -45,6 +54,8 @@ public:
 	void handleEndedEvents();
 	void initRaidHp(int hp);
 	void damageRaidHp(int damage);
+	void addEnemyCount();
+	void drawEnemyCount();
 
     void setGameObjectPosition(const cocos2d::CCPoint &pts);
     void setTileMap(cocos2d::CCTMXTiledMap* tileMap);
@@ -60,17 +71,16 @@ public:
     
     StateMachine* getStateMachine() { return m_pStateMachine; }
     
-	CC_SYNTHESIZE(int, _raidHp, RaidHp);
-    CC_SYNTHESIZE(int, m_playerLives, PlayerLives);
-    CC_SYNTHESIZE(int, m_nextLevel, NextLevel);
-    CC_SYNTHESIZE(bool, m_bLevelComplete, LevelComplete);
-    
     void setCurrentLevel(int currentLevel);
     int getCurrentLevel() { return m_currentLevel;}
     
     std::vector<std::string> getLevelFiles() { return m_levelFiles; }
     
 	CCSprite* initBackground();
+	void reset();
+	void fadeInState();
+	void playStart();
+	void addPlayCount();
 	
 private:
     
@@ -88,6 +98,7 @@ private:
     std::vector<std::string> m_levelFiles;
     
 	void initAudio();
+	
 
     ObjectManager();
     ~ObjectManager();
