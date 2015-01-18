@@ -21,15 +21,15 @@ using namespace CocosDenshion;
 
 ObjectManager* ObjectManager::s_pInstance = 0;
 
-ObjectManager::ObjectManager()
-:_raidHp(0)
-,_enemyCount(0)
-,_playCount(0)
-,m_pStateMachine(0)
-,m_playerLives(3)
-,m_bLevelComplete(false)
-,isReady(false)
-, _main(Main::getInstance())
+ObjectManager::ObjectManager():
+_raidHp(0),
+_enemyCount(0),
+_playCount(0),
+m_pStateMachine(0),
+m_playerLives(3),
+m_bLevelComplete(false),
+isReady(false),
+_main(Main::getInstance())
 {
 	SimpleAudioEngine::sharedEngine()->preloadEffect("se_maoudamashii_element_fire07.mp3");
 	//状態マシーンの初期化
@@ -46,6 +46,7 @@ bool ObjectManager::init()
 	initAudio();
 	//初期状態を追加し、状態を初期化
 	m_pStateMachine->pushState(new TitleState());
+	_enemyFactory = EnemyFactory::create();
 
 	return true;
 }
@@ -75,9 +76,9 @@ void ObjectManager::playStart()
 	//ウィスプ生成
 	Player::create();
 	//エネミー生成
-	Enemy::create(kTag_rat1, 0.2, 0.5);
-	Enemy::create(kTag_vampire, 0.5, 0.8);
-	Enemy::create(kTag_rat2, 0.7, 0.5);
+	_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
+	_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
+	_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
 	//背景生成
 	initBackground();
 }
@@ -202,9 +203,9 @@ void ObjectManager::reset()
 	{
 		wisp->resetWisp();
 		
-		Enemy::create(kTag_rat1, 0.2, 0.5);
-		Enemy::create(kTag_vampire, 0.5, 0.8);
-		Enemy::create(kTag_rat2, 0.7, 0.5);
+		_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
+		_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
+		_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
 		fadeInState();
 	}
 }

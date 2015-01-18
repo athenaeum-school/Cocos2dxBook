@@ -22,14 +22,14 @@ class TitleState : public GameState
 {
 public:
 
-	virtual void stateUpdate(float dt);
-	virtual bool onStateEnter();
-	virtual bool onStateExit();
-	virtual bool onTouchBeganEvent();
-	virtual void onTouchMovedEvent();
-	virtual void onTouchEndedEvent();
+	void stateUpdate(float dt) override;
+	bool onStateEnter() override;
+	bool onStateExit() override;
+	bool onTouchBeganEvent() override;
+	void onTouchMovedEvent() override;
+	void onTouchEndedEvent() override;
 
-	virtual std::string getStateID() { return s_titleID; }
+	std::string getStateID() override { return s_titleID; }
 	
 	TitleState();
 	~TitleState();

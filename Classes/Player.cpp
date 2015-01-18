@@ -22,9 +22,8 @@ USING_NS_CC;
 using namespace CocosDenshion;
 
 
-Player::Player(MainScene *main)
-	:GameObject(main)
-	, _isDead(false)
+Player::Player()
+	:_isDead(false)
 	, _canFire(true)
 	, _isAttacking(false)
 	, _isContacted(false)
@@ -41,7 +40,7 @@ Player::~Player(){}
 
 Player* Player::create()
 {
-	Player * wisp = new Player(Main::getInstance());
+	Player * wisp = new Player();
 	if (wisp)
 	{
 		wisp->initWisp();
@@ -144,9 +143,10 @@ void Player::hitCheck()
 
 }
 
-//“GNPCUŒ‚•`‰æ”»’è
+
 CCRect Player::enemyAtkRect(EnemyAttack *enemyAttack)
 {
+	//“GNPCUŒ‚•`‰æ”»’è
 	CCRect atkRect = CCRectMake(enemyAttack->getPositionX() - (enemyAttack->getContentSize().width / 10),
 		enemyAttack->getPositionY() - (enemyAttack->getContentSize().height / 10),
 		enemyAttack->getContentSize().width / 2, enemyAttack->getContentSize().height / 2);

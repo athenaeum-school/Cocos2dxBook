@@ -31,7 +31,7 @@ public:
 	virtual void setPosition(const cocos2d::CCPoint& pos);
 	virtual float radius();
 
-	GameObject(MainScene* main);
+	GameObject();
 	~GameObject();
 
 	CC_SYNTHESIZE(int, _hp, HP);

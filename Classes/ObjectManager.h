@@ -18,10 +18,11 @@
 #include <cocos2d.h>
 #include "StateMachine.h"
 #include "GameObject.h"
-
+#include "EnemyFactory.h"
 
 USING_NS_CC;
 
+class EnemyFactory;
 
 class ObjectManager : public cocos2d::CCLayer
 {
@@ -45,7 +46,7 @@ public:
 	CC_SYNTHESIZE(int, m_nextLevel, NextLevel);
 	CC_SYNTHESIZE(bool, m_bLevelComplete, LevelComplete);
 	CC_SYNTHESIZE(bool, isReady, IsReady);
-
+	
     bool init();
     void update(float dt);
     void clean();
@@ -88,6 +89,8 @@ private:
     static ObjectManager* s_pInstance;
 	MainScene* _main;
     
+	EnemyFactory *_enemyFactory;
+
     std::vector<GameObject*> m_gameObjects;
     std::map<std::string, GameObject*> m_gameObjectMap;
     

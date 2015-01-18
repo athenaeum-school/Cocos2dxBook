@@ -36,35 +36,31 @@ class Enemy : public GameObject
 
 public:
 
-	virtual void onStateEnter();
-	virtual void onStateExit();
-	virtual void stateUpdate(float dt);
-	virtual void damage();
-	void died();
-
-	static Enemy* create(enemyType type, float xPos, float yPos);
-	void attack();
-	bool isDeadOrAttacked();
-	void hitCheck();
-	void initAnimation();
-	void resultExit();
-	std::string fileNameInit(enemyType type);
-	void animationInit(enemyType type);
-	int calcRandom(int min, int max);
-
 	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
 	CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(enemyType, _eType, Etype);
+	CC_SYNTHESIZE(std::string, _addMapName, AddMapName);
+
+	void onStateEnter() override;
+	void onStateExit() override;
+	void stateUpdate(float dt) override;
+	void damage();
 	
-	Enemy(MainScene *main);
+protected:
+
+	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
+	virtual std::string statusInit(enemyType type) = 0;
+	virtual void setIdleAction() = 0;
+
+	Enemy();
 	~Enemy(void);
 
 private:
 
 	Player *_wisp;
 
-	Enemy* initEnemy(enemyType type, float xPos, float yPos);
+	//Enemy* initEnemy(enemyType type, float xPos, float yPos);
 
 	void attackCheck();
 	void onEnemyStateEnter();
@@ -74,6 +70,13 @@ private:
 	bool isDeadWithAttacking();
 	void normalDamage(int playerAtk);
 	void overDamage();
+	void died();
+	void attack();
+	bool isDeadOrAttacked();
+	void hitCheck();
+	void resultExit();
+	int calcRandom(int min, int max);
+	
 	
 };
 

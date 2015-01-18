@@ -15,14 +15,15 @@
 #include "SimpleAudioEngine.h"
 #include "ObjectManager.h"
 
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
-Enemy::Enemy(MainScene *main) 
-: GameObject(main)
-, _isAttacked(true)
-, _isContacted(false)
-, _isDead(false)
+
+Enemy::Enemy() :
+ _isAttacked(true),
+ _isContacted(false),
+ _isDead(false)
 {
 	setAtk(0);
 	setHP(0);
@@ -32,103 +33,28 @@ Enemy::Enemy(MainScene *main)
 
 Enemy::~Enemy(){}
 
-Enemy* Enemy::create(enemyType type, float xPos, float yPos)
-{
-	//エネミー生成
-	Enemy * enemy = new Enemy(Main::getInstance());
-	if (enemy)
-	{
-		enemy->initEnemy(type, xPos, yPos);
-		enemy->autorelease();
-		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
-		return enemy;
-	}
-	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
-	//何度も生成しないようにガードをかける
-	CC_SAFE_DELETE(enemy);
-	return NULL;
-}
-
 Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
-	this->initWithFile(fileNameInit(type).c_str());
+	this->initWithFile(statusInit(type).c_str());
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 1 * this->radius()));
+	//フェードインのため、透明に
 	this->setOpacity(0);
-
+	//移動しながらフェードインするアクション
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - 10 * this->radius())), NULL);
 	this->runAction(fadeIn);
-	animationInit(type);
+	//待機アクション
+	setIdleAction();
 	//レイドHPに追加
 	_om->initRaidHp(this->getHP());
 	//エネミーカウント増加
 	_om->addEnemyCount();
-	_om->addGameObjectMap("enemy", this);
+	_om->addGameObjectMap(_addMapName, this);
 	_om->addGameObject(this);
 	
 	return this;
-}
-
-std::string Enemy::fileNameInit(enemyType type)
-{
-	std::string fileName;
-	//エネミータイプに応じて、ステータスを設定
-	switch (type)
-	{
-	case enemyType::kTag_rat1:
-		fileName = "enemy1.png";
-		this->setEtype(type);
-		this->setHP(30);
-		this->setMaxHP(30);
-		this->setAtk(5);
-		break;
-	case enemyType::kTag_rat2:
-		fileName = "enemy2.png";
-		this->setEtype(type);
-		this->setHP(60);
-		this->setMaxHP(60);
-		this->setAtk(10);
-		break;
-	case enemyType::kTag_vampire:
-		fileName = "enemy3.png";
-		this->setEtype(type);
-		this->setHP(100);
-		this->setMaxHP(100);
-		this->setAtk(20);
-		break;
-	default:
-		break;
-	}
-
-	return fileName;
-}
-
-void Enemy::animationInit(enemyType type)
-{
-	
-	switch (type)
-	{ 
-		{
-	case enemyType::kTag_rat1:
-	case enemyType::kTag_rat2:
-		_hud->getAnime()->enemyIdleAnime(this);
-		break;
-		}
-
-		{
-	case enemyType::kTag_vampire:
-		_hud->getAnime()->enemy_vamp_idleAnime(this);
-		break;
-		}
-
-		{
-	default:
-		break;
-		}
-	}
-
 }
 
 
@@ -202,15 +128,6 @@ void Enemy::onEnemyStateEnter()
 	}
 }
 
-int Enemy::randomAttack(int value)
-{
-	//敵NPCの最大数 * valueまでの乱数を返す
-	int enemyCount = _om->getEnemyCount();
-	int random = enemyCount % calcRandom(1, enemyCount * value);
-	return random;
-}
-
-
 void Enemy::resultExit()
 {
 	//リザルト状態が終了すると同時に、敵NPCの消去処理
@@ -219,6 +136,14 @@ void Enemy::resultExit()
 	setIsDead(true);
 	Om::getInstance()->setEnemyCount(0);
 	this->runAction(CCFadeOut::create(0));
+}
+
+int Enemy::randomAttack(int value)
+{
+	//敵NPCの最大数 * valueまでの乱数を返す
+	int enemyCount = _om->getEnemyCount();
+	int random = enemyCount % calcRandom(1, enemyCount * value);
+	return random;
 }
 
 int Enemy::calcRandom(int min, int max)

@@ -15,7 +15,7 @@
 
 USING_NS_CC;
 
-GameObject::GameObject(MainScene* main)
+GameObject::GameObject()
 	: _main(Main::getInstance())
 	, _hud(Hud::getInstance())
 	, _om(Om::getInstance())

@@ -38,10 +38,10 @@ public:
 	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
 	CC_SYNTHESIZE(int, _timer, Timer);
 	
-	virtual void onStateEnter();
-	virtual void onStateExit();
-	virtual void stateUpdate(float dt);
-	virtual void damage(EnemyAttack *atk);
+	void onStateEnter() override;
+	void onStateExit() override;
+	void stateUpdate(float dt) override;
+	void damage(EnemyAttack *atk);
 	void hitCheck();
 	void addPower(int power);
 	void drawPower(int power);
@@ -60,8 +60,8 @@ public:
 	void startTimer();
 	void resetWisp();
 
-	Player(MainScene *main);
-	~Player(void);
+	Player();
+	~Player();
 };
 
 #endif /*defined(__WillYard__Player__)*/
