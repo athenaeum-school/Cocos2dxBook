@@ -19,6 +19,7 @@ GameObject::GameObject()
 	: _main(Main::getInstance())
 	, _hud(Hud::getInstance())
 	, _om(Om::getInstance())
+	, _isDead(false)
 	,_vector(ccp(0, 0))
 	, _nextPosition(ccp(0, 0))
 {

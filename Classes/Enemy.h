@@ -38,7 +38,7 @@ public:
 
 	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
-	CC_SYNTHESIZE(bool, _isDead, IsDead);
+	//CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(enemyType, _eType, Etype);
 	CC_SYNTHESIZE(std::string, _addMapName, AddMapName);
 
@@ -60,9 +60,6 @@ private:
 
 	Player *_wisp;
 
-	//Enemy* initEnemy(enemyType type, float xPos, float yPos);
-
-	void attackCheck();
 	void onEnemyStateEnter();
 	int randomAttack(int value);
 	cocos2d::CCRect setEnemyRect();
@@ -76,7 +73,6 @@ private:
 	void hitCheck();
 	void resultExit();
 	int calcRandom(int min, int max);
-	
 	
 };
 

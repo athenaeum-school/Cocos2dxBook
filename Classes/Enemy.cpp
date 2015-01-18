@@ -22,8 +22,7 @@ using namespace CocosDenshion;
 
 Enemy::Enemy() :
  _isAttacked(true),
- _isContacted(false),
- _isDead(false)
+ _isContacted(false)
 {
 	setAtk(0);
 	setHP(0);
@@ -37,7 +36,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
-	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
+	//敵NPCのステータスを追加
 	this->initWithFile(statusInit(type).c_str());
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 1 * this->radius()));
 	//フェードインのため、透明に
@@ -56,7 +55,6 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	
 	return this;
 }
-
 
 void Enemy::onStateEnter()
 {
@@ -152,7 +150,6 @@ int Enemy::calcRandom(int min, int max)
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
-
 void Enemy::attack()
 {
 	//死亡しているか、攻撃済みまたは敵NPCターン以外なら攻撃をしない
@@ -198,7 +195,6 @@ void Enemy::hitCheck()
 	}
 
 }
-
 
 bool Enemy::isDeadWithAttacking()
 {
@@ -256,7 +252,6 @@ void Enemy::damage()
 		died();
 	}
 }
-
 
 void Enemy::normalDamage(int playerAtk)
 {

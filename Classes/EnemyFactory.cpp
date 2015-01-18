@@ -15,14 +15,9 @@
 #include "EnemyVampire.h"
 
 
-EnemyFactory::EnemyFactory()
-{
-}
+EnemyFactory::EnemyFactory(){}
 
-
-EnemyFactory::~EnemyFactory()
-{
-}
+EnemyFactory::~EnemyFactory(){}
 
 Enemy* EnemyFactory::createEnemy(enemyType type, float xPos, float yPos)
 {

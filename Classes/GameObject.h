@@ -37,6 +37,7 @@ public:
 	CC_SYNTHESIZE(int, _hp, HP);
 	CC_SYNTHESIZE(int, _maxHp, MaxHP);
 	CC_SYNTHESIZE(int, _atk, Atk);
+	CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(std::string, _stateID, StateID);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);

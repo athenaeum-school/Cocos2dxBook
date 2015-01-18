@@ -40,7 +40,7 @@ void AnimationManager::swingAnime(GameObject *obj)
 	obj->runAction(CCSequence::create(swing, CCRotateTo::create(0, 0.125), NULL));
 }
 
-void AnimationManager::wispDyingAnime(Player *wisp)
+void AnimationManager::wispDyingAnime(PlayerHit *wisp)
 {
 	//消滅アニメーション（上方に移動しながら、縮小しフェードアウト）
 	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), CCMoveBy::create(1, ccp(0, 20)), nullptr);

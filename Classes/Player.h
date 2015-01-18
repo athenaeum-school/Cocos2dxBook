@@ -15,17 +15,15 @@
 #include "cocos2d.h"
 #include "GameObject.h"
 #include "EnemyAttack.h"
+#include "PlayerHit.h"
 
 class MainScene;
 
-class Player : public GameObject {
+class Player : public PlayerHit {
 private:
 
 	Player* initWisp();
-	bool gThanRadius(float wispNextPos);
-	bool lessThanRadius(float wispNextPos, float screenwh);
 	void addForceToWisp();
-	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
 	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
 
 public:
@@ -33,7 +31,6 @@ public:
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
 	CC_SYNTHESIZE(bool, _isAttacking, IsAttacking);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
-	CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
 	CC_SYNTHESIZE(int, _timer, Timer);
@@ -41,8 +38,6 @@ public:
 	void onStateEnter() override;
 	void onStateExit() override;
 	void stateUpdate(float dt) override;
-	void damage(EnemyAttack *atk);
-	void hitCheck();
 	void addPower(int power);
 	void drawPower(int power);
 	
@@ -51,11 +46,6 @@ public:
 	bool wispTouchBegan();
 	void wispTouchMoved();
 	void wispTouchEnded();
-
-	void collisionBlockWest();
-	void collisionBlockEast();
-	void collisionBlockNorth();
-	void collisionBlockSouth();
 
 	void startTimer();
 	void resetWisp();

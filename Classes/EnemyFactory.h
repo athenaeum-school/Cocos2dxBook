@@ -18,16 +18,17 @@
 class Enemy;
 enum enemyType;
 
+
 class EnemyFactory : public cocos2d::CCNode
 {
 public:
 
-	Enemy* createEnemy(enemyType type, float xPos, float yPos);
-
 	CREATE_FUNC(EnemyFactory);
+	Enemy* createEnemy(enemyType type, float xPos, float yPos);
 
 	EnemyFactory();
 	~EnemyFactory();
+
 };
 
 #endif /* defined(__WillYard__EnemyFactory__) */
