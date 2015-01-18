@@ -76,9 +76,16 @@ void PlayerHit::damage(EnemyAttack *atk)
 	_hud->getAnime()->swingAnime(this);
 	if (_hp <= 0)
 	{
-		CCLOG("wispDied");
-		setHP(0);
 		setIsDead(true);
+		died();
+	}
+}
+
+void PlayerHit::died()
+{
+	if (_isDead)
+	{
+		setHP(0);
 		_hud->getAnime()->wispDyingAnime(this);
 	}
 }

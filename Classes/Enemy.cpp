@@ -12,17 +12,13 @@
 #include "Enemy.h"
 #include "EnemyAttack.h"
 #include "MainScene.h"
-#include "SimpleAudioEngine.h"
-#include "ObjectManager.h"
 
 
 USING_NS_CC;
-using namespace CocosDenshion;
 
 
 Enemy::Enemy() :
- _isAttacked(true),
- _isContacted(false)
+ _isAttacked(true)
 {
 	setAtk(0);
 	setHP(0);
@@ -169,112 +165,4 @@ bool Enemy::isDeadOrAttacked()
 		return true;
 	}
 	return false;
-}
-
-void Enemy::hitCheck()
-{
-	if (isEnemyState())
-	{
-		return;
-	}
-
-	CCPoint enemyPosition = this->getPosition();
-	CCRect wispRect = _wisp->boundingBox();
-	
-	bool isContact = setEnemyRect().intersectsRect(wispRect);
-	//敵NPCの描画領域に触れていて、それまでに触れていない、かつ、敵NPCが生存していて、ウィスプが攻撃中ならばtrue
-	if (isContanctWithContacted(isContact) && isDeadWithAttacking())
-	{
-		damage();
-		_hud->getAnime()->enemyDamageAnime(this);
-		setIsContacted(true);
-	}
-	else if (!isContact)
-	{
-		setIsContacted(false);
-	}
-
-}
-
-bool Enemy::isDeadWithAttacking()
-{
-	//敵NPCが生存していて、ウィスプが攻撃中ならばtrue
-	if (!_isDead && _wisp->getIsAttacking())
-	{
-		return true;
-	}
-	return false;
-}
-
-bool Enemy::isContanctWithContacted(bool isContact)
-{
-	if (isContact && !_isContacted)
-	{
-		return true;
-	}
-	return false;
-}
-
-CCRect Enemy::setEnemyRect()
-{
-	//敵NPCのダメージ判定描画領域
-	CCRect enemyRect = CCRectMake(this->getPositionX() - (this->getContentSize().width / 4),
-									this->getPositionY() - (this->getContentSize().height / 4),
-									this->getContentSize().width / 2, this->getContentSize().height / 2);
-	return enemyRect;
-}
-
-void Enemy::damage()
-{
-	
-	int playerAtk = _wisp->getAtk();
-	//ダメージを表示
-	_hud->damageToString(this->getPosition(), _wisp->getAtk());
-	//ヒット数を表示
-	_hud->addComboCount();
-
-	if (playerAtk <= this->_hp)
-	{
-		//通常ダメージ
-		normalDamage(playerAtk);
-	}
-	else if (playerAtk > this->_hp)
-	{
-		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
-		overDamage();
-	}
-	
-	CCLOG("EnemyHP : %d", _hp);
-
-	if (_hp <= 0)
-	{
-		setIsDead(true);
-		died();
-	}
-}
-
-void Enemy::normalDamage(int playerAtk)
-{
-	//通常ダメージ
-	_hp -= playerAtk;
-	_om->damageRaidHp(playerAtk);
-}
-
-void Enemy::overDamage()
-{
-	//レイドHPとのずれを無くすため、オーバーダメージを防ぐ処理
-	int margeDamage = _hp;
-	_hp -= margeDamage;
-	_om->damageRaidHp(margeDamage);
-}
-
-void Enemy::died()
-{
-	if (_isDead)
-	{
-		setHP(0);
-		//敵NPCの数を減らす
-		_om->drawEnemyCount();
-		_hud->getAnime()->enemyDyingAnime(this);
-	}
 }

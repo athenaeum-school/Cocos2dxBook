@@ -15,6 +15,7 @@
 #include "cocos2d.h"
 #include "Player.h"
 #include "PlayerHit.h"
+#include "EnemyHit.h"
 
 
 class AnimationManager : public cocos2d::CCNode
@@ -26,10 +27,10 @@ public:
 	void wispInitAnime(Player *wisp);
 	void swingAnime(GameObject *obj);
 	void wispDyingAnime(PlayerHit *wisp);
-	void enemyDyingAnime(Enemy *enemy);
+	void enemyDyingAnime(EnemyHit *enemy);
 	void enemyStarAnime();
-	void enemyExplodeAnime(Enemy *enemy);
-	void enemyDamageAnime(Enemy *enemy);
+	void enemyExplodeAnime(EnemyHit *enemy);
+	void enemyDamageAnime(EnemyHit *enemy);
 	void boundSE();
 	void enemyIdleAnime(Enemy *enemy);
 	void enemy_vamp_idleAnime(Enemy *enemy);

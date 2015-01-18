@@ -11,21 +11,13 @@
 
 #include "Player.h"
 #include "MainScene.h"
-#include "EnemyAttack.h"
-#include "EnemyState.h"
-#include "ObjectManager.h"
-#include "SimpleAudioEngine.h"
-#include "ResultState.h"
 
 
 USING_NS_CC;
-using namespace CocosDenshion;
-
 
 Player::Player():
 _canFire(true),
 _isAttacking(false),
-_isContacted(false),
 _touchPoint(ccp(0, 0)),
 _timer(0)
 {
@@ -33,7 +25,6 @@ _timer(0)
 	setMaxHP(100);
 	setAtk(10);
 }
-
 
 Player::~Player(){}
 
@@ -149,7 +140,6 @@ bool Player::wispTouchBegan()
 	
 	if (touch)
 	{
-		_isContacted = false;
 		//タッチ位置を取得
 		_touchPoint = touch->getLocation();
 		//ウィスプに触れているなら次の処理へ

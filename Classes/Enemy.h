@@ -14,11 +14,7 @@
 
 #include "cocos2d.h"
 #include "GameObject.h"
-#include "ObjectManager.h"
-
-
-class MainScene;
-class Player;
+#include "EnemyHit.h"
 
 
 enum enemyType
@@ -31,21 +27,18 @@ enum enemyType
 };
 
 
-class Enemy : public GameObject 
+class Enemy : public EnemyHit 
 {
 
 public:
 
 	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);
-	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
-	//CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(enemyType, _eType, Etype);
 	CC_SYNTHESIZE(std::string, _addMapName, AddMapName);
 
 	void onStateEnter() override;
 	void onStateExit() override;
 	void stateUpdate(float dt) override;
-	void damage();
 	
 protected:
 
@@ -58,19 +51,10 @@ protected:
 
 private:
 
-	Player *_wisp;
-
 	void onEnemyStateEnter();
 	int randomAttack(int value);
-	cocos2d::CCRect setEnemyRect();
-	bool isContanctWithContacted(bool isContact);
-	bool isDeadWithAttacking();
-	void normalDamage(int playerAtk);
-	void overDamage();
-	void died();
 	void attack();
 	bool isDeadOrAttacked();
-	void hitCheck();
 	void resultExit();
 	int calcRandom(int min, int max);
 	

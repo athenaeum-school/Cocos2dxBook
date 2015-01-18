@@ -13,8 +13,6 @@
 #define __WillYard__Player__
 
 #include "cocos2d.h"
-#include "GameObject.h"
-#include "EnemyAttack.h"
 #include "PlayerHit.h"
 
 class MainScene;
@@ -30,7 +28,6 @@ public:
 	
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
 	CC_SYNTHESIZE(bool, _isAttacking, IsAttacking);
-	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
 	CC_SYNTHESIZE(int, _timer, Timer);

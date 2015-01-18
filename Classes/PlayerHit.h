@@ -23,7 +23,8 @@ private:
 	bool gThanRadius(float wispNextPos);
 	bool lessThanRadius(float wispNextPos, float screenwh);
 	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
-	
+	void died();
+
 protected:
 
 	void hitCheck();

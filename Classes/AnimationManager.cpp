@@ -69,7 +69,7 @@ void AnimationManager::wispDyingAnime(PlayerHit *wisp)
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire06.mp3");
 }
 
-void AnimationManager::enemyDyingAnime(Enemy *enemy)
+void AnimationManager::enemyDyingAnime(EnemyHit *enemy)
 {
 	//敵NPCを蒸発（上方に移動しながら、縮小しフェードアウト）
 	CCSpawn *diedSpawn = CCSpawn::create(CCScaleTo::create(1, 0, 1), CCFadeOut::create(1), CCMoveBy::create(1, ccp(0, 20)), nullptr);
@@ -121,7 +121,7 @@ void AnimationManager::enemyStarAnime()
 	star->runAction(starSequence);
 }
 
-void AnimationManager::enemyExplodeAnime(Enemy *enemy)
+void AnimationManager::enemyExplodeAnime(EnemyHit *enemy)
 {
 	//ダメージ時、爆発エフェクト表示
 	CCSprite *ex = CCSprite::create("explode1.png");
@@ -141,7 +141,7 @@ void AnimationManager::enemyExplodeAnime(Enemy *enemy)
 	ex->runAction(exSequence);
 }
 
-void AnimationManager::enemyDamageAnime(Enemy *enemy)
+void AnimationManager::enemyDamageAnime(EnemyHit *enemy)
 {
 	//ダメージ時、スターエフェクト表示
 	enemyStarAnime();
