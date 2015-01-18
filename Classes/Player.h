@@ -14,6 +14,7 @@
 
 #include "cocos2d.h"
 #include "GameObject.h"
+#include "EnemyAttack.h"
 
 class MainScene;
 
@@ -24,18 +25,27 @@ private:
 	bool gThanRadius(float wispNextPos);
 	bool lessThanRadius(float wispNextPos, float screenwh);
 	void addForceToWisp();
+	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
+	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
 
 public:
 	
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
+	CC_SYNTHESIZE(bool, _isAttacking, IsAttacking);
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
+	CC_SYNTHESIZE(bool, _isDead, IsDead);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _touchPoint, TouchPoint);
 	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
 	CC_SYNTHESIZE(int, _timer, Timer);
-
-
+	
+	virtual void onStateEnter();
+	virtual void onStateExit();
 	virtual void stateUpdate(float dt);
-
+	virtual void damage(EnemyAttack *atk);
+	void hitCheck();
+	void addPower(int power);
+	void drawPower(int power);
+	
 	static Player* create();
 	
 	bool wispTouchBegan();
@@ -47,8 +57,8 @@ public:
 	void collisionBlockNorth();
 	void collisionBlockSouth();
 
-	void onCollisionPassing();
 	void startTimer();
+	void resetWisp();
 
 	Player(MainScene *main);
 	~Player(void);
