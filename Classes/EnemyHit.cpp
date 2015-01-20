@@ -12,7 +12,6 @@
 #include "EnemyHit.h"
 #include "MainScene.h"
 
-
 EnemyHit::EnemyHit():
 _isContacted(false)
 {}
@@ -21,7 +20,7 @@ EnemyHit::~EnemyHit(){}
 
 void EnemyHit::hitCheck()
 {
-	if (isEnemyState())
+	if (!isNormalState())
 	{
 		return;
 	}
@@ -47,9 +46,9 @@ void EnemyHit::hitCheck()
 CCRect EnemyHit::setEnemyRect()
 {
 	//敵NPCのダメージ判定描画領域
-	CCRect enemyRect = CCRectMake(this->getPositionX() - (this->getContentSize().width / 4),
-		this->getPositionY() - (this->getContentSize().height / 4),
-		this->getContentSize().width / 2, this->getContentSize().height / 2);
+	CCRect enemyRect = CCRectMake(this->getPositionX() - (this->getContentSize().width / 4.0),
+		this->getPositionY() - (this->getContentSize().height / 4.0),
+		this->getContentSize().width / 2.0, this->getContentSize().height / 2.0);
 	return enemyRect;
 }
 
@@ -76,6 +75,7 @@ void EnemyHit::damage()
 {
 
 	int playerAtk = _wisp->getAtk();
+	
 	//ダメージを表示
 	_hud->damageToString(this->getPosition(), _wisp->getAtk());
 	//ヒット数を表示
@@ -91,7 +91,7 @@ void EnemyHit::damage()
 		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
 		overDamage();
 	}
-
+	_hud->drawHpbar(this);
 	CCLOG("EnemyHP : %d", _hp);
 
 	if (_hp <= 0)

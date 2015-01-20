@@ -14,7 +14,6 @@
 #include "EnemyRatTwo.h"
 #include "EnemyVampire.h"
 
-
 EnemyFactory::EnemyFactory(){}
 
 EnemyFactory::~EnemyFactory(){}

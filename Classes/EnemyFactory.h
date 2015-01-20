@@ -12,12 +12,10 @@
 #ifndef __WillYard__EnemyFactory__
 #define __WillYard__EnemyFactory__
 
-
 #include "Enemy.h"
 
 class Enemy;
 enum enemyType;
-
 
 class EnemyFactory : public cocos2d::CCNode
 {
@@ -25,6 +23,8 @@ public:
 
 	CREATE_FUNC(EnemyFactory);
 	Enemy* createEnemy(enemyType type, float xPos, float yPos);
+
+private:
 
 	EnemyFactory();
 	~EnemyFactory();

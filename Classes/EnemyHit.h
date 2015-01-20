@@ -31,14 +31,14 @@ protected:
 
 	Player *_wisp;
 
+	void hitCheck();
 	cocos2d::CCRect setEnemyRect();
-	bool isContanctWithContacted(bool isContact);
 	bool isDeadWithAttacking();
+	bool isContanctWithContacted(bool isContact);
 	void normalDamage(int playerAtk);
 	void overDamage();
 	void died();
-	void hitCheck();
-
+	
 	EnemyHit();
 	~EnemyHit();
 
