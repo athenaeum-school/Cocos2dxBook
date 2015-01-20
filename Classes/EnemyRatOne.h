@@ -19,7 +19,7 @@ class EnemyRatOne : public Enemy
 public:
 	
 	static EnemyRatOne* create(enemyType type, float xPos, float yPos);
-
+	
 private:
 
 	std::string statusInit(enemyType type) override;
