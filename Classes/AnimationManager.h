@@ -34,7 +34,7 @@ public:
 	void boundSE();
 	void enemyIdleAnime(Enemy *enemy);
 	void enemy_vamp_idleAnime(Enemy *enemy);
-	
+	cocos2d::CCSprite* arrowAnime();
 
 	AnimationManager();
 	~AnimationManager();

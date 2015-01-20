@@ -173,3 +173,26 @@ void AnimationManager::enemy_vamp_idleAnime(Enemy *enemy)
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	enemy->runAction(repeat);
 }
+
+CCSprite* AnimationManager::arrowAnime()
+{
+	//タッチ時のガイド矢印追加
+	CCSprite *arrow = CCSprite::create("arrow1.png");
+	//矢印が変化するアニメーション
+	CCAnimation *animation = CCAnimation::create();
+	animation->addSpriteFrameWithFileName("arrow1.png");
+	animation->addSpriteFrameWithFileName("arrow2.png");
+	animation->addSpriteFrameWithFileName("arrow3.png");
+	animation->addSpriteFrameWithFileName("arrow4.png");
+	animation->addSpriteFrameWithFileName("arrow5.png");
+	animation->setDelayPerUnit(0.3);
+	//初めの画像に戻す
+	animation->setRestoreOriginalFrame(true);
+	//点滅しているように見せるアクション
+	CCSequence *fade = CCSequence::create(CCFadeOut::create(0.5), CCFadeIn::create(0.5), NULL);
+	CCSpawn *spawn = CCSpawn::create(CCAnimate::create(animation), fade, NULL);
+	//繰り返すアクション
+	CCRepeatForever *repeat = CCRepeatForever::create(spawn);
+	arrow->runAction(repeat);
+	return arrow;
+}
