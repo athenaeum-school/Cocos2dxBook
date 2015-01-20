@@ -15,8 +15,8 @@
 #include "cocos2d.h"
 #include "Enemy.h"
 
-
-class EnemyAttack : public cocos2d::CCSprite {
+class EnemyAttack : public cocos2d::CCSprite 
+{
 
 public:
 

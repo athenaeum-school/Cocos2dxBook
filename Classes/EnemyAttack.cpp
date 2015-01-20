@@ -43,8 +43,6 @@ EnemyAttack* EnemyAttack::create(Enemy *enemy)
 EnemyAttack* EnemyAttack::initEnemyAttack(Enemy *enemy, CCPoint point)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-
-	//assert((float)(0, 0) < (WISP_SET_POS.x, WISP_SET_POS.y));
 	this->initWithFile(fileNameInit(enemy->getEtype()).c_str());
 	this->setPosition(point);
 	
