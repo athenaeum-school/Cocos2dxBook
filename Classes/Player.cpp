@@ -12,8 +12,15 @@
 #include "Player.h"
 #include "MainScene.h"
 
-
 USING_NS_CC;
+//ショット時の運動量倍率
+const float SHOT_RATE = 0.5;
+//ウィスプのHP
+const int WISP_HP = 100;
+//最大HP
+const int WISP_MAXHP = 100;
+//攻撃力
+const int WISP_ATK = 10;
 
 Player::Player():
 _canFire(true),
@@ -21,9 +28,9 @@ _isAttacking(false),
 _touchPoint(ccp(0, 0)),
 _timer(0)
 {
-	setHP(100);
-	setMaxHP(100);
-	setAtk(10);
+	setHP(WISP_HP);
+	setMaxHP(WISP_MAXHP);
+	setAtk(WISP_ATK); 
 }
 
 Player::~Player(){}
@@ -48,7 +55,7 @@ Player* Player::initWisp()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	this->initWithFile("wisp_1.png");
-	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 1));
+	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//アニメーションの初期化
@@ -73,7 +80,7 @@ void Player::onStateEnter()
 		setTimer(0);
 		setCanFire(true);
 		//HPラベルの表示
-		_hud->drawMyHpLabel();
+		_hud->drawHpLabel();
 	}
 	else if (isEnemyState())
 	{
@@ -153,7 +160,7 @@ bool Player::wispTouchBegan()
 		//タッチ位置を取得
 		setTouchPoint(touch->getLocation());
 		//タッチ画像に触れているなら次の処理へ
-		ret = toTheNext();
+		ret = isNext();
 	}
 
 	return ret;
@@ -184,7 +191,7 @@ void Player::wispTouchEnded()
 	setIsAttacking(true);
 }
 
-bool Player::toTheNext()
+bool Player::isNext()
 {
 	bool ret = false;
 	//タッチ画像に触れているなら次の処理へ
@@ -217,8 +224,8 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 	arrow->setPosition(this->getPosition());
 	//タッチ開始座標に対する移動中のタッチ座標の角度
 	float angle = ((_touchPoint - movePoint)).getAngle();
-	CCPoint pos = movePoint + _touchPoint.rotate(CCPoint::forAngle(angle));
-	angle = CC_RADIANS_TO_DEGREES((_touchPoint - pos).getAngle() * -1);
+	CCPoint point = movePoint + _touchPoint.rotate(CCPoint::forAngle(angle));
+	angle = CC_RADIANS_TO_DEGREES((_touchPoint - point).getAngle() * -1.0);
 	//結果を矢印に反映
 	arrow->setRotation(angle);
 }
@@ -228,7 +235,7 @@ CCPoint Player::calcForce(CCPoint endPoint)
 	float diffx = _touchPoint.x - endPoint.x;
 	float diffy = _touchPoint.y - endPoint.y;
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算
-	return ccp(diffx, diffy) * 0.5;
+	return ccp(diffx, diffy) * SHOT_RATE;
 }
 
 void Player::startTimer()
@@ -248,6 +255,6 @@ void Player::resetWisp()
 	setIsDead(false);
 	setCanFire(true);
 	setTimer(0);
-	setVector(ccp(NULL, NULL));
-	setPosition(ccp(screenSize.width * 0.5, this->radius() * 2));
+	setVector(ccp(0, 0));
+	setPosition(ccp(screenSize.width / 2.0, this->radius() * 2.0));
 }

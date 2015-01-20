@@ -49,7 +49,7 @@ private:
 
 	Player* initWisp();
 	void addForceToWisp();
-	bool toTheNext();
+	bool isNext();
 	void createArrow(cocos2d::CCPoint movePoint);
 	void arrowSettings(cocos2d::CCSprite *arrow, cocos2d::CCPoint movePoint);
 	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
