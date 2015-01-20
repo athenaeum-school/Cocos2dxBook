@@ -1,24 +1,18 @@
 #include "AppDelegate.h"
 #include "MainScene.h"
-#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
-using namespace CocosDenshion;
 
-AppDelegate::AppDelegate() {
+AppDelegate::AppDelegate() {}
 
-}
+AppDelegate::~AppDelegate() {}
 
-AppDelegate::~AppDelegate() 
+bool AppDelegate::applicationDidFinishLaunching() 
 {
-}
-
-bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     CCDirector* pDirector = CCDirector::sharedDirector();
     CCEGLView* pEGLView = CCEGLView::sharedOpenGLView();
-	SimpleAudioEngine* pAudio = SimpleAudioEngine::sharedEngine();
-
+	
     pDirector->setOpenGLView(pEGLView);
 	
     // turn on display FPS
@@ -44,7 +38,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
-void AppDelegate::applicationDidEnterBackground() {
+void AppDelegate::applicationDidEnterBackground() 
+{
     CCDirector::sharedDirector()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
@@ -52,7 +47,8 @@ void AppDelegate::applicationDidEnterBackground() {
 }
 
 // this function will be called when the app is active again
-void AppDelegate::applicationWillEnterForeground() {
+void AppDelegate::applicationWillEnterForeground()
+{
     CCDirector::sharedDirector()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
