@@ -18,11 +18,6 @@
 class MainScene;
 
 class Player : public PlayerHit {
-private:
-
-	Player* initWisp();
-	void addForceToWisp();
-	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
 
 public:
 	
@@ -32,13 +27,13 @@ public:
 	CC_SYNTHESIZE(cocos2d::CCPoint, _force, Force);
 	CC_SYNTHESIZE(int, _timer, Timer);
 	
+	static Player* create();
+
 	void onStateEnter() override;
 	void onStateExit() override;
 	void stateUpdate(float dt) override;
 	void addPower(int power);
 	void drawPower(int power);
-	
-	static Player* create();
 	
 	bool wispTouchBegan();
 	void wispTouchMoved();
@@ -49,6 +44,16 @@ public:
 
 	Player();
 	~Player();
+
+private:
+
+	Player* initWisp();
+	void addForceToWisp();
+	bool toTheNext();
+	void createArrow(cocos2d::CCPoint movePoint);
+	void arrowSettings(cocos2d::CCSprite *arrow, cocos2d::CCPoint movePoint);
+	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
+	
 };
 
 #endif /*defined(__WillYard__Player__)*/

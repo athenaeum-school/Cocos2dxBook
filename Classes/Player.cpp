@@ -53,6 +53,8 @@ Player* Player::initWisp()
 	this->setOpacity(0);
 	//アニメーションの初期化
 	_hud->getAnime()->wispInitAnime(this);
+	//HPバーの追加
+	_hud->initHpbar(this);
 
 	//vectorとmapコンテナへウィスプを追加
 	_om->addGameObjectMap("wisp", this);
@@ -67,6 +69,9 @@ void Player::onStateEnter()
 	setStateID();
 	if (isNormalState())
 	{
+		setTouchPoint(ccp(0, 0));
+		setTimer(0);
+		setCanFire(true);
 		//HPラベルの表示
 		_hud->drawMyHpLabel();
 	}
@@ -85,6 +90,12 @@ void Player::onStateExit()
 	if (isNormalState())
 	{
 		setIsAttacking(false);
+		setVector(ccp(0, 0));
+	} 
+	else if (isResultState())
+	{
+		CCLOG("wispresultExit");
+		_hud->initHpbar(this);
 	}
 }
 
@@ -130,58 +141,101 @@ void Player::addForceToWisp()
 
 bool Player::wispTouchBegan()
 {
+	bool ret = false;
 	CCTouch *touch = _main->getBeganTouch();
-	CCNode *wisp = _main->getChildByTag(kTag_wisp);
-	
 	if (!_canFire)
 	{
-		return false;
+		return ret;
 	}
 	
 	if (touch)
 	{
 		//タッチ位置を取得
-		_touchPoint = touch->getLocation();
-		//ウィスプに触れているなら次の処理へ
-		if (wisp->boundingBox().containsPoint(_touchPoint)) 
-		{
-			CCLOG("OK");
-			return true;
-		}
+		setTouchPoint(touch->getLocation());
+		//タッチ画像に触れているなら次の処理へ
+		ret = toTheNext();
 	}
+
+	return ret;
 }
 
 void Player::wispTouchMoved()
 {
 	CCTouch* touch = _main->getMovedTouch();
-	CCNode* wisp = _main->getChildByTag(kTag_wisp);
-	
-	if (wisp){}
+	CCPoint movePoint = touch->getLocation();
+	if (touch)
+	{
+		//ガイド矢印を追加
+		createArrow(movePoint);
+	}
 }
 
 void Player::wispTouchEnded()
 {
 	CCTouch* touch = _main->getEndedTouch();
-	CCNode* wisp = _main->getChildByTag(kTag_wisp);
 	//放した座標
 	CCPoint endPoint = touch->getLocation();
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算し、力を加える
 	this->setVector(calcForce(endPoint));
+	//矢印を削除
+	_main->removeChildByTag(kTag_arrow);
 	//ショット中の操作を不可に
 	setCanFire(false);
 	setIsAttacking(true);
 }
 
+bool Player::toTheNext()
+{
+	bool ret = false;
+	//タッチ画像に触れているなら次の処理へ
+	CCSprite * touchImage = static_cast<CCSprite *>(_hud->getChildByTag(ktag_touch));
+	if (touchImage && touchImage->boundingBox().containsPoint(_touchPoint))
+	{
+		//タッチ画像を削除
+		touchImage->removeFromParent();
+		ret = true;
+	}
+
+	return ret;
+}
+
+void Player::createArrow(CCPoint movePoint)
+{
+	CCSprite *arrow = static_cast<CCSprite *>(_main->getChildByTag(kTag_arrow));
+	//存在しなければ、矢印を追加（１つしか作らないための処理）
+	if (!arrow)
+	{
+		arrow = _hud->getAnime()->arrowAnime();
+		_main->addChild(arrow, z_arrow, kTag_arrow);
+	}
+	//矢印の座標と角度の設定
+	arrowSettings(arrow, movePoint);
+}
+
+void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
+{
+	arrow->setPosition(this->getPosition());
+	//タッチ開始座標に対する移動中のタッチ座標の角度
+	float angle = ((_touchPoint - movePoint)).getAngle();
+	CCPoint pos = movePoint + _touchPoint.rotate(CCPoint::forAngle(angle));
+	angle = CC_RADIANS_TO_DEGREES((_touchPoint - pos).getAngle() * -1);
+	//結果を矢印に反映
+	arrow->setRotation(angle);
+}
+
 CCPoint Player::calcForce(CCPoint endPoint)
 {
+	float diffx = _touchPoint.x - endPoint.x;
+	float diffy = _touchPoint.y - endPoint.y;
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算
-	return CCPoint(_touchPoint.x - endPoint.x, _touchPoint.y - endPoint.y) * 0.5;
+	return ccp(diffx, diffy) * 0.5;
 }
 
 void Player::startTimer()
 {
 	//ショット後、タイマースタート
-	if (!getCanFire()){
+	if (!_canFire)
+	{
 		++_timer;
 	}
 }
