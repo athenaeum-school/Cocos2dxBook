@@ -17,7 +17,6 @@
 
 class EnemyAttack : public cocos2d::CCSprite 
 {
-
 public:
 
 	CC_SYNTHESIZE(int, _atk, Atk);

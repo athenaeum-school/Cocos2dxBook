@@ -13,15 +13,12 @@
 #include "NormalState.h"
 #include "ResultState.h"
 
-
 //状態のID
 const std::string EnemyState::s_enemyID = "ENEMY";
 
-
 void EnemyState::enemyToNormal()
 {
-	CCLOG("enemyToNormal : change");
-    Om::getInstance()->getStateMachine()->changeState(new NormalState());
+	Om::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
 void EnemyState::enemyToResult()
@@ -38,7 +35,6 @@ EnemyState::~EnemyState(){}
 
 bool EnemyState::onStateEnter()
 {
-	CCLOG("Changed : enemyState");
 	//ターン開始ラベル表示
 	turnOnEnemy();
 	//コンテナにゲームオブジェクトを代入
@@ -72,13 +68,9 @@ bool EnemyState::onTouchBeganEvent()
 	return false;
 }
 
-void EnemyState::onTouchMovedEvent()
-{
-}
+void EnemyState::onTouchMovedEvent(){}
 
-void EnemyState::onTouchEndedEvent()
-{	
-}
+void EnemyState::onTouchEndedEvent(){}
 
 void EnemyState::turnOnEnemy()
 {

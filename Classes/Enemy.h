@@ -27,7 +27,6 @@ enum enemyType
 
 class Enemy : public EnemyHit 
 {
-
 public:
 
 	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);

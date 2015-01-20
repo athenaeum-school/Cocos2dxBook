@@ -20,7 +20,6 @@ class Player;
 
 class EnemyHit : public GameObject
 {
-
 public:
 
 	CC_SYNTHESIZE(bool, _isContacted, IsContacted);

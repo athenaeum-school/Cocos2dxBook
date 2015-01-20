@@ -12,11 +12,13 @@
 #include "EnemyRatTwo.h"
 #include "MainScene.h"
 
+const int RAT_TWO_HP = 80;
+const int RAT_TWO_MAXHP = 80;
+const int RAT_TWO_ATK = 10;
 
 EnemyRatTwo::EnemyRatTwo(){}
 
 EnemyRatTwo::~EnemyRatTwo(){}
-
 
 EnemyRatTwo* EnemyRatTwo::create(enemyType type, float xPos, float yPos)
 {
@@ -41,9 +43,9 @@ std::string EnemyRatTwo::statusInit(enemyType type)
 	//エネミータイプに応じて、ステータスを設定
 	fileName = "enemy_rat2.png";
 	this->setEtype(type);
-	this->setHP(60);
-	this->setMaxHP(60);
-	this->setAtk(10);
+	this->setHP(RAT_TWO_HP);
+	this->setMaxHP(RAT_TWO_MAXHP);
+	this->setAtk(RAT_TWO_ATK);
 	this->setAddMapName("rat2");
 
 	return fileName;
@@ -51,5 +53,6 @@ std::string EnemyRatTwo::statusInit(enemyType type)
 
 void EnemyRatTwo::setIdleAction()
 {
+	//待機アクション
 	_hud->getAnime()->enemyIdleAnime(this);
 }

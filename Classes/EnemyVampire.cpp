@@ -12,11 +12,13 @@
 #include "EnemyVampire.h"
 #include "MainScene.h"
 
+const int VAMPIRE_HP = 120;
+const int VAMPIEE_MAXHP = 120;
+const int VAMPIRE_ATK = 20;
 
 EnemyVampire::EnemyVampire(){}
 
 EnemyVampire::~EnemyVampire(){}
-
 
 EnemyVampire* EnemyVampire::create(enemyType type, float xPos, float yPos)
 {
@@ -41,9 +43,9 @@ std::string EnemyVampire::statusInit(enemyType type)
 	//エネミータイプに応じて、ステータスを設定
 	fileName = "enemy_vampire.png";
 	this->setEtype(type);
-	this->setHP(100);
-	this->setMaxHP(100);
-	this->setAtk(20);
+	this->setHP(VAMPIRE_HP);
+	this->setMaxHP(VAMPIEE_MAXHP);
+	this->setAtk(VAMPIRE_ATK);
 	this->setAddMapName("vampire");
 
 	return fileName;
@@ -51,5 +53,6 @@ std::string EnemyVampire::statusInit(enemyType type)
 
 void EnemyVampire::setIdleAction()
 {
+	//待機アクション
 	_hud->getAnime()->enemy_vamp_idleAnime(this);
 }
