@@ -16,7 +16,6 @@
 #include "GameObject.h"
 #include "EnemyHit.h"
 
-
 enum enemyType
 {
 	kTag_rat1 = 1,
@@ -25,7 +24,6 @@ enum enemyType
 	kTag_enemyLength,
 
 };
-
 
 class Enemy : public EnemyHit 
 {
@@ -50,13 +48,13 @@ protected:
 	~Enemy(void);
 
 private:
-
+	
 	void onEnemyStateEnter();
 	int randomAttack(int value);
+	int calcRandom(int min, int max);
 	void attack();
 	bool isDeadOrAttacked();
 	void resultExit();
-	int calcRandom(int min, int max);
 	
 };
 

@@ -13,9 +13,9 @@
 #include "EnemyAttack.h"
 #include "MainScene.h"
 
-
 USING_NS_CC;
-
+//敵NPCの攻撃確率
+const int SUCCESS_RATE = 2;
 
 Enemy::Enemy() :
  _isAttacked(true)
@@ -24,7 +24,6 @@ Enemy::Enemy() :
 	setHP(0);
 	setMaxHP(0);
 }
-
 
 Enemy::~Enemy(){}
 
@@ -42,10 +41,13 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	this->runAction(fadeIn);
 	//待機アクション
 	setIdleAction();
+	//HPバーを追加
+	_hud->initHpbar(this);
 	//レイドHPに追加
 	_om->initRaidHp(this->getHP());
 	//エネミーカウント増加
 	_om->addEnemyCount();
+	//vectorとmapコンテナに追加
 	_om->addGameObjectMap(_addMapName, this);
 	_om->addGameObject(this);
 	
@@ -54,11 +56,9 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 
 void Enemy::onStateEnter()
 {
-	if (_isDead)
-	{
-		return;
-	}
-
+	//死亡していたら抜ける
+	this->isDeadWithRet();
+	
 	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
 	setStateID();
@@ -79,10 +79,7 @@ void Enemy::onStateEnter()
 
 void Enemy::stateUpdate(float dt)
 {
-	if (_isDead)
-	{
-		return;
-	}
+	this->isDeadWithRet();
 
 	attack();
 	hitCheck();
@@ -90,10 +87,7 @@ void Enemy::stateUpdate(float dt)
 
 void Enemy::onStateExit()
 {
-	if (_isDead)
-	{
-		return;
-	}
+	this->isDeadWithRet();
 
 	if (isEnemyState())
 	{
@@ -107,34 +101,35 @@ void Enemy::onStateExit()
 
 void Enemy::onEnemyStateEnter()
 {
-	//50%の確率で攻撃が成功
-	if (randomAttack(2.0) < 1)
+	//毎ターン最低１体が、50%の確率で攻撃する確率
+	if (randomAttack(SUCCESS_RATE) == 0)
 	{
 		setIsAttacked(false);
 	}
 	else if (_om->getEnemyCount() == 1)
 	{
-		//残り１体になると、75%の確率で攻撃
-		if (randomAttack(1.3) < 1)
-		{
-			setIsAttacked(false);
-		}
+		//残り１体になると必ず攻撃
+		setIsAttacked(false);
 	}
 }
 
 void Enemy::resultExit()
 {
 	//リザルト状態が終了すると同時に、敵NPCの消去処理
-	CCLOG("enemyOnStateExit:result");
 	setHP(0);
 	setIsDead(true);
+	if (getHpBar() && this->getChildByTag(kTag_hpbarBg))
+	{
+		getHpBar()->removeFromParent();
+		this->removeChildByTag(kTag_hpbarBg);
+	}
 	Om::getInstance()->setEnemyCount(0);
 	this->runAction(CCFadeOut::create(0));
 }
 
 int Enemy::randomAttack(int value)
 {
-	//敵NPCの最大数 * valueまでの乱数を返す
+	//敵NPCの最大数 % (敵NPCの最大数 * value)を返す
 	int enemyCount = _om->getEnemyCount();
 	int random = enemyCount % calcRandom(1, enemyCount * value);
 	return random;
@@ -160,6 +155,7 @@ void Enemy::attack()
 
 bool Enemy::isDeadOrAttacked()
 {
+	//死亡しているか攻撃済みならtrue
 	if (_isDead || _isAttacked)
 	{
 		return true;
