@@ -33,9 +33,7 @@ NormalState::~NormalState() {}
 
 void NormalState::normalToEnemy()
 {
-	//ウィスプを再攻撃可能、タイマーをリセットし、敵NPCのターンへ
-	_wisp->setCanFire(true);
-	_wisp->setTimer(0);
+	//敵NPCのターンへ
 	_om->getStateMachine()->changeState(new EnemyState());
 }
 
@@ -72,9 +70,9 @@ bool NormalState::onStateEnter()
 bool NormalState::onStateExit()
 {
 	//状態終了時（次の状態へ遷移時）の処理
-	_wisp->setVector(ccp(0, 0));
 	_hud->setComboCount(0);
 	_hud->hide();
+	//ゲームオブジェクトのonStateExit()を実行
 	objectStateExit();
 	return true;
 }
@@ -101,7 +99,28 @@ void NormalState::stateUpdate(float dt)
 	switchState();
 }
 
+bool NormalState::onTouchBeganEvent()
+{
+	//isReadyがFalseなら抜ける
+	if (!_om->getIsReady())
+	{
+		return false;
+	}
+	CCLOG("hp:wisp%d", _wisp->getHP());
+	CCLOG("raidHp : %d", _om->getRaidHp());
+	CCLOG("playCount : %d", _om->getPlayCount());
+	return _wisp->wispTouchBegan();
+}
 
+void NormalState::onTouchMovedEvent()
+{
+	_wisp->wispTouchMoved();
+}
+
+void NormalState::onTouchEndedEvent()
+{
+	_wisp->wispTouchEnded();
+}
 
 void NormalState::switchState()
 {
@@ -137,30 +156,6 @@ bool NormalState::isGreaterThanCount(int count)
 	}
 	return false;
 }
-
-bool NormalState::onTouchBeganEvent()
-{
-	//isReadyがFalseなら抜ける
-	if (!_om->getIsReady())
-	{
-		return false;
-	}
-	CCLOG("hp:wisp%d", _wisp->getHP());
-	CCLOG("raidHp : %d", _om->getRaidHp());
-	CCLOG("playCount : %d", _om->getPlayCount());
-	return _wisp->wispTouchBegan();
-}
-
-void NormalState::onTouchMovedEvent()
-{
-	_wisp->wispTouchMoved();
-}
-
-void NormalState::onTouchEndedEvent()
-{
-	_wisp->wispTouchEnded();
-}
-
 
 void NormalState::calcCollision()
 {

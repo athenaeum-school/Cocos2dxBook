@@ -18,14 +18,18 @@
 #include "Player.h"
 #include "Enemy.h"
 
-
 class NormalState : public GameState
 {
 public:
 
-    void stateUpdate(float dt) override;
+	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyVector, EnemyVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyNextPosition, EnemyNextPosition);
+
 	bool onStateEnter() override;
 	bool onStateExit() override;
+	void stateUpdate(float dt) override;
 	bool onTouchBeganEvent() override;
 	void onTouchMovedEvent() override;
 	void onTouchEndedEvent() override;
@@ -35,28 +39,22 @@ public:
     NormalState();
     ~NormalState();
 
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyVector, EnemyVector);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyNextPosition, EnemyNextPosition);
-
 private:
    
 	Player *_wisp;
-	
-   static const std::string s_normalID;
+    static const std::string s_normalID;
     
+	void normalToEnemy();
+	void normalToResult();
     void switchState();
-    void normalToEnemy();
-    void normalToResult();
+	bool isLessThanZero();
+	bool isGreaterThanCount(int count);
 	void calcCollision();
 	void onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy);
-	float calcVector(Enemy *enemy);
+	bool isLessThanRadius(float dist, float radius);
 	float CalcDiff(float nextPos, float getPos);
 	float CalcSum(float powOne, float powTwo);
-	bool isLessThanRadius(float dist, float radius);
-	bool isGreaterThanCount(int count);
-	bool isLessThanZero();
+	float calcVector(Enemy *enemy);
 	
 };
 
