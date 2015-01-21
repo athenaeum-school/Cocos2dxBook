@@ -21,10 +21,15 @@ USING_NS_CC;
 const std::string NormalState::s_normalID = "NORMAL";
 //高速ヒットの場合、威力が増加する値
 const int ADD_POWER = 5;
+//敵ターンへのカウント
+const float TO_ENEMY = 250;
+//リザルト状態へのカウント
+const float TO_RESULT = 200;
+//高速衝突判定の基準速度
+const float HIT_SPEED = 10;
 
-
-NormalState::NormalState()
-	:_wisp(NULL)
+NormalState::NormalState() :
+_wisp(NULL)
 {
 	std::cout << "NormalState::NormalState() normal state constructor\n";
 }
@@ -124,12 +129,12 @@ void NormalState::onTouchEndedEvent()
 
 void NormalState::switchState()
 {
-	if (isGreaterThanCount(250))
+	if (isGreaterThanCount(TO_ENEMY))
 	{
 		//ウィスプのタイマーが250を超えたら敵NPCのターンへ
 		normalToEnemy();
 	}
-	else if (isLessThanZero() && isGreaterThanCount(200))
+	else if (isLessThanZero() && isGreaterThanCount(TO_RESULT))
 	{
 		//レイドHPが0かつ、ウィスプのタイマーが200を超えたらリザルト状態へ
 		normalToResult();
@@ -253,8 +258,8 @@ float NormalState::CalcSum(float powOne, float powTwo)
 //衝突判定(高速ヒット時)
 float NormalState::calcVector(Enemy *enemy)
 {
-	//ウィスプの速度が10以下なら抜ける
-	if (_wispVector.x < 10, _wispVector.y < 10)
+	//ウィスプの速度がHIT_SPEED以下なら抜ける
+	if (_wispVector.x < HIT_SPEED, _wispVector.y < HIT_SPEED)
 	{
 		return 0;
 	}
