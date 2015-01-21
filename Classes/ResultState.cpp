@@ -14,11 +14,9 @@
 #include "TitleState.h"
 #include "SimpleAudioEngine.h"
 
-
 using namespace CocosDenshion;
 //状態のID
 const std::string ResultState::s_resultID = "RESULT";
-
 
 ResultState::ResultState()
 	:_timer(0)
@@ -51,6 +49,19 @@ bool ResultState::onStateEnter()
 	return true;
 }
 
+bool ResultState::onStateExit()
+{
+	//ボタンを削除
+	_hud->removeChildByTag(kTag_retry);
+	//ゲームオブジェクトのonStateExit()を実行
+	objectStateExit();
+	_om->setIsReady(false);
+	_om->setRaidHp(0);
+	//ウィスプのHPラベルを非表示に
+	_hud->setLabelVisible(false);
+	return true;
+}
+
 void ResultState::stateUpdate(float dt) {}
 
 bool ResultState::onTouchBeganEvent()
@@ -62,36 +73,20 @@ void ResultState::onTouchMovedEvent(){}
 
 void ResultState::onTouchEndedEvent(){}
 
-bool ResultState::onStateExit() 
-{
-	CCLOG("ResultToNormal");
-	//ボタンを削除
-	_hud->removeChildByTag(kTag_retry);
-	//ゲームオブジェクトのonStateExit()を実行
-	objectStateExit();
-
-	_om->setIsReady(false);
-	_om->setRaidHp(0);
-	//ウィスプのHPラベルを非表示に
-	_hud->setLabelVisible(false);
-	return true;
-}
-
-
 void ResultState::onResult()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//リトライボタン
 	CCMenuItemImage *retryButton = CCMenuItemImage::create("result_button_retry_normal.png",
-														   "result_button_retry_selected.png", 
-														   this,
-														   menu_selector(ResultState::retry));
+		"result_button_retry_selected.png", 
+		this,
+		menu_selector(ResultState::retry));
 	//バックボタン
 	CCMenuItemImage *backButton = CCMenuItemImage::create("result_button_back_normal.png",
-														  "result_button_back_selected.png", 
-														  this, 
-														  menu_selector(ResultState::back));
+		"result_button_back_selected.png", 
+		this, 
+		menu_selector(ResultState::back));
 
 	//ボタンからメニューを作成する
 	CCMenu *menu = CCMenu::create(retryButton, backButton, NULL);

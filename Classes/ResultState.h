@@ -22,9 +22,10 @@ class ResultState : public GameState
 {
 public:
 
-	void stateUpdate(float dt) override;
 	bool onStateEnter() override;
 	bool onStateExit() override;
+	void stateUpdate(float dt) override;
+
 	bool onTouchBeganEvent() override;
 	void onTouchMovedEvent() override;
 	void onTouchEndedEvent() override;
