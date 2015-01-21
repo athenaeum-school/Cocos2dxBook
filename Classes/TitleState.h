@@ -12,19 +12,17 @@
 #ifndef __WillYard__TitleState__
 #define __WillYard__TitleState__
 
-
 #include "GameState.h"
 #include <cocos2d.h>
 #include "MainScene.h"
-
 
 class TitleState : public GameState
 {
 public:
 
-	void stateUpdate(float dt) override;
 	bool onStateEnter() override;
 	bool onStateExit() override;
+	void stateUpdate(float dt) override;
 	bool onTouchBeganEvent() override;
 	void onTouchMovedEvent() override;
 	void onTouchEndedEvent() override;
@@ -37,14 +35,13 @@ public:
 private:
 
 	int _timer;
-
 	static const std::string s_titleID;
-	static void s_titleToNormal();
-
+	
+	void titleToNormal();
+	void onNormal();
 	void initBackground(cocos2d::CCSize screenSize);
 	void play(cocos2d::CCObject *pSender);
-	void onNormal();
-	
+
 };
 
 #endif /* defined(__WillYard__TitleState__) */

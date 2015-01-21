@@ -78,12 +78,14 @@ void ResultState::onResult()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//リトライボタン
-	CCMenuItemImage *retryButton = CCMenuItemImage::create("result_button_retry_normal.png",
+	CCMenuItemImage *retryButton = CCMenuItemImage::create(
+		"result_button_retry_normal.png",
 		"result_button_retry_selected.png", 
 		this,
 		menu_selector(ResultState::retry));
 	//バックボタン
-	CCMenuItemImage *backButton = CCMenuItemImage::create("result_button_back_normal.png",
+	CCMenuItemImage *backButton = CCMenuItemImage::create(
+		"result_button_back_normal.png",
 		"result_button_back_selected.png", 
 		this, 
 		menu_selector(ResultState::back));
