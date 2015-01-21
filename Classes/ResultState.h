@@ -12,11 +12,9 @@
 #ifndef __WillYard__ResultState__
 #define __WillYard__ResultState__
 
-
 #include "GameState.h"
 #include <cocos2d.h>
 #include "MainScene.h"
-
 
 class ResultState : public GameState
 {

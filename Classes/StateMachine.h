@@ -18,10 +18,7 @@
 class StateMachine
 {
 public:
-    StateMachine();
-    ~StateMachine();
-    
-	std::vector<GameState*> getStates(){ return m_gameStates; }
+
     void pushState(GameState* pState);
     void changeState(GameState* pState);
     void popState();
@@ -29,10 +26,15 @@ public:
     bool onBeganEvent();
 	void onMovedEvent();
 	void onEndedEvent();
-    
-protected:
+	std::vector<GameState*> getStates(){ return m_gameStates; }
+
+	StateMachine();
+	~StateMachine();
+
 private:
+
     std::vector<GameState*> m_gameStates;
+
 };
 
 typedef StateMachine theStateMachine;

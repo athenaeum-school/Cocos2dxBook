@@ -10,22 +10,20 @@
 
 #include "StateMachine.h"
 
-StateMachine::StateMachine() {
-    
-}
+StateMachine::StateMachine() {}
 
-StateMachine::~StateMachine() {
-	
-}
+StateMachine::~StateMachine() {}
 
-void StateMachine::pushState(GameState* pState) {
+void StateMachine::pushState(GameState* pState)
+{
 	//コンテナの最後に新しい状態を追加
     m_gameStates.push_back(pState);
 	//追加した状態（コンテナの最後）を取り出す。更に、その状態の初期化
     m_gameStates.back()->onStateEnter();
 }
 
-void StateMachine::changeState(GameState* pState) {
+void StateMachine::changeState(GameState* pState) 
+{
 	//ステートが存在する場合
     if(!m_gameStates.empty())
     {
@@ -50,7 +48,8 @@ void StateMachine::changeState(GameState* pState) {
     }
 }
 
-void StateMachine::popState() {
+void StateMachine::popState() 
+{
 	//ステートが存在する場合
     if(!m_gameStates.empty())
     {
@@ -64,18 +63,22 @@ void StateMachine::popState() {
     }
 }
 
-void StateMachine::update(float dt) {
+void StateMachine::update(float dt) 
+{
     m_gameStates.back()->stateUpdate(dt);
 }
 
-bool StateMachine::onBeganEvent(){
+bool StateMachine::onBeganEvent()
+{
 	return m_gameStates.back()->onTouchBeganEvent();
 }
 
-void StateMachine::onMovedEvent(){
+void StateMachine::onMovedEvent()
+{
 	m_gameStates.back()->onTouchMovedEvent();
 }
 
-void StateMachine::onEndedEvent(){
+void StateMachine::onEndedEvent()
+{
 	m_gameStates.back()->onTouchEndedEvent();
 }
