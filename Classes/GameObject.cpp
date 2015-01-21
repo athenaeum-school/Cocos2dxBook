@@ -20,12 +20,16 @@ GameObject::GameObject()
 	, _hud(Hud::getInstance())
 	, _om(Om::getInstance())
 	, _isDead(false)
-	,_vector(ccp(0, 0))
 	, _nextPosition(ccp(0, 0))
+	, _vector(ccp(0, 0))
+	, _hpBar(NULL)
 {
 }
 
-GameObject::~GameObject(){}
+GameObject::~GameObject()
+{
+	CC_SAFE_RELEASE_NULL(_hpBar);
+}
 
 void GameObject::setStateID()
 {
@@ -63,12 +67,17 @@ bool GameObject::isResultState()
 	return false;
 }
 
+void GameObject::isDeadWithRet()
+{
+	//死亡していたら抜ける
+	if (_isDead)
+	{
+		return;
+	}
+}
+
 float GameObject::radius()
 {
-	if (_hp <= 0)
-	{
-		return 0.0;
-	}
 	//画像サイズの半径を返す
 	return getTexture()->getContentSize().width * 0.5;
 }
@@ -81,4 +90,10 @@ void GameObject::setPosition(const CCPoint& pos)
 	{
 		_nextPosition = pos;
 	}
+}
+
+float GameObject::getHpRatio()
+{
+	//HPバーの割合
+	return _hp * 100.0 / _maxHp;
 }
