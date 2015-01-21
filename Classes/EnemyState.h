@@ -33,6 +33,9 @@ public:
 
 	std::string getStateID() override { return s_enemyID; }
 
+	EnemyState();
+	~EnemyState();
+
 private:
 
 	int _timer;
@@ -48,8 +51,6 @@ private:
 	void switchState();
 	bool isGreaterThanCount(int count);
 	
-	EnemyState();
-	~EnemyState();
 };
 
 #endif /* defined(__WillYard__EnemyState__) */

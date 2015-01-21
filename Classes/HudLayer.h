@@ -42,24 +42,28 @@ public:
 	void damageToString(cocos2d::CCPoint hudPos, int damage);
 	void addComboCount();
 	void hide();
-	void drawMyHpLabel();
+	void drawHpLabel();
 	void setLabelVisible(bool flg);
 	void ready();
 	void fire();
 	void aim();
+	void touchImage();
+	void initHpbar(GameObject *obj);
+	void drawHpbar(GameObject *obj);
+
+private:
+
+	static HudLayer *s_pInstance;
+	MainScene *_main;
+	ObjectManager *_om;
+	
+	cocos2d::CCLabelTTF *_label;
+	cocos2d::CCLabelTTF *_comboLabel;
+	cocos2d::CCLabelTTF *_hp_label_wisp;
 	
 	HudLayer();
 	~HudLayer();
 
-private:
-
-	cocos2d::CCLabelTTF *_label;
-	cocos2d::CCLabelTTF *_comboLabel;
-	cocos2d::CCLabelTTF *_hp_label_wisp;
-	MainScene *_main;
-	ObjectManager *_om;
-	static HudLayer *s_pInstance;
-	
 };
 
 typedef HudLayer Hud;

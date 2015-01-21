@@ -15,11 +15,12 @@
 
 USING_NS_CC;
 using namespace CocosDenshion;
-
-
+//シングルトンの初期化
 HudLayer* HudLayer::s_pInstance = 0;
-
+//ダメージラベルの高さ
 const float HUD_POS = 20;
+//ラベルのマージン
+const float MARGIN = 50;
 
 HudLayer::HudLayer()
 	:_main(Main::getInstance())
@@ -50,7 +51,6 @@ bool HudLayer::init()
 	
 	CCLOG("HudInit");
 	CCSize screennSize = CCDirector::sharedDirector()->getWinSize();
-	int margin = 50;
 	//ウィスプのHPラベルを追加
 	_hp_label_wisp = new CCLabelTTF();
 	_hp_label_wisp->initWithString("HP : 0", "arial", 18);
@@ -59,13 +59,14 @@ bool HudLayer::init()
 	_comboLabel = new CCLabelTTF();
 	_comboLabel->initWithString("0", "arial", 30.0);
 	_comboLabel->setColor(ccc3(255, 215, 0));
-	_comboLabel->setPosition(ccp(screennSize.width - (_comboLabel->getContentSize().width) - margin, screennSize.height / 1.5 + margin));
+	_comboLabel->setPosition(ccp(screennSize.width - (_comboLabel->getContentSize().width) - MARGIN, screennSize.height / 1.5 + MARGIN));
 	_comboLabel->setVisible(false);
 	
 	this->addChild(_hp_label_wisp);
 	this->addChild(_comboLabel);
-	_hp_label_wisp->setPosition(ccp(screennSize.width / 4, screennSize.height / 1.2 + margin));
+	_hp_label_wisp->setPosition(ccp(screennSize.width / 4, screennSize.height / 1.2 + MARGIN));
 	_hp_label_wisp->setVisible(false);
+
 	return true;
 }
 
@@ -81,8 +82,8 @@ void HudLayer::damageToString(CCPoint hudPos, int damage)
 	this->addChild(damageLabel);
 	damageLabel->setPosition(ccp(hudPos.x, hudPos.y + HUD_POS));
 	damageLabel->setString(label->getCString());
-
 	CCSpawn *color = CCSpawn::create(CCTintTo::create(0.5, 255, 215, 0), CCFadeOut::create(0.5), NULL);
+	//カラー変更アクション後、削除するアクション
 	CCSequence *seq = CCSequence::create(color, CCRemoveSelf::create(), NULL);
 	damageLabel->runAction(seq);
 }
@@ -101,16 +102,12 @@ void HudLayer::addComboCount()
 
 void HudLayer::hide()
 {
-	if (_comboCount >= 1)
-	{
-		return;
-	}
 	//ラベルを非表示にし、色を元に戻す
 	_comboLabel->setVisible(false);
 	_comboLabel->setColor(ccc3(255, 215, 0));
 }
 
-void HudLayer::drawMyHpLabel()
+void HudLayer::drawHpLabel()
 {
 	Player *wisp = static_cast<Player *>(Main::getInstance()->getChildByTag(kTag_wisp));
 	//HPラベルを表示し、更新していく
@@ -118,11 +115,42 @@ void HudLayer::drawMyHpLabel()
 	CCString *label = new CCString();
 	label->initWithFormat("HP : %d", wisp->getHP());
 	_hp_label_wisp->setString(label->getCString());
-	
+}
+
+void HudLayer::drawHpbar(GameObject *obj)
+{
+	//HPバーにダメージを反映させる
+	CCProgressFromTo *draw = CCProgressFromTo::create(0.5, obj->getHP(), obj->getHpRatio());
+	obj->getHpBar()->runAction(draw);
+}
+
+void HudLayer::initHpbar(GameObject *obj)
+{
+	//ウィスプのみ、リザルト状態でHPバーを最大に戻す
+	if (_om->getStateMachine()->getStates().back()->getStateID() == "RESULT")
+	{
+		CCProgressFromTo *add = CCProgressFromTo::create(0, obj->getHP(), obj->getMaxHP());
+		obj->getHpBar()->runAction(add);
+		return;
+	} 
+	//HPバーの背景を追加
+	CCSprite *hpBgBar = CCSprite::create("hpBarBg.png");
+	hpBgBar->setPosition(ccp(obj->getContentSize().width / 2, obj->getContentSize().height / 10 - 10));
+	obj->addChild(hpBgBar, z_hpBarBg, kTag_hpbarBg);
+	//HPバーを追加
+	obj->setHpBar(CCProgressTimer::create(CCSprite::create("hpBar.png")));
+	CCProgressTimer *hpBar = obj->getHpBar();
+	hpBar->setPosition(ccp(hpBgBar->getContentSize().width / 2, hpBgBar->getContentSize().height / 2));
+	hpBar->setType(CCProgressTimerType::kCCProgressTimerTypeBar);
+	hpBar->setMidpoint(ccp(0, 1));
+	hpBar->setBarChangeRate(ccp(1, 0));
+	hpBar->setPercentage(obj->getHpRatio());
+	hpBgBar->addChild(hpBar, z_hpbar);
 }
 
 void HudLayer::setLabelVisible(bool flg)
 {
+	//HPラベルを非表示に
 	_hp_label_wisp->setVisible(flg); 
 }
 
@@ -146,7 +174,6 @@ void HudLayer::ready()
 
 void HudLayer::fire()
 {
-	CCLOG("fire");
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//Fireラベルを追加
@@ -155,7 +182,7 @@ void HudLayer::fire()
 	this->addChild(fire);
 
 	CCSpawn *scaleOut = CCSpawn::create(CCEaseIn::create(CCScaleTo::create(0.5, 2.0), 0.5), CCFadeOut::create(1), NULL);
-	CCSequence *action = CCSequence::create(scaleOut, CCRemoveSelf::create(), NULL);
+	CCSequence *action = CCSequence::create(scaleOut, CCCallFunc::create(this, callfunc_selector(HudLayer::touchImage)),CCRemoveSelf::create(), NULL);
 	fire->runAction(action);
 	_om->setIsReady(true);
 }
@@ -171,7 +198,22 @@ void HudLayer::aim()
 		aim->setOpacity(0);
 		this->addChild(aim);
 
-		CCSequence *aimFade = CCSequence::create(CCFadeIn::create(0.5), CCFadeOut::create(0.5), CCRemoveSelf::create(), NULL);
+		CCSequence *aimFade = CCSequence::create(CCFadeIn::create(0.5),
+			CCFadeOut::create(0.5),
+			CCCallFunc::create(this, callfunc_selector(HudLayer::touchImage)),
+			CCRemoveSelf::create(), NULL);
 		aim->runAction(aimFade);
 	}
+}
+
+void HudLayer::touchImage()
+{
+	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+	//タッチイメージを追加
+	CCSprite * touchImage = CCSprite::create("normalState_touch.png");
+	touchImage->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+	this->addChild(touchImage, z_touch, ktag_touch);
+	CCSequence *fade = CCSequence::create(CCFadeOut::create(0.5), CCFadeIn::create(0.5), NULL);
+	CCRepeatForever *repeat = CCRepeatForever::create(fade);
+	touchImage->runAction(repeat);
 }
