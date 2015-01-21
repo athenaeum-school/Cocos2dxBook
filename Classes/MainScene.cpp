@@ -13,17 +13,12 @@
 #include "SimpleAudioEngine.h"
 #include "HudLayer.h"
 
-
 USING_NS_CC;
 using namespace CocosDenshion;
-
-
+//シングルトンの初期化
 MainScene* MainScene::s_pInstance = 0;
 
-
-MainScene::MainScene()
-{
-}
+MainScene::MainScene(){}
 
 MainScene:: ~MainScene()
 {	
@@ -75,18 +70,24 @@ void MainScene::update(float dt) {
 }
 
 
-bool MainScene::ccTouchBegan(CCTouch* touch, CCEvent* event){
+bool MainScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
+{
+	//入力をメンバーへ代入
 	setBeganTouch(touch);
 	return _om->handleBeganEvents();
 }
 
-void MainScene::ccTouchMoved(CCTouch* touch, CCEvent* event){
+void MainScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
+{
+	//入力をメンバーへ代入
 	setMovedTouch(touch);
 	_om->handleMovedEvents();
 }
 
 
-void MainScene::ccTouchEnded(CCTouch* touch, CCEvent* event){
+void MainScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
+{
+	//入力をメンバーへ代入
 	setEndedTouch(touch);
 	_om->handleEndedEvents();
 }

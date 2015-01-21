@@ -16,21 +16,24 @@
 #include "ObjectManager.h"
 #include "HudLayer.h"
 
-
 enum tag
 {
 	kTag_background = 1,
+	kTag_arrow,
 	kTag_wisp,
 	kTag_enemy,
 	kTag_enemyAttack,
 	kTag_ready,
 	kTag_fire,
 	kTag_retry,
+	ktag_touch,
+	kTag_hpbarBg,
 };
 
 enum zOrder
 {
 	z_background = 1,
+	z_arrow,
 	z_enemy,
 	z_wisp,
 	z_enemyAttack,
@@ -38,6 +41,9 @@ enum zOrder
 	z_vanish,
 	z_star,
 	z_retry,
+	z_touch,
+	z_hpBarBg,
+	z_hpbar,
 };
 
 class MainScene : public cocos2d::CCLayer
@@ -69,16 +75,14 @@ public:
 	virtual void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event);
 	virtual void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event);
 
-protected:
-
-	MainScene();
-	~MainScene();
-
 private:
 
 	static MainScene *s_pInstance;
 	ObjectManager *_om;
 	HudLayer *_hud;
+
+	MainScene();
+	~MainScene();
 
 };
 
