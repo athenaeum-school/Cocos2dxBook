@@ -49,7 +49,6 @@ Player* Player::create()
 	return NULL;
 }
 
-
 Player* Player::initWisp()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
@@ -101,7 +100,6 @@ void Player::onStateExit()
 	} 
 	else if (isResultState())
 	{
-		CCLOG("wispresultExit");
 		_hud->initHpbar(this);
 	}
 }
@@ -125,26 +123,6 @@ void Player::stateUpdate(float dt)
 	//攻撃後、次の状態へのカウント開始
 	startTimer();
 }
-
-void Player::addPower(int power)
-{
-	//パワーアップ
-	this->_atk += power;
-}
-
-void Player::drawPower(int power)
-{
-	//パワーダウン
-	this->_atk -= power;
-}
-
-void Player::addForceToWisp()
-{
-	//放した時の運動量をウィスプに加える
-	_nextPosition.x += _vector.x;
-	_nextPosition.y += _vector.y;
-}
-
 
 bool Player::wispTouchBegan()
 {
@@ -189,6 +167,25 @@ void Player::wispTouchEnded()
 	//ショット中の操作を不可に
 	setCanFire(false);
 	setIsAttacking(true);
+}
+
+void Player::addPower(int power)
+{
+	//パワーアップ
+	this->_atk += power;
+}
+
+void Player::drawPower(int power)
+{
+	//パワーダウン
+	this->_atk -= power;
+}
+
+void Player::addForceToWisp()
+{
+	//放した時の運動量をウィスプに加える
+	_nextPosition.x += _vector.x;
+	_nextPosition.y += _vector.y;
 }
 
 bool Player::isNext()

@@ -17,8 +17,8 @@
 
 class MainScene;
 
-class Player : public PlayerHit {
-
+class Player : public PlayerHit
+{
 public:
 	
 	CC_SYNTHESIZE(bool, _canFire, CanFire);
@@ -32,18 +32,15 @@ public:
 	void onStateEnter() override;
 	void onStateExit() override;
 	void stateUpdate(float dt) override;
-	void addPower(int power);
-	void drawPower(int power);
 	
 	bool wispTouchBegan();
 	void wispTouchMoved();
 	void wispTouchEnded();
 
+	void addPower(int power);
+	void drawPower(int power);
 	void startTimer();
 	void resetWisp();
-
-	Player();
-	~Player();
 
 private:
 
@@ -54,6 +51,9 @@ private:
 	void arrowSettings(cocos2d::CCSprite *arrow, cocos2d::CCPoint movePoint);
 	cocos2d::CCPoint calcForce(cocos2d::CCPoint endPoint);
 	
+	Player();
+	~Player();
+
 };
 
 #endif /*defined(__WillYard__Player__)*/
