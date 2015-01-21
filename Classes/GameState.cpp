@@ -12,7 +12,6 @@
 #include "GameState.h"
 #include "MainScene.h"
 
-
 GameState::GameState()
 	:_main(Main::getInstance())
 	, _hud(Hud::getInstance())

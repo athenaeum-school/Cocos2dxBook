@@ -24,6 +24,7 @@ class HudLayer;
 class GameState : public CCSprite
 {
 public:
+
     virtual void stateUpdate(float dt) = 0;
     virtual bool onStateEnter() = 0;
     virtual bool onStateExit() = 0;
