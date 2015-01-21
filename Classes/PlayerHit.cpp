@@ -8,6 +8,7 @@
 *
 */
 
+
 #include "PlayerHit.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
@@ -22,10 +23,7 @@ PlayerHit::~PlayerHit(){}
 void PlayerHit::hitCheck()
 {
 	//敗北していたら抜ける
-	if (_isDead)
-	{
-		return;
-	}
+	this->isDeadWithRet();
 
 	CCPoint wispPosition = this->getPosition();
 	EnemyAttack *enemyAttack = static_cast<EnemyAttack *>(_main->getChildByTag(kTag_enemyAttack));
@@ -68,9 +66,11 @@ void PlayerHit::damage(EnemyAttack *atk)
 	{
 		_hp -= damage;
 	}
+	//HPバーに反映
+	_hud->drawHpbar(this);
 	//HPラベルに反映
-	Hud::getInstance()->drawMyHpLabel();
-	Hud::getInstance()->damageToString(this->getPosition(), atk->getAtk());
+	_hud->drawHpLabel();
+	_hud->damageToString(this->getPosition(), atk->getAtk());
 	CCLOG("wispdamageHp%d", _hp);
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	_hud->getAnime()->swingAnime(this);
@@ -94,9 +94,10 @@ void PlayerHit::died()
 //西
 void PlayerHit::collisionBlockWest()
 {
-	if (gThanRadius(_nextPosition.x))
+	if (isLessThanRadius(_nextPosition.x))
 	{
 		_nextPosition.x = this->radius();
+		//バウンド時の摩擦
 		_vector.x *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
@@ -105,7 +106,7 @@ void PlayerHit::collisionBlockWest()
 void PlayerHit::collisionBlockEast()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (lessThanRadius(_nextPosition.x, screenSize.width))
+	if (isGreaterThanRadius(_nextPosition.x, screenSize.width))
 	{
 		_nextPosition.x = screenSize.width - this->radius();
 		_vector.x *= -0.8f;
@@ -116,7 +117,7 @@ void PlayerHit::collisionBlockEast()
 void PlayerHit::collisionBlockNorth()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (lessThanRadius(_nextPosition.y, screenSize.height)) {
+	if (isGreaterThanRadius(_nextPosition.y, screenSize.height)) {
 		_nextPosition.y = screenSize.height - this->radius();
 		_vector.y *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
@@ -126,7 +127,7 @@ void PlayerHit::collisionBlockNorth()
 //南
 void PlayerHit::collisionBlockSouth()
 {
-	if (gThanRadius(_nextPosition.y))
+	if (isLessThanRadius(_nextPosition.y))
 	{
 		_nextPosition.y = this->radius();
 		_vector.y *= -0.8f;
@@ -134,8 +135,8 @@ void PlayerHit::collisionBlockSouth()
 	}
 }
 
-//ウィスプの半径が壁を超えたら、衝突する判定を返す
-bool PlayerHit::gThanRadius(float wispNextPos)
+//ウィスプの半径が壁を超えたら、衝突する判定を返す（南、西）
+bool PlayerHit::isLessThanRadius(float wispNextPos)
 {
 	if (wispNextPos < this->radius())
 	{
@@ -144,8 +145,8 @@ bool PlayerHit::gThanRadius(float wispNextPos)
 	return false;
 }
 
-//ウィスプの半径が壁を超えたら、衝突する判定を返す
-bool PlayerHit::lessThanRadius(float wispNextPos, float screenwh)
+//ウィスプの半径が壁を超えたら、衝突する判定を返す（北、東）
+bool PlayerHit::isGreaterThanRadius(float wispNextPos, float screenwh)
 {
 	if (wispNextPos > screenwh - this->radius())
 	{

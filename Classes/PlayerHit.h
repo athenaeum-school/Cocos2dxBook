@@ -16,15 +16,8 @@
 #include "GameObject.h"
 #include "EnemyAttack.h"
 
-
-class PlayerHit : public GameObject {
-private:
-
-	bool gThanRadius(float wispNextPos);
-	bool lessThanRadius(float wispNextPos, float screenwh);
-	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
-	void died();
-
+class PlayerHit : public GameObject 
+{
 protected:
 
 	void hitCheck();
@@ -38,6 +31,13 @@ protected:
 	PlayerHit();
 	~PlayerHit();
 
+private:
+
+	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
+	void died();
+	bool isLessThanRadius(float wispNextPos);
+	bool isGreaterThanRadius(float wispNextPos, float screenwh);
+	
 };
 
 #endif /*defined(__WillYard__PlayerHit__)*/
