@@ -12,17 +12,12 @@
 #ifndef __WillYard__ObjectManager__
 #define __WillYard__ObjectManager__
 
-
 #include <vector>
 #include <map>
 #include <cocos2d.h>
 #include "StateMachine.h"
 #include "GameObject.h"
 #include "EnemyFactory.h"
-
-USING_NS_CC;
-
-class EnemyFactory;
 
 class ObjectManager : public cocos2d::CCLayer
 {
@@ -77,11 +72,11 @@ public:
     
     std::vector<std::string> getLevelFiles() { return m_levelFiles; }
     
+	void playStart();
+	void addPlayCount();
 	CCSprite* initBackground();
 	void reset();
 	void fadeInState();
-	void playStart();
-	void addPlayCount();
 	
 private:
     
@@ -102,14 +97,12 @@ private:
     
 	void initAudio();
 	
-
     ObjectManager();
     ~ObjectManager();
     
     ObjectManager(const ObjectManager&);
 	ObjectManager& operator=(const ObjectManager&);
     
-    ObjectManager(const cocos2d::CCSprite*);
 };
 
 typedef ObjectManager Om;

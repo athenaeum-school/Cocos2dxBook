@@ -13,7 +13,7 @@
 #include "MainScene.h"
 
 const int VAMPIRE_HP = 120;
-const int VAMPIEE_MAXHP = 120;
+const int VAMPIRE_MAXHP = 120;
 const int VAMPIRE_ATK = 20;
 
 EnemyVampire::EnemyVampire(){}
@@ -44,7 +44,7 @@ std::string EnemyVampire::statusInit(enemyType type)
 	fileName = "enemy_vampire.png";
 	this->setEtype(type);
 	this->setHP(VAMPIRE_HP);
-	this->setMaxHP(VAMPIEE_MAXHP);
+	this->setMaxHP(VAMPIRE_MAXHP);
 	this->setAtk(VAMPIRE_ATK);
 	this->setAddMapName("vampire");
 

@@ -18,7 +18,7 @@
 USING_NS_CC;
 using namespace std;
 using namespace CocosDenshion;
-
+//シングルトンの初期化
 ObjectManager* ObjectManager::s_pInstance = 0;
 
 ObjectManager::ObjectManager():
@@ -31,7 +31,6 @@ m_bLevelComplete(false),
 isReady(false),
 _main(Main::getInstance())
 {
-	SimpleAudioEngine::sharedEngine()->preloadEffect("se_maoudamashii_element_fire07.mp3");
 	//状態マシーンの初期化
     m_pStateMachine = new StateMachine();
     m_currentLevel = 1;
@@ -41,7 +40,6 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::init()
 {
-	CCLOG("OMInit");
 	//BGMとSEの初期化
 	initAudio();
 	//初期状態を追加し、状態を初期化
@@ -49,43 +47,6 @@ bool ObjectManager::init()
 	_enemyFactory = EnemyFactory::create();
 
 	return true;
-}
-
-//BGMとSEの初期化
-void ObjectManager::initAudio()
-{
-	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
-	audio->preloadEffect("se_maoudamashii_system48.mp3");
-	audio->preloadEffect("se_maoudamashii_system45.mp3");
-	audio->preloadEffect("se_maoudamashii_element_fire06.mp3");
-	audio->preloadEffect("se_maoudamashii_magical23.mp3");
-	audio->preloadEffect("se_maoudamashii_element_wind02.mp3");
-	audio->preloadEffect("se_maoudamashii_system28.mp3");
-	audio->preloadEffect("se_maoudamashii_battle18.mp3");
-	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
-}
-
-//プレイスタート時の初期化
-void ObjectManager::playStart()
-{
-	if (_playCount >= 1)
-	{
-		return;
-	}
-
-	//ウィスプ生成
-	Player::create();
-	//エネミー生成
-	_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
-	_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
-	_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
-	//背景生成
-	initBackground();
-}
-
-void ObjectManager::addPlayCount()
-{
-	_playCount++;
 }
 
 void ObjectManager::setGameObjectPosition(const cocos2d::CCPoint &pts)
@@ -170,6 +131,45 @@ void ObjectManager::clean()
     m_pStateMachine = 0;
     delete m_pStateMachine;
 
+}
+
+//BGMとSEの初期化
+void ObjectManager::initAudio()
+{
+	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
+	audio->preloadEffect("se_maoudamashii_element_fire07.mp3");
+	audio->preloadEffect("se_maoudamashii_system48.mp3");
+	audio->preloadEffect("se_maoudamashii_system45.mp3");
+	audio->preloadEffect("se_maoudamashii_element_fire06.mp3");
+	audio->preloadEffect("se_maoudamashii_magical23.mp3");
+	audio->preloadEffect("se_maoudamashii_element_wind02.mp3");
+	audio->preloadEffect("se_maoudamashii_system28.mp3");
+	audio->preloadEffect("se_maoudamashii_battle18.mp3");
+	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
+}
+
+//プレイスタート時の初期化
+void ObjectManager::playStart()
+{
+	if (_playCount >= 1)
+	{
+		return;
+	}
+
+	//ウィスプ生成
+	Player::create();
+	//エネミー生成
+	_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
+	_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
+	_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
+	//背景生成
+	initBackground();
+}
+
+void ObjectManager::addPlayCount()
+{
+	//プレイ回数を更新
+	_playCount++;
 }
 
 CCSprite* ObjectManager::initBackground()
