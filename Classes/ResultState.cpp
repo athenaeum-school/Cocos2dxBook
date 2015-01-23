@@ -62,7 +62,7 @@ bool ResultState::onStateExit()
 	OM::getInstance()->setIsReady(false);
 	OM::getInstance()->setRaidHp(0);
 	//ウィスプのHPラベルを非表示に
-	Hud::getInstance()->setLabelVisible(false);
+	Hud::getInstance()->setHpLabelVisible(false);
 	return true;
 }
 

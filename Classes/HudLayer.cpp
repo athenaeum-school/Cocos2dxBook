@@ -70,7 +70,7 @@ bool HudLayer::init()
 }
 
 
-void HudLayer::damageToString(CCPoint hudPos, int damage)
+void HudLayer::damageLabel(CCPoint hudPos, int damage)
 {
 	//ダメージラベルを追加
 	CCString *label = new CCString();
@@ -87,7 +87,7 @@ void HudLayer::damageToString(CCPoint hudPos, int damage)
 	damageLabel->runAction(seq);
 }
 
-void HudLayer::addComboCount()
+void HudLayer::addComboCountLabel()
 {
 	//コンボラベルを表示
 	m_comboCount++;
@@ -99,7 +99,7 @@ void HudLayer::addComboCount()
 	m_pComboLabel->runAction(CCTintBy::create(0.0, 0, -5, 10));
 }
 
-void HudLayer::hide()
+void HudLayer::hideComboLabel()
 {
 	//ラベルを非表示にし、色を元に戻す
 	m_pComboLabel->setVisible(false);
@@ -110,20 +110,20 @@ void HudLayer::drawHpLabel()
 {
 	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//HPラベルを表示し、更新していく
-	setLabelVisible(true);
+	setHpLabelVisible(true);
 	CCString *label = new CCString();
 	label->initWithFormat("HP : %d", wisp->getHP());
 	m_pPlayerHpLabel->setString(label->getCString());
 }
 
-void HudLayer::drawHpbar(GameObject *obj)
+void HudLayer::drawHpBar(GameObject *obj)
 {
 	//HPバーにダメージを反映させる
 	CCProgressFromTo *draw = CCProgressFromTo::create(0.5, obj->getHP(), obj->getHpRatio());
 	obj->getHpBar()->runAction(draw);
 }
 
-void HudLayer::initHpbar(GameObject *obj)
+void HudLayer::initHpBar(GameObject *obj)
 {
 	//ウィスプのみ、リザルト状態でHPバーを最大に戻す
 	if (OM::getInstance()->getStateMachine()->getStates().back()->getStateID() == "RESULT")
@@ -147,13 +147,13 @@ void HudLayer::initHpbar(GameObject *obj)
 	hpBgBar->addChild(hpBar, z_hpbar);
 }
 
-void HudLayer::setLabelVisible(bool flg)
+void HudLayer::setHpLabelVisible(bool flg)
 {
 	//HPラベルを非表示に
 	m_pPlayerHpLabel->setVisible(flg); 
 }
 
-void HudLayer::ready()
+void HudLayer::readyImage()
 {
 	if (OM::getInstance()->getIsReady())
 	{
@@ -167,11 +167,11 @@ void HudLayer::ready()
 	ready->setOpacity(0);
 	this->addChild(ready);
 	//フェードインし、1秒後にFireラベルを表示させ、Readyラベルを削除するアクション
-	CCSequence *readyFire = CCSequence::create(CCFadeIn::create(0.5), CCDelayTime::create(1.0), CCCallFunc::create(this, callfunc_selector(HudLayer::fire)), CCRemoveSelf::create(), NULL);
+	CCSequence *readyFire = CCSequence::create(CCFadeIn::create(0.5), CCDelayTime::create(1.0), CCCallFunc::create(this, callfunc_selector(HudLayer::fireImage)), CCRemoveSelf::create(), NULL);
 	ready->runAction(readyFire);
 }
 
-void HudLayer::fire()
+void HudLayer::fireImage()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -186,7 +186,7 @@ void HudLayer::fire()
 	OM::getInstance()->setIsReady(true);
 }
 
-void HudLayer::aim()
+void HudLayer::aimImage()
 {
 	if (OM::getInstance()->getIsReady())
 	{

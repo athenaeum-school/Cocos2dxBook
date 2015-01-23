@@ -25,11 +25,6 @@ EnemyHit::~EnemyHit(){}
 
 void EnemyHit::hitCheck()
 {
-	if (!isNormalState())
-	{
-		return;
-	}
-
 	CCPoint enemyPosition = this->getPosition();
 	CCRect wispRect = m_pWisp->boundingBox();
 
@@ -82,9 +77,9 @@ void EnemyHit::damage()
 	int playerAtk = m_pWisp->getAtkPower();
 	
 	//ダメージを表示
-	Hud::getInstance()->damageToString(this->getPosition(), m_pWisp->getAtkPower());
+	Hud::getInstance()->damageLabel(this->getPosition(), m_pWisp->getAtkPower());
 	//ヒット数を表示
-	Hud::getInstance()->addComboCount();
+	Hud::getInstance()->addComboCountLabel();
 
 	if (playerAtk <= this->m_hp)
 	{
@@ -96,7 +91,7 @@ void EnemyHit::damage()
 		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
 		overDamage();
 	}
-	Hud::getInstance()->drawHpbar(this);
+	Hud::getInstance()->drawHpBar(this);
 	CCLOG("EnemyHP : %d", m_hp);
 
 	if (m_hp <= 0)

@@ -39,17 +39,17 @@ public:
 	virtual bool init();
 	CREATE_FUNC(HudLayer);
 	
-	void damageToString(cocos2d::CCPoint hudPos, int damage);
-	void addComboCount();
-	void hide();
+	void damageLabel(cocos2d::CCPoint hudPos, int damage);
+	void addComboCountLabel();
+	void hideComboLabel();
 	void drawHpLabel();
-	void setLabelVisible(bool flg);
-	void ready();
-	void fire();
-	void aim();
+	void setHpLabelVisible(bool flg);
+	void readyImage();
+	void fireImage();
+	void aimImage();
 	void touchImage();
-	void initHpbar(GameObject *obj);
-	void drawHpbar(GameObject *obj);
+	void initHpBar(GameObject *obj);
+	void drawHpBar(GameObject *obj);
 
 private:
 

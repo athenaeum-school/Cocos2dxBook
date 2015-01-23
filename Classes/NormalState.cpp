@@ -58,9 +58,9 @@ bool NormalState::onStateEnter()
 	//状態の初期化
 	std::cout << "NormalState::onStateEnter()\n";
 	//Readyラベル表示
-	Hud::getInstance()->ready();
+	Hud::getInstance()->readyImage();
 	//Aimラベル表示
-	Hud::getInstance()->aim();
+	Hud::getInstance()->aimImage();
 	//MainSceneからウィスプを取得
 	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//リトライ後の再設定
@@ -78,7 +78,7 @@ bool NormalState::onStateExit()
 {
 	//状態終了時（次の状態へ遷移時）の処理
 	Hud::getInstance()->setComboCount(0);
-	Hud::getInstance()->hide();
+	Hud::getInstance()->hideComboLabel();
 	//ゲームオブジェクトのonStateExit()を実行
 	objectStateExit();
 	return true;

@@ -68,10 +68,10 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 		m_hp -= damage;
 	}
 	//HPƒo[‚É”½‰f
-	Hud::getInstance()->drawHpbar(this);
+	Hud::getInstance()->drawHpBar(this);
 	//HPƒ‰ƒxƒ‹‚É”½‰f
 	Hud::getInstance()->drawHpLabel();
-	Hud::getInstance()->damageToString(this->getPosition(), atkPower->getAtkPower());
+	Hud::getInstance()->damageLabel(this->getPosition(), atkPower->getAtkPower());
 	CCLOG("wispdamageHp%d", m_hp);
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	Hud::getInstance()->getAnime()->swingAnime(this);

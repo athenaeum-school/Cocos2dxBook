@@ -63,7 +63,7 @@ Player* Player::initWisp()
 	//アニメーションの初期化
 	Hud::getInstance()->getAnime()->wispInitAnime(this);
 	//HPバーの追加
-	Hud::getInstance()->initHpbar(this);
+	Hud::getInstance()->initHpBar(this);
 
 	//vectorとmapコンテナへウィスプを追加
 	OM::getInstance()->addGameObject(this);
@@ -102,7 +102,7 @@ void Player::onStateExit()
 	} 
 	else if (isResultState())
 	{
-		Hud::getInstance()->initHpbar(this);
+		Hud::getInstance()->initHpBar(this);
 	}
 }
 

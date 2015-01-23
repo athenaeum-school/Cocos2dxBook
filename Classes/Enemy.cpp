@@ -45,7 +45,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	//待機アクション
 	setIdleAction();
 	//HPバーを追加
-	Hud::getInstance()->initHpbar(this);
+	Hud::getInstance()->initHpBar(this);
 	//レイドHPに追加
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
