@@ -15,20 +15,19 @@
 #include "cocos2d.h"
 #include "GameObject.h"
 
-class MainScene;
 class Player;
 
 class EnemyHit : public GameObject
 {
 public:
 
-	CC_SYNTHESIZE(bool, _isContacted, IsContacted);
+	CC_SYNTHESIZE(bool, m_isContacted, IsContacted);
 
 	void damage();
 
 protected:
 
-	Player *_wisp;
+	Player *m_pWisp;
 
 	void hitCheck();
 	cocos2d::CCRect setEnemyRect();

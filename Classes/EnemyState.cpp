@@ -27,8 +27,8 @@ void EnemyState::enemyToResult()
 }
 
 EnemyState::EnemyState()
-	:_timer(0)
-	, _isTurn(false)
+	:m_timer(0)
+	, m_isTurn(false)
 {}
 
 EnemyState::~EnemyState(){}
@@ -39,7 +39,7 @@ bool EnemyState::onStateEnter()
 	turnOnEnemy();
 	//コンテナにゲームオブジェクトを代入
 	setGameObjects();
-	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	m_pWisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
 	//ゲームオブジェクトのonStateEnter()を実行
 	objectStateEnter();
 
@@ -53,7 +53,7 @@ bool EnemyState::onStateExit()
 
 void EnemyState::stateUpdate(float dt) 
 {
-	if (!_isTurn)
+	if (!m_isTurn)
 	{
 		return;
 	}
@@ -89,12 +89,12 @@ void EnemyState::turnOnEnemy()
 void EnemyState::setIsTurn()
 {
 	//フラグをtrueにし、stateUpdate()を開始
-	_isTurn = true;
+	m_isTurn = true;
 }
 
 void EnemyState::switchState()
 {
-	if (_wisp->getIsDead() && isGreaterThanCount(90))
+	if (m_pWisp->getIsDead() && isGreaterThanCount(90))
 	{
 		//ウィスプが消滅し、タイマーが190を超えたらResultStateへ
 		if (isGreaterThanCount(190))
@@ -105,14 +105,14 @@ void EnemyState::switchState()
 	else if (isGreaterThanCount(100))
 	{
 		//タイマーが100を超えたらプレイヤーのターンへ
-		_timer = 0;
+		m_timer = 0;
 		enemyToNormal();
 	}
 }
 
 bool EnemyState::isGreaterThanCount(int count)
 {
-	if (++_timer > count)
+	if (++m_timer > count)
 	{
 		return true;
 	}

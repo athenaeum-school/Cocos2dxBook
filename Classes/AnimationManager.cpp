@@ -49,7 +49,7 @@ void AnimationManager::wispDyingAnime(PlayerHit *wisp)
 	//消滅エフェクト（風が発生）
 	CCSprite *vanish = CCSprite::create("wisp_dying1.png");
 	vanish->setPosition(wisp->getPosition());
-	Main::getInstance()->addChild(vanish, z_vanish);
+	MS::getInstance()->addChild(vanish, z_vanish);
 
 	CCAnimation *vanishing = CCAnimation::create();
 	vanishing->addSpriteFrameWithFileName("wisp_dying1.png");
@@ -78,7 +78,7 @@ void AnimationManager::enemyDyingAnime(EnemyHit *enemy)
 	//消滅エフェクト(爆発が発生)
 	CCSprite *vanish = CCSprite::create("dying1.png");
 	vanish->setPosition(enemy->getPosition());
-	Main::getInstance()->addChild(vanish, z_vanish);
+	MS::getInstance()->addChild(vanish, z_vanish);
 
 	CCAnimation *vanishing = CCAnimation::create();
 	vanishing->addSpriteFrameWithFileName("dying1.png");
@@ -98,7 +98,7 @@ void AnimationManager::enemyDyingAnime(EnemyHit *enemy)
 
 void AnimationManager::enemyStarAnime()
 {
-	MainScene *main = Main::getInstance();
+	MainScene *main = MS::getInstance();
 	Player* wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
 	//ダメージ時、スターエフェクト表示
 	CCSprite *star = CCSprite::create("star1.png");
@@ -124,7 +124,7 @@ void AnimationManager::enemyExplodeAnime(EnemyHit *enemy)
 	//ダメージ時、爆発エフェクト表示
 	CCSprite *ex = CCSprite::create("explode1.png");
 	ex->setPosition(enemy->getPosition());
-	Main::getInstance()->addChild(ex, z_explode);
+	MS::getInstance()->addChild(ex, z_explode);
 
 	CCAnimation *explode = CCAnimation::create();
 	explode->addSpriteFrameWithFileName("explode1.png");

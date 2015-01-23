@@ -12,13 +12,9 @@
 #ifndef __WillYard__EnemyState__
 #define __WillYard__EnemyState__
 
-
 #include "GameState.h"
 #include <cocos2d.h>
 #include "Player.h"
-#include "Enemy.h"
-#include "MainScene.h"
-
 
 class EnemyState : public GameState
 {
@@ -38,9 +34,9 @@ public:
 
 private:
 
-	int _timer;
-	bool _isTurn;
-	Player *_wisp;
+	int m_timer;
+	bool m_isTurn;
+	Player *m_pWisp;
 
 	static const std::string s_enemyID;
 

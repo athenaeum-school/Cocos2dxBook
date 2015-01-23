@@ -46,7 +46,6 @@ std::string EnemyRatTwo::statusInit(enemyType type)
 	this->setHP(RAT_TWO_HP);
 	this->setMaxHP(RAT_TWO_MAXHP);
 	this->setAtk(RAT_TWO_ATK);
-	this->setAddMapName("rat2");
 
 	return fileName;
 }

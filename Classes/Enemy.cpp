@@ -42,13 +42,13 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	//待機アクション
 	setIdleAction();
 	//HPバーを追加
-	_hud->initHpbar(this);
+	Hud::getInstance()->initHpbar(this);
 	//レイドHPに追加
-	_om->initRaidHp(this->getHP());
+	OM::getInstance()->initRaidHp(this->getHP());
 	//エネミーカウント増加
-	_om->addEnemyCount();
+	OM::getInstance()->addEnemyCount();
 	//vectorとmapコンテナに追加
-	_om->addGameObject(this);
+	OM::getInstance()->addGameObject(this);
 	
 	return this;
 }
@@ -58,7 +58,7 @@ void Enemy::onStateEnter()
 	//死亡していたら抜ける
 	this->isDeadWithRet();
 	
-	m_pWisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
 	setStateID();
 	//状態の判別
@@ -105,7 +105,7 @@ void Enemy::onEnemyStateEnter()
 	{
 		setIsAttacked(false);
 	}
-	else if (_om->getEnemyCount() == 1)
+	else if (OM::getInstance()->getEnemyCount() == 1)
 	{
 		//残り１体になると必ず攻撃
 		setIsAttacked(false);
@@ -122,14 +122,14 @@ void Enemy::resultExit()
 		getHpBar()->removeFromParent();
 		this->removeChildByTag(kTag_hpbarBg);
 	}
-	Om::getInstance()->setEnemyCount(0);
+	OM::getInstance()->setEnemyCount(0);
 	this->runAction(CCFadeOut::create(0));
 }
 
 int Enemy::randomAttack(int value)
 {
 	//敵NPCの最大数 % (敵NPCの最大数 * value)を返す
-	int enemyCount = _om->getEnemyCount();
+	int enemyCount = OM::getInstance()->getEnemyCount();
 	int random = enemyCount % calcRandom(1, enemyCount * value);
 	return random;
 }
@@ -155,7 +155,7 @@ void Enemy::attack()
 bool Enemy::isDeadOrAttacked()
 {
 	//死亡しているか攻撃済みならtrue
-	if (_isDead || m_isAttacked)
+	if (m_isDead || m_isAttacked)
 	{
 		return true;
 	}

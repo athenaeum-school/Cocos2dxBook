@@ -13,7 +13,7 @@
 #include "MainScene.h"
 
 EnemyHit::EnemyHit():
-_isContacted(false)
+m_isContacted(false)
 {}
 
 EnemyHit::~EnemyHit(){}
@@ -26,14 +26,14 @@ void EnemyHit::hitCheck()
 	}
 
 	CCPoint enemyPosition = this->getPosition();
-	CCRect wispRect = _wisp->boundingBox();
+	CCRect wispRect = m_pWisp->boundingBox();
 
 	bool isContact = setEnemyRect().intersectsRect(wispRect);
 	//敵NPCの描画領域に触れていて、それまでに触れていない、かつ、敵NPCが生存していて、ウィスプが攻撃中ならばtrue
 	if (isContanctWithContacted(isContact) && isDeadWithAttacking())
 	{
 		damage();
-		_hud->getAnime()->enemyDamageAnime(this);
+		Hud::getInstance()->getAnime()->enemyDamageAnime(this);
 		setIsContacted(true);
 	}
 	else if (!isContact)
@@ -55,7 +55,7 @@ CCRect EnemyHit::setEnemyRect()
 bool EnemyHit::isDeadWithAttacking()
 {
 	//敵NPCが生存していて、ウィスプが攻撃中ならばtrue
-	if (!_isDead && _wisp->getIsAttacking())
+	if (!m_isDead && m_pWisp->getIsAttacking())
 	{
 		return true;
 	}
@@ -64,7 +64,7 @@ bool EnemyHit::isDeadWithAttacking()
 
 bool EnemyHit::isContanctWithContacted(bool isContact)
 {
-	if (isContact && !_isContacted)
+	if (isContact && !m_isContacted)
 	{
 		return true;
 	}
@@ -74,27 +74,27 @@ bool EnemyHit::isContanctWithContacted(bool isContact)
 void EnemyHit::damage()
 {
 
-	int playerAtk = _wisp->getAtk();
+	int playerAtk = m_pWisp->getAtk();
 	
 	//ダメージを表示
-	_hud->damageToString(this->getPosition(), _wisp->getAtk());
+	Hud::getInstance()->damageToString(this->getPosition(), m_pWisp->getAtk());
 	//ヒット数を表示
-	_hud->addComboCount();
+	Hud::getInstance()->addComboCount();
 
-	if (playerAtk <= this->_hp)
+	if (playerAtk <= this->m_hp)
 	{
 		//通常ダメージ
 		normalDamage(playerAtk);
 	}
-	else if (playerAtk > this->_hp)
+	else if (playerAtk > this->m_hp)
 	{
 		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
 		overDamage();
 	}
-	_hud->drawHpbar(this);
-	CCLOG("EnemyHP : %d", _hp);
+	Hud::getInstance()->drawHpbar(this);
+	CCLOG("EnemyHP : %d", m_hp);
 
-	if (_hp <= 0)
+	if (m_hp <= 0)
 	{
 		setIsDead(true);
 		died();
@@ -104,25 +104,25 @@ void EnemyHit::damage()
 void EnemyHit::normalDamage(int playerAtk)
 {
 	//通常ダメージ
-	_hp -= playerAtk;
-	_om->damageRaidHp(playerAtk);
+	m_hp -= playerAtk;
+	OM::getInstance()->damageRaidHp(playerAtk);
 }
 
 void EnemyHit::overDamage()
 {
 	//レイドHPとのずれを無くすため、オーバーダメージを防ぐ処理
-	int margeDamage = _hp;
-	_hp -= margeDamage;
-	_om->damageRaidHp(margeDamage);
+	int margeDamage = m_hp;
+	m_hp -= margeDamage;
+	OM::getInstance()->damageRaidHp(margeDamage);
 }
 
 void EnemyHit::died()
 {
-	if (_isDead)
+	if (m_isDead)
 	{
 		setHP(0);
 		//敵NPCの数を減らす
-		_om->drawEnemyCount();
-		_hud->getAnime()->enemyDyingAnime(this);
+		OM::getInstance()->drawEnemyCount();
+		Hud::getInstance()->getAnime()->enemyDyingAnime(this);
 	}
 }
