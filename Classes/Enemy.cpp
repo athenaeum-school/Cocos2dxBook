@@ -23,9 +23,9 @@ const int SUCCESS_RATE = 2;
 Enemy::Enemy() :
  m_isAttacked(true)
 {
-	setAtkPower(0);
-	setHP(0);
-	setMaxHP(0);
+	this->setAtkPower(0);
+	this->setHP(0);
+	this->setMaxHP(0);
 }
 
 Enemy::~Enemy(){}
@@ -35,14 +35,15 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//敵NPCのステータスを追加
+	//引数のstatusInit()は純粋仮想関数であり、派生クラス（敵NPCタイプ）に応じて、実装を変えている
 	this->initWithFile(statusInit(type).c_str());
-	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - 1 * this->radius()));
+	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - this->radius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//移動しながらフェードインするアクション
-	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - 10 * this->radius())), NULL);
+	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - this->radius() * 10.0)), NULL);
 	this->runAction(fadeIn);
-	//待機アクション
+	//待機アクション（純粋仮想関数）
 	setIdleAction();
 	//HPバーを追加
 	Hud::getInstance()->initHpBar(this);
@@ -63,17 +64,17 @@ void Enemy::onStateEnter()
 	
 	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
-	setStateID();
+	this->setStateID();
 	//状態の判別
-	if (isNormalState())
+	if (this->isNormalState())
 	{
-		setIsContacted(false);
+		this->setIsContacted(false);
 	}
-	else if (isEnemyState())
+	else if (this->isEnemyState())
 	{
-		onEnemyStateEnter();
+		this->onEnemyStateEnter();
 	}
-	else if (isResultState())
+	else if (this->isResultState())
 	{
 		
 	}
@@ -84,18 +85,19 @@ void Enemy::stateUpdate(float dt)
 	this->isDeadWithRet();
 
 	attack();
-	hitCheck();
+	this->hitCheck();
 }
 
 void Enemy::onStateExit()
 {
 	this->isDeadWithRet();
 
-	if (isEnemyState())
+	if (this->isEnemyState())
 	{
-		setIsContacted(false);
+		//まだウィスプに触れていない状態にする
+		this->setIsContacted(false);
 	}
-	else if (isResultState())
+	else if (this->isResultState())
 	{
 		resultExit();
 	}
@@ -118,14 +120,18 @@ void Enemy::onEnemyStateEnter()
 void Enemy::resultExit()
 {
 	//リザルト状態が終了すると同時に、敵NPCの消去処理
-	setHP(0);
-	setIsDead(true);
-	if (getHpBar() && this->getChildByTag(kTag_hpbarBg))
+	this->setHP(0);
+	this->setIsDead(true);
+	if (this->getHpBar() && this->getChildByTag(kTag_hpbarBg))
 	{
-		getHpBar()->removeFromParent();
+		//m_hpBarはHudLayerにaddChildしているため、子自身で消去処理
+		this->getHpBar()->removeFromParent();
+		//hpBar_bgはこのクラスにaddChildしているため、this->で消去
 		this->removeChildByTag(kTag_hpbarBg);
 	}
+	//敵NPCの総数をリセット
 	OM::getInstance()->setEnemyCount(0);
+	//敵NPCを見えなくさせるアクション
 	this->runAction(CCFadeOut::create(0));
 }
 
@@ -146,19 +152,20 @@ int Enemy::calcRandom(int min, int max)
 void Enemy::attack()
 {
 	//死亡しているか、攻撃済みまたは敵NPCターン以外なら攻撃をしない
-	if (isDeadOrAttacked() || !isEnemyState())
+	if (isDeadOrAttacked() || !this->isEnemyState())
 	{
 		return;
 	}
 		//設定敵NPCタイプに応じて、攻撃を生成
 		EnemyAttack::create(this);
+		//攻撃済みのフラグを立てる
 		setIsAttacked(true);
 }
 
 bool Enemy::isDeadOrAttacked()
 {
 	//死亡しているか攻撃済みならtrue
-	if (m_isDead || m_isAttacked)
+	if (this->m_isDead || m_isAttacked)
 	{
 		return true;
 	}
