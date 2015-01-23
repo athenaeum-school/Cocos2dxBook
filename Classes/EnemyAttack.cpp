@@ -16,7 +16,7 @@ USING_NS_CC;
 using namespace CocosDenshion;
 
 EnemyAttack::EnemyAttack()
-	:_atk(0)
+	:m_atk(0)
 {}
 
 
@@ -24,7 +24,7 @@ EnemyAttack::~EnemyAttack(){}
 
 EnemyAttack* EnemyAttack::create(Enemy *enemy)
 {
-	//エネミー生成
+	//攻撃生成
 	EnemyAttack * enemyAttack = new EnemyAttack();
 	if (enemyAttack) 
 	{

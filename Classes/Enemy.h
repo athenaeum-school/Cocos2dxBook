@@ -29,10 +29,9 @@ class Enemy : public EnemyHit
 {
 public:
 
-	CC_SYNTHESIZE(bool, _isAttacked, IsAttacked);
-	CC_SYNTHESIZE(enemyType, _eType, Etype);
-	CC_SYNTHESIZE(std::string, _addMapName, AddMapName);
-
+	CC_SYNTHESIZE(bool, m_isAttacked, IsAttacked);
+	CC_SYNTHESIZE(enemyType, m_eType, Etype);
+	
 	void onStateEnter() override;
 	void onStateExit() override;
 	void stateUpdate(float dt) override;

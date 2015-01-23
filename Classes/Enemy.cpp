@@ -18,7 +18,7 @@ USING_NS_CC;
 const int SUCCESS_RATE = 2;
 
 Enemy::Enemy() :
- _isAttacked(true)
+ m_isAttacked(true)
 {
 	setAtk(0);
 	setHP(0);
@@ -48,7 +48,6 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	//エネミーカウント増加
 	_om->addEnemyCount();
 	//vectorとmapコンテナに追加
-	_om->addGameObjectMap(_addMapName, this);
 	_om->addGameObject(this);
 	
 	return this;
@@ -59,7 +58,7 @@ void Enemy::onStateEnter()
 	//死亡していたら抜ける
 	this->isDeadWithRet();
 	
-	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	m_pWisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
 	setStateID();
 	//状態の判別
@@ -156,7 +155,7 @@ void Enemy::attack()
 bool Enemy::isDeadOrAttacked()
 {
 	//死亡しているか攻撃済みならtrue
-	if (_isDead || _isAttacked)
+	if (_isDead || m_isAttacked)
 	{
 		return true;
 	}

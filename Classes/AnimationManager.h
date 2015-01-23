@@ -39,8 +39,6 @@ public:
 	AnimationManager();
 	~AnimationManager();
 
-private:
-
 };
 
 #endif /*defined(__WillYard__AnimationManager__)*/

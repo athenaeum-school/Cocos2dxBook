@@ -13,10 +13,8 @@
 #include "SimpleAudioEngine.h"
 #include "MainScene.h"
 
-
 USING_NS_CC;
 using namespace CocosDenshion;
-
 
 AnimationManager::AnimationManager(){}
 
