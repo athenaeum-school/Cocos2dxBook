@@ -21,11 +21,11 @@ public:
 
 	CC_SYNTHESIZE(int, m_hp, HP);
 	CC_SYNTHESIZE(int, m_maxHp, MaxHP);
-	CC_SYNTHESIZE(int, m_atk, Atk);
+	CC_SYNTHESIZE(int, m_atkPower, AtkPower);
 	CC_SYNTHESIZE(bool, m_isDead, IsDead);
 	CC_SYNTHESIZE(std::string, m_stateID, StateID);
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_nextPosition, NextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, m_vector, Vector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_acceleration, Acceleration);
 	CC_SYNTHESIZE_RETAIN(cocos2d::CCProgressTimer *, m_pHpBar, HpBar);
 
 	virtual void onStateEnter() = 0;

@@ -92,13 +92,13 @@ void NormalState::stateUpdate(float dt)
 	//ウィスプの状態を更新（この状態内の、計算用メンバーへステータスを代入）
 	setWispNextPosition(m_pWisp->getNextPosition());
 	//ウィスプの推進力
-	setWispVector(m_pWisp->getVector());
+	setWispVector(m_pWisp->getAcceleration());
 	//徐々に減速させる処理（運動量_wispVectorのxとyに、0.98fを掛け続ける）
 	setWispVector(ccpMult(m_wispVector, 0.98f));
 	//衝突判定
 	calcCollision();
 	//最後に、ウィスプの推進力と次の目標地点に設定
-	m_pWisp->setVector(m_wispVector);
+	m_pWisp->setAcceleration(m_wispVector);
 	m_pWisp->setNextPosition(m_wispNextPosition);
 	//次の目標地点へ移動
 	m_pWisp->setPosition(m_pWisp->getNextPosition());
@@ -175,7 +175,7 @@ void NormalState::calcCollision()
 			Enemy *enemy = static_cast<Enemy *>((*it));
 
 			setEnemyNextPosition(enemy->getNextPosition());
-			setEnemyVector(enemy->getVector());
+			setEnemyVector(enemy->getAcceleration());
 			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
 			float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
 			float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());

@@ -16,7 +16,7 @@
 
 USING_NS_CC;
 //ショット時の運動量倍率
-const float SHOT_RATE = 0.4;
+const float SHOT_RATE = 0.3;
 //ウィスプのHP
 const int WISP_HP = 100;
 //最大HP
@@ -33,7 +33,7 @@ m_angle(0)
 {
 	setHP(WISP_HP);
 	setMaxHP(WISP_MAXHP);
-	setAtk(WISP_ATK); 
+	setAtkPower(WISP_ATK); 
 }
 
 Player::~Player(){}
@@ -98,7 +98,7 @@ void Player::onStateExit()
 	if (isNormalState())
 	{
 		setIsAttacking(false);
-		setVector(ccp(0, 0));
+		setAcceleration(ccp(0, 0));
 	} 
 	else if (isResultState())
 	{
@@ -163,7 +163,7 @@ void Player::wispTouchEnded()
 	//放した座標
 	CCPoint endPoint = touch->getLocation();
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算し、力を加える
-	this->setVector(calcForce(endPoint));
+	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
 	MS::getInstance()->removeChildByTag(kTag_arrow);
 	//ショット中の操作を不可に
@@ -174,20 +174,20 @@ void Player::wispTouchEnded()
 void Player::addPower(int power)
 {
 	//パワーアップ
-	this->m_atk += power;
+	this->m_atkPower += power;
 }
 
 void Player::drawPower(int power)
 {
 	//パワーダウン
-	this->m_atk -= power;
+	this->m_atkPower -= power;
 }
 
 void Player::addForceToWisp()
 {
 	//放した時の運動量をウィスプに加える
-	m_nextPosition.x += m_vector.x;
-	m_nextPosition.y += m_vector.y;
+	m_nextPosition.x += m_acceleration.x;
+	m_nextPosition.y += m_acceleration.y;
 }
 
 bool Player::isNext()
@@ -283,6 +283,6 @@ void Player::resetWisp()
 	setIsDead(false);
 	setCanFire(true);
 	setTimer(0);
-	setVector(ccp(0, 0));
+	setAcceleration(ccp(0, 0));
 	setPosition(ccp(screenSize.width / 2.0, this->radius() * 2.0));
 }

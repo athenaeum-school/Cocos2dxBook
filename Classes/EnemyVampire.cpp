@@ -46,7 +46,7 @@ std::string EnemyVampire::statusInit(enemyType type)
 	this->setEtype(type);
 	this->setHP(VAMPIRE_HP);
 	this->setMaxHP(VAMPIRE_MAXHP);
-	this->setAtk(VAMPIRE_ATK);
+	this->setAtkPower(VAMPIRE_ATK);
 	
 	return fileName;
 }

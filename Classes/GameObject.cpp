@@ -20,7 +20,7 @@ USING_NS_CC;
 GameObject::GameObject() : 
 	m_isDead(false),
 	m_nextPosition(ccp(0, 0)),
-	m_vector(ccp(0, 0)),
+	m_acceleration(ccp(0, 0)),
 	m_pHpBar(NULL)
 {
 }

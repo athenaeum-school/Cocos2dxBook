@@ -19,7 +19,7 @@ class EnemyAttack : public cocos2d::CCSprite
 {
 public:
 
-	CC_SYNTHESIZE(int, m_atk, Atk);
+	CC_SYNTHESIZE(int, m_atkPower, AtkPower);
 
 	static EnemyAttack* create(Enemy *enemy);
 	void attack(Enemy *enemy);

@@ -33,15 +33,15 @@ void EnemyHit::hitCheck()
 	CCPoint enemyPosition = this->getPosition();
 	CCRect wispRect = m_pWisp->boundingBox();
 
-	bool isContact = setEnemyRect().intersectsRect(wispRect);
+	bool isContact_interSects = setEnemyRect().intersectsRect(wispRect);
 	//“GNPC‚Ì•`‰æ—Ìˆæ‚ÉG‚ê‚Ä‚¢‚ÄA‚»‚ê‚Ü‚Å‚ÉG‚ê‚Ä‚¢‚È‚¢A‚©‚ÂA“GNPC‚ª¶‘¶‚µ‚Ä‚¢‚ÄAƒEƒBƒXƒv‚ªUŒ‚’†‚È‚ç‚Îtrue
-	if (isContanctWithContacted(isContact) && isDeadWithAttacking())
+	if (isContanctWithContacted(isContact_interSects) && isDeadWithAttacking())
 	{
 		damage();
 		Hud::getInstance()->getAnime()->enemyDamageAnime(this);
 		setIsContacted(true);
 	}
-	else if (!isContact)
+	else if (!isContact_interSects)
 	{
 		setIsContacted(false);
 	}
@@ -67,9 +67,9 @@ bool EnemyHit::isDeadWithAttacking()
 	return false;
 }
 
-bool EnemyHit::isContanctWithContacted(bool isContact)
+bool EnemyHit::isContanctWithContacted(bool isContact_interSects)
 {
-	if (isContact && !m_isContacted)
+	if (isContact_interSects && !m_isContacted)
 	{
 		return true;
 	}
@@ -79,10 +79,10 @@ bool EnemyHit::isContanctWithContacted(bool isContact)
 void EnemyHit::damage()
 {
 
-	int playerAtk = m_pWisp->getAtk();
+	int playerAtk = m_pWisp->getAtkPower();
 	
 	//ƒ_ƒ[ƒW‚ð•\Ž¦
-	Hud::getInstance()->damageToString(this->getPosition(), m_pWisp->getAtk());
+	Hud::getInstance()->damageToString(this->getPosition(), m_pWisp->getAtkPower());
 	//ƒqƒbƒg”‚ð•\Ž¦
 	Hud::getInstance()->addComboCount();
 

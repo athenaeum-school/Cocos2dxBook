@@ -17,7 +17,7 @@ USING_NS_CC;
 using namespace CocosDenshion;
 
 EnemyAttack::EnemyAttack()
-	:m_atk(0)
+	:m_atkPower(0)
 {}
 
 
@@ -73,7 +73,7 @@ std::string EnemyAttack::fileNameInit(enemyType type)
 void EnemyAttack::attack(Enemy *enemy)
 {
 	//ŒÄ‚Ño‚µ‚½“GNPC‚ÌUŒ‚—Í‚ð‘ã“ü
-	setAtk(enemy->getAtk());
+	setAtkPower(enemy->getAtkPower());
 	//ƒ^ƒCƒv‚É‚æ‚Á‚ÄAUŒ‚•û–@‚ð•Ï‚¦‚é
 	switch (enemy->getEtype())
 	{

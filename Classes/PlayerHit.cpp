@@ -53,10 +53,10 @@ CCRect PlayerHit::enemyAtkRect(EnemyAttack *enemyAttack)
 	return atkRect;
 }
 
-void PlayerHit::damage(EnemyAttack *atk)
+void PlayerHit::damage(EnemyAttack *atkPower)
 {
 	//ダメージ
-	int damage = atk->getAtk();
+	int damage = atkPower->getAtkPower();
 
 	if (damage > m_hp)
 	{
@@ -71,7 +71,7 @@ void PlayerHit::damage(EnemyAttack *atk)
 	Hud::getInstance()->drawHpbar(this);
 	//HPラベルに反映
 	Hud::getInstance()->drawHpLabel();
-	Hud::getInstance()->damageToString(this->getPosition(), atk->getAtk());
+	Hud::getInstance()->damageToString(this->getPosition(), atkPower->getAtkPower());
 	CCLOG("wispdamageHp%d", m_hp);
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	Hud::getInstance()->getAnime()->swingAnime(this);
@@ -99,7 +99,7 @@ void PlayerHit::collisionBlockWest()
 	{
 		m_nextPosition.x = this->radius();
 		//バウンド時の摩擦
-		m_vector.x *= -0.8f;
+		m_acceleration.x *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
@@ -110,7 +110,7 @@ void PlayerHit::collisionBlockEast()
 	if (isGreaterThanRadius(m_nextPosition.x, screenSize.width))
 	{
 		m_nextPosition.x = screenSize.width - this->radius();
-		m_vector.x *= -0.8f;
+		m_acceleration.x *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
@@ -120,7 +120,7 @@ void PlayerHit::collisionBlockNorth()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	if (isGreaterThanRadius(m_nextPosition.y, screenSize.height)) {
 		m_nextPosition.y = screenSize.height - this->radius();
-		m_vector.y *= -0.8f;
+		m_acceleration.y *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 
@@ -131,7 +131,7 @@ void PlayerHit::collisionBlockSouth()
 	if (isLessThanRadius(m_nextPosition.y))
 	{
 		m_nextPosition.y = this->radius();
-		m_vector.y *= -0.8f;
+		m_acceleration.y *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }

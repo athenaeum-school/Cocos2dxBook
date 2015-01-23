@@ -23,7 +23,7 @@ const int SUCCESS_RATE = 2;
 Enemy::Enemy() :
  m_isAttacked(true)
 {
-	setAtk(0);
+	setAtkPower(0);
 	setHP(0);
 	setMaxHP(0);
 }
