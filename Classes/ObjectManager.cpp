@@ -165,13 +165,16 @@ void ObjectManager::fadeInState()
 {
 	//通常状態がフェードインするアクション
 	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
+	//画面底からウィスプ3個分の高さへ設定
 	wisp->setPositionY(wisp->radius() * 3);
+	//フェードインのため、透明に
 	wisp->setOpacity(0);
+	//1秒かけて、フェードインとウィスプ1個分下に移動するアクション（引数3個目は敗北してた場合、大きさを元に戻すため）
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, -wisp->radius())), CCScaleTo::create(0,1,1), NULL);
 	wisp->runAction(fadeIn);
 	
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-
+	//背景も同様にフェードインするためのアクション設定
 	CCSprite *back = static_cast<CCSprite *>(MS::getInstance()->getChildByTag(kTag_background));
 	back->setPosition(ccp(screenSize.width / 2, screenSize.height / 2.1));
 	back->setOpacity(0);
