@@ -11,6 +11,7 @@
 
 #include "EnemyRatTwo.h"
 #include "MainScene.h"
+#include "HudLayer.h"
 
 const int RAT_TWO_HP = 80;
 const int RAT_TWO_MAXHP = 80;
@@ -28,7 +29,7 @@ EnemyRatTwo* EnemyRatTwo::create(enemyType type, float xPos, float yPos)
 	{
 		enemy->initEnemy(type, xPos, yPos);
 		enemy->autorelease();
-		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
+		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
 	}
 	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
@@ -53,5 +54,5 @@ std::string EnemyRatTwo::statusInit(enemyType type)
 void EnemyRatTwo::setIdleAction()
 {
 	//待機アクション
-	_hud->getAnime()->enemyIdleAnime(this);
+	Hud::getInstance()->getAnime()->enemyIdleAnime(this);
 }

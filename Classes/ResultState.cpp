@@ -12,33 +12,37 @@
 #include "ResultState.h"
 #include "NormalState.h"
 #include "TitleState.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
 #include "SimpleAudioEngine.h"
+
+USING_NS_CC;
 
 using namespace CocosDenshion;
 //状態のID
 const std::string ResultState::s_resultID = "RESULT";
 
-ResultState::ResultState()
-	:_timer(0)
+ResultState::ResultState() :
+m_timer(0)
 {}
 
 ResultState::~ResultState(){}
 
 void ResultState::resultToNormal()
 {
-	Om::getInstance()->getStateMachine()->changeState(new NormalState());
+	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
 void ResultState::resultToTitle() 
 {
-	Om::getInstance()->getStateMachine()->changeState(new TitleState());
+	OM::getInstance()->getStateMachine()->changeState(new TitleState());
 }
 
 bool ResultState::onStateEnter()
 {
 	CCLOG("Changed : resultState");
 	//プレイカウントを増加
-	_om->addPlayCount();
+	OM::getInstance()->addPlayCount();
 	//_gObjectsへ、コンテナを代入
 	setGameObjects();
 	//ゲームオブジェクトのonStateEnter()を実行
@@ -52,13 +56,13 @@ bool ResultState::onStateEnter()
 bool ResultState::onStateExit()
 {
 	//ボタンを削除
-	_hud->removeChildByTag(kTag_retry);
+	Hud::getInstance()->removeChildByTag(kTag_retry);
 	//ゲームオブジェクトのonStateExit()を実行
 	objectStateExit();
-	_om->setIsReady(false);
-	_om->setRaidHp(0);
+	OM::getInstance()->setIsReady(false);
+	OM::getInstance()->setRaidHp(0);
 	//ウィスプのHPラベルを非表示に
-	_hud->setLabelVisible(false);
+	Hud::getInstance()->setLabelVisible(false);
 	return true;
 }
 
@@ -98,7 +102,7 @@ void ResultState::onResult()
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	//フェードインするため、透明に
 	menu->setOpacity(0);
-	_hud->addChild(menu, z_retry, kTag_retry);
+	Hud::getInstance()->addChild(menu, z_retry, kTag_retry);
 	menu->runAction(CCFadeIn::create(2));
 }
 

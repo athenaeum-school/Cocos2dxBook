@@ -11,7 +11,10 @@
 
 #include "Enemy.h"
 #include "EnemyAttack.h"
+#include "Player.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
 
 USING_NS_CC;
 //敵NPCの攻撃確率
@@ -44,7 +47,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	//HPバーを追加
 	Hud::getInstance()->initHpbar(this);
 	//レイドHPに追加
-	OM::getInstance()->initRaidHp(this->getHP());
+	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
 	OM::getInstance()->addEnemyCount();
 	//vectorとmapコンテナに追加

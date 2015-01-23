@@ -11,25 +11,22 @@
 
 #include "GameState.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
 
-GameState::GameState()
-	:_main(Main::getInstance())
-	, _hud(Hud::getInstance())
-	, _om(Om::getInstance())
-{}
+GameState::GameState(){}
 
 GameState::~GameState() {}
 
 void GameState::setGameObjects()
 {
 	//ゲームオブジェクトのコンテナをメンバーヘ代入
-	_gObjects = _om->getGameObjects();
+	m_gObjects = OM::getInstance()->getGameObjects();
 }
 
 void GameState::objectStateEnter()
 {
 	//ゲームオブジェクトの状態開始処理を実行
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
 	{
 		(*it)->onStateEnter();
 	}
@@ -38,7 +35,7 @@ void GameState::objectStateEnter()
 void GameState::objectStateExit()
 {
 	//ゲームオブジェクトの状態終了処理を実行
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
 	{
 		(*it)->onStateExit();
 	}
@@ -47,7 +44,7 @@ void GameState::objectStateExit()
 void GameState::objectStateUpdate(float dt)
 {
 	//ゲームオブジェクトの状態更新処理を実行
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
 	{
 		(*it)->stateUpdate(dt);
 	}

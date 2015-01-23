@@ -14,7 +14,6 @@
 
 #include "GameState.h"
 #include <cocos2d.h>
-#include "ObjectManager.h"
 #include "Player.h"
 #include "Enemy.h"
 
@@ -22,10 +21,10 @@ class NormalState : public GameState
 {
 public:
 
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispVector, WispVector);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _wispNextPosition, WispNextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyVector, EnemyVector);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _enemyNextPosition, EnemyNextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_wispVector, WispVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_wispNextPosition, WispNextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_enemyVector, EnemyVector);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_enemyNextPosition, EnemyNextPosition);
 
 	bool onStateEnter() override;
 	bool onStateExit() override;
@@ -41,7 +40,7 @@ public:
 
 private:
    
-	Player *_wisp;
+	Player *m_pWisp;
     static const std::string s_normalID;
     
 	void normalToEnemy();

@@ -23,7 +23,6 @@ public:
 	bool onStateEnter() override;
 	bool onStateExit() override;
 	void stateUpdate(float dt) override;
-
 	bool onTouchBeganEvent() override;
 	void onTouchMovedEvent() override;
 	void onTouchEndedEvent() override;
@@ -35,7 +34,7 @@ public:
 
 private:
 
-	int _timer;
+	int m_timer;
 	static const std::string s_resultID;
 
 	void resultToNormal();

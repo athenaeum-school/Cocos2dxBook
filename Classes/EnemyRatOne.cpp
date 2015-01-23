@@ -11,6 +11,7 @@
 
 #include "EnemyRatOne.h"
 #include "MainScene.h"
+#include "HudLayer.h"
 
 const int RAT_ONE_HP = 50;
 const int RAT_ONE_MAXHP = 50;
@@ -28,7 +29,7 @@ EnemyRatOne* EnemyRatOne::create(enemyType type, float xPos, float yPos)
 	{
 		enemy->initEnemy(type, xPos, yPos);
 		enemy->autorelease();
-		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
+		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
 	}
 	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
@@ -53,5 +54,5 @@ std::string EnemyRatOne::statusInit(enemyType type)
 void EnemyRatOne::setIdleAction()
 {
 	//待機アクション
-	_hud->getAnime()->enemyIdleAnime(this);
+	Hud::getInstance()->getAnime()->enemyIdleAnime(this);
 }

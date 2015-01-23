@@ -13,8 +13,6 @@
 #define __WillYard__MainScene__
 
 #include "cocos2d.h"
-#include "ObjectManager.h"
-#include "HudLayer.h"
 
 enum tag
 {
@@ -62,9 +60,9 @@ public:
 		return s_pInstance;
 	}
 
-	CC_SYNTHESIZE(cocos2d::CCTouch *, _beganTouch, BeganTouch);
-	CC_SYNTHESIZE(cocos2d::CCTouch *, _movedTouch, MovedTouch);
-	CC_SYNTHESIZE(cocos2d::CCTouch *, _endedTouch, EndedTouch);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, m_pBeganTouch, BeganTouch);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, m_pMovedTouch, MovedTouch);
+	CC_SYNTHESIZE(cocos2d::CCTouch *, m_pEndedTouch, EndedTouch);
 
 	static cocos2d::CCScene* createScene();
 	CREATE_FUNC(MainScene);
@@ -78,14 +76,12 @@ public:
 private:
 
 	static MainScene *s_pInstance;
-	ObjectManager *_om;
-	HudLayer *_hud;
-
+	
 	MainScene();
 	~MainScene();
 
 };
 
-typedef MainScene Main;
+typedef MainScene MS;
 
 #endif /*defined(__WillYard__MainScene__)*/

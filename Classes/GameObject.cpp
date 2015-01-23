@@ -10,37 +10,36 @@
 
 
 #include "GameObject.h"
-#include "HudLayer.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
+
 
 USING_NS_CC;
 
-GameObject::GameObject()
-	: _main(Main::getInstance())
-	, _hud(Hud::getInstance())
-	, _om(Om::getInstance())
-	, _isDead(false)
-	, _nextPosition(ccp(0, 0))
-	, _vector(ccp(0, 0))
-	, _hpBar(NULL)
+GameObject::GameObject() : 
+	m_isDead(false),
+	m_nextPosition(ccp(0, 0)),
+	m_vector(ccp(0, 0)),
+	m_pHpBar(NULL)
 {
 }
 
 GameObject::~GameObject()
 {
-	CC_SAFE_RELEASE_NULL(_hpBar);
+	CC_SAFE_RELEASE_NULL(m_pHpBar);
 }
 
 void GameObject::setStateID()
 {
 	//現在の状態のIDを代入
-	_stateID = _om->getStateMachine()->getStates().back()->getStateID();
+	m_stateID = OM::getInstance()->getStateMachine()->getStates().back()->getStateID();
 }
 
 bool GameObject::isNormalState()
 {
 	//プレイヤーターンか確認
-	if (_stateID == "NORMAL")
+	if (m_stateID == "NORMAL")
 	{
 		return true;
 	}
@@ -50,7 +49,7 @@ bool GameObject::isNormalState()
 bool GameObject::isEnemyState()
 {
 	//敵NPCターンか確認
-	if (_stateID == "ENEMY")
+	if (m_stateID == "ENEMY")
 	{
 		return true;
 	}
@@ -60,7 +59,7 @@ bool GameObject::isEnemyState()
 bool GameObject::isResultState()
 {
 	//リザルト状態か確認
-	if (_stateID == "RESULT")
+	if (m_stateID == "RESULT")
 	{
 		return true;
 	}
@@ -70,7 +69,7 @@ bool GameObject::isResultState()
 void GameObject::isDeadWithRet()
 {
 	//死亡していたら抜ける
-	if (_isDead)
+	if (m_isDead)
 	{
 		return;
 	}
@@ -86,14 +85,14 @@ void GameObject::setPosition(const CCPoint& pos)
 {
 	CCSprite::setPosition(pos);
 	//次の目標座標を設定する
-	if (!_nextPosition.equals(pos)) 
+	if (!m_nextPosition.equals(pos)) 
 	{
-		_nextPosition = pos;
+		m_nextPosition = pos;
 	}
 }
 
 float GameObject::getHpRatio()
 {
 	//HPバーの割合
-	return _hp * 100.0 / _maxHp;
+	return m_hp * 100.0 / m_maxHp;
 }

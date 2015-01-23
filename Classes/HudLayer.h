@@ -33,8 +33,8 @@ public:
 		return s_pInstance;
 	}
 
-	CC_SYNTHESIZE(int, _comboCount, ComboCount);
-	CC_SYNTHESIZE_RETAIN(AnimationManager *, _anime, Anime);
+	CC_SYNTHESIZE(int, m_comboCount, ComboCount);
+	CC_SYNTHESIZE_RETAIN(AnimationManager *, m_pAnime, Anime);
 
 	virtual bool init();
 	CREATE_FUNC(HudLayer);
@@ -54,12 +54,10 @@ public:
 private:
 
 	static HudLayer *s_pInstance;
-	MainScene *_main;
-	ObjectManager *_om;
 	
-	cocos2d::CCLabelTTF *_label;
-	cocos2d::CCLabelTTF *_comboLabel;
-	cocos2d::CCLabelTTF *_hp_label_wisp;
+	cocos2d::CCLabelTTF *m_pLabel;
+	cocos2d::CCLabelTTF *m_pComboLabel;
+	cocos2d::CCLabelTTF *m_pPlayerHpLabel;
 	
 	HudLayer();
 	~HudLayer();

@@ -10,7 +10,12 @@
 
 
 #include "EnemyHit.h"
+#include "Player.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
+
+USING_NS_CC;
 
 EnemyHit::EnemyHit():
 m_isContacted(false)

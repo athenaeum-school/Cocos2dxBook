@@ -11,14 +11,19 @@
 
 #include "TitleState.h"
 #include "NormalState.h"
+#include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
 #include "SimpleAudioEngine.h"
+
+USING_NS_CC;
 
 using namespace CocosDenshion;
 //状態のID
 const std::string TitleState::s_titleID = "TITLE";
 
-TitleState::TitleState()
-:_timer(0)
+TitleState::TitleState() :
+m_timer(0)
 {}
 
 TitleState::~TitleState() {}
@@ -26,7 +31,7 @@ TitleState::~TitleState() {}
 
 void TitleState::titleToNormal()
 {
-	Om::getInstance()->getStateMachine()->changeState(new NormalState());
+	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
 bool TitleState::onStateEnter() 
@@ -39,9 +44,9 @@ bool TitleState::onStateEnter()
 bool TitleState::onStateExit()
 {
 	CCLOG("TitleToNormal");
-	_hud->removeChildByTag(kTag_background);
-	_hud->removeChildByTag(kTag_retry);
-	_om->playStart();
+	Hud::getInstance()->removeChildByTag(kTag_background);
+	Hud::getInstance()->removeChildByTag(kTag_retry);
+	OM::getInstance()->playStart();
 	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 	return true;
 }
@@ -69,7 +74,7 @@ void TitleState::onNormal()
 	CCMenu *menu = CCMenu::create(playButton, NULL);
 	//画面の中央へ表示
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	_hud->addChild(menu, z_retry, kTag_retry);
+	Hud::getInstance()->addChild(menu, z_retry, kTag_retry);
 }
 
 void TitleState::initBackground(CCSize screenSize)
@@ -77,7 +82,7 @@ void TitleState::initBackground(CCSize screenSize)
 	//背景画像の設定
 	CCSprite *background = CCSprite::create("title_background.png");
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	_hud->addChild(background, z_background, kTag_background);
+	Hud::getInstance()->addChild(background, z_background, kTag_background);
 }
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数

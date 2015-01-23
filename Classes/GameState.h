@@ -15,13 +15,7 @@
 #include "cocos2d.h"
 #include "GameObject.h"
 
-using namespace cocos2d;
-
-class MainScene;
-class ObjectManager;
-class HudLayer;
-
-class GameState : public CCSprite
+class GameState : public cocos2d::CCSprite
 {
 public:
 
@@ -39,21 +33,13 @@ public:
     
 protected:
 
-	MainScene* _main;
-	ObjectManager* _om;
-	HudLayer* _hud;
-	std::vector<GameObject*> _gObjects;
+	std::vector<GameObject*> m_gObjects;
 
 	void setGameObjects();
 	void objectStateEnter();
 	void objectStateExit();
 	void objectStateUpdate(float dt);
 
-private:
-    
-    bool m_loadingComplete;
-    bool m_exiting;
-	
 };
 
 #endif /* defined(__WillYard__GameState__) */

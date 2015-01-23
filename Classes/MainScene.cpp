@@ -11,6 +11,7 @@
 
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
+#include "ObjectManager.h"
 #include "HudLayer.h"
 
 USING_NS_CC;
@@ -22,25 +23,23 @@ MainScene::MainScene(){}
 
 MainScene:: ~MainScene()
 {	
-	_om->clean();
+	OM::getInstance()->clean();
 }
 
 CCScene* MainScene::createScene()
 {
     CCScene *scene = CCScene::create();
-    MainScene *layer = MainScene::create();
+	MainScene *layer = MainScene::create();
 	scene->addChild(layer);
 
 	ObjectManager *om = ObjectManager::getInstance();
 	om->init();
 	scene->addChild(om);
-	layer->_om = om;
-
+	
 	HudLayer *hud = HudLayer::getInstance();
 	hud->init();
 	scene->addChild(hud);
-	layer->_hud = hud;
-
+	
     return scene;
 }
 
@@ -66,7 +65,7 @@ bool MainScene::init()
 
 void MainScene::update(float dt) {
 	//状態マシーンのループ（ゲームのループ）
-	_om->update(dt);
+	OM::getInstance()->update(dt);
 }
 
 
@@ -74,14 +73,14 @@ bool MainScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	//入力をメンバーへ代入
 	setBeganTouch(touch);
-	return _om->handleBeganEvents();
+	return OM::getInstance()->handleBeganEvents();
 }
 
 void MainScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	//入力をメンバーへ代入
 	setMovedTouch(touch);
-	_om->handleMovedEvents();
+	OM::getInstance()->handleMovedEvents();
 }
 
 
@@ -89,5 +88,5 @@ void MainScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	//入力をメンバーへ代入
 	setEndedTouch(touch);
-	_om->handleEndedEvents();
+	OM::getInstance()->handleEndedEvents();
 }

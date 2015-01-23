@@ -12,18 +12,23 @@
 #include "EnemyState.h"
 #include "NormalState.h"
 #include "ResultState.h"
+#include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
+
+USING_NS_CC;
 
 //状態のID
 const std::string EnemyState::s_enemyID = "ENEMY";
 
 void EnemyState::enemyToNormal()
 {
-	Om::getInstance()->getStateMachine()->changeState(new NormalState());
+	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
 void EnemyState::enemyToResult()
 {
-	Om::getInstance()->getStateMachine()->changeState(new ResultState());
+	OM::getInstance()->getStateMachine()->changeState(new ResultState());
 }
 
 EnemyState::EnemyState()
@@ -39,7 +44,7 @@ bool EnemyState::onStateEnter()
 	turnOnEnemy();
 	//コンテナにゲームオブジェクトを代入
 	setGameObjects();
-	m_pWisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//ゲームオブジェクトのonStateEnter()を実行
 	objectStateEnter();
 
@@ -80,7 +85,7 @@ void EnemyState::turnOnEnemy()
 	CCSprite *turn = CCSprite::create("enemtState_turn.png");
 	turn->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 1.5));
 	turn->setOpacity(0);
-	_hud->addChild(turn);
+	Hud::getInstance()->addChild(turn);
 	//ラベルフェードアウト後、setIsTurn()を実行
 	CCSequence *fadeTurn = CCSequence::create(CCFadeIn::create(0.5), CCFadeOut::create(0.5), CCCallFunc::create(this, callfunc_selector(EnemyState::setIsTurn)), CCRemoveSelf::create(), NULL);
 	turn->runAction(fadeTurn);

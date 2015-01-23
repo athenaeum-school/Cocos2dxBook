@@ -11,6 +11,7 @@
 
 #include "HudLayer.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -22,24 +23,22 @@ const float HUD_POS = 20;
 //ラベルのマージン
 const float MARGIN = 50;
 
-HudLayer::HudLayer()
-	:_main(Main::getInstance())
-	, _om(Om::getInstance())
-	, _label(NULL)
-	, _comboLabel(NULL)
-	, _comboCount(NULL)
-	, _hp_label_wisp(NULL)
+HudLayer::HudLayer() :
+m_pLabel(NULL),
+m_pComboLabel(NULL),
+m_comboCount(NULL),
+m_pPlayerHpLabel(NULL)
 {
-	_anime = AnimationManager::create();
+	m_pAnime = AnimationManager::create();
 }
 
 
 HudLayer::~HudLayer()
 {
-	CC_SAFE_RELEASE_NULL(_hp_label_wisp);
-	CC_SAFE_RELEASE_NULL(_label);
-	CC_SAFE_RELEASE_NULL(_comboLabel);
-	CC_SAFE_RELEASE_NULL(_anime);
+	CC_SAFE_RELEASE_NULL(m_pPlayerHpLabel);
+	CC_SAFE_RELEASE_NULL(m_pLabel);
+	CC_SAFE_RELEASE_NULL(m_pComboLabel);
+	CC_SAFE_RELEASE_NULL(m_pAnime);
 }
 
 bool HudLayer::init()
@@ -52,20 +51,20 @@ bool HudLayer::init()
 	CCLOG("HudInit");
 	CCSize screennSize = CCDirector::sharedDirector()->getWinSize();
 	//ウィスプのHPラベルを追加
-	_hp_label_wisp = new CCLabelTTF();
-	_hp_label_wisp->initWithString("HP : 0", "arial", 18);
-	_hp_label_wisp->setColor(ccc3(127,255,212));
+	m_pPlayerHpLabel = new CCLabelTTF();
+	m_pPlayerHpLabel->initWithString("HP : 0", "arial", 18);
+	m_pPlayerHpLabel->setColor(ccc3(127, 255, 212));
 	//コンボカウントラベルを追加
-	_comboLabel = new CCLabelTTF();
-	_comboLabel->initWithString("0", "arial", 30.0);
-	_comboLabel->setColor(ccc3(255, 215, 0));
-	_comboLabel->setPosition(ccp(screennSize.width - (_comboLabel->getContentSize().width) - MARGIN, screennSize.height / 1.5 + MARGIN));
-	_comboLabel->setVisible(false);
+	m_pComboLabel = new CCLabelTTF();
+	m_pComboLabel->initWithString("0", "arial", 30.0);
+	m_pComboLabel->setColor(ccc3(255, 215, 0));
+	m_pComboLabel->setPosition(ccp(screennSize.width - (m_pComboLabel->getContentSize().width) - MARGIN, screennSize.height / 1.5 + MARGIN));
+	m_pComboLabel->setVisible(false);
 	
-	this->addChild(_hp_label_wisp);
-	this->addChild(_comboLabel);
-	_hp_label_wisp->setPosition(ccp(screennSize.width / 4, screennSize.height / 1.2 + MARGIN));
-	_hp_label_wisp->setVisible(false);
+	this->addChild(m_pPlayerHpLabel);
+	this->addChild(m_pComboLabel);
+	m_pPlayerHpLabel->setPosition(ccp(screennSize.width / 4, screennSize.height / 1.2 + MARGIN));
+	m_pPlayerHpLabel->setVisible(false);
 
 	return true;
 }
@@ -91,30 +90,30 @@ void HudLayer::damageToString(CCPoint hudPos, int damage)
 void HudLayer::addComboCount()
 {
 	//コンボラベルを表示
-	_comboCount++;
+	m_comboCount++;
 	CCString *label = new CCString();
-	label->initWithFormat("%d Hits", _comboCount);
-	_comboLabel->setString(label->getCString());
-	_comboLabel->setVisible(true);
+	label->initWithFormat("%d Hits", m_comboCount);
+	m_pComboLabel->setString(label->getCString());
+	m_pComboLabel->setVisible(true);
 	//ヒットする毎にラベルが濃くなるアクション
-	_comboLabel->runAction(CCTintBy::create(0.0, 0, -5, 10));
+	m_pComboLabel->runAction(CCTintBy::create(0.0, 0, -5, 10));
 }
 
 void HudLayer::hide()
 {
 	//ラベルを非表示にし、色を元に戻す
-	_comboLabel->setVisible(false);
-	_comboLabel->setColor(ccc3(255, 215, 0));
+	m_pComboLabel->setVisible(false);
+	m_pComboLabel->setColor(ccc3(255, 215, 0));
 }
 
 void HudLayer::drawHpLabel()
 {
-	Player *wisp = static_cast<Player *>(Main::getInstance()->getChildByTag(kTag_wisp));
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//HPラベルを表示し、更新していく
 	setLabelVisible(true);
 	CCString *label = new CCString();
 	label->initWithFormat("HP : %d", wisp->getHP());
-	_hp_label_wisp->setString(label->getCString());
+	m_pPlayerHpLabel->setString(label->getCString());
 }
 
 void HudLayer::drawHpbar(GameObject *obj)
@@ -127,7 +126,7 @@ void HudLayer::drawHpbar(GameObject *obj)
 void HudLayer::initHpbar(GameObject *obj)
 {
 	//ウィスプのみ、リザルト状態でHPバーを最大に戻す
-	if (_om->getStateMachine()->getStates().back()->getStateID() == "RESULT")
+	if (OM::getInstance()->getStateMachine()->getStates().back()->getStateID() == "RESULT")
 	{
 		CCProgressFromTo *add = CCProgressFromTo::create(0, obj->getHP(), obj->getMaxHP());
 		obj->getHpBar()->runAction(add);
@@ -151,12 +150,12 @@ void HudLayer::initHpbar(GameObject *obj)
 void HudLayer::setLabelVisible(bool flg)
 {
 	//HPラベルを非表示に
-	_hp_label_wisp->setVisible(flg); 
+	m_pPlayerHpLabel->setVisible(flg); 
 }
 
 void HudLayer::ready()
 {
-	if (_om->getIsReady())
+	if (OM::getInstance()->getIsReady())
 	{
 		return;
 	}
@@ -184,12 +183,12 @@ void HudLayer::fire()
 	CCSpawn *scaleOut = CCSpawn::create(CCEaseIn::create(CCScaleTo::create(0.5, 2.0), 0.5), CCFadeOut::create(1), NULL);
 	CCSequence *action = CCSequence::create(scaleOut, CCCallFunc::create(this, callfunc_selector(HudLayer::touchImage)),CCRemoveSelf::create(), NULL);
 	fire->runAction(action);
-	_om->setIsReady(true);
+	OM::getInstance()->setIsReady(true);
 }
 
 void HudLayer::aim()
 {
-	if (_om->getIsReady())
+	if (OM::getInstance()->getIsReady())
 	{
 		//Aimラベルを追加
 		CCSprite *aim = CCSprite::create("normalState_aim.png");

@@ -13,6 +13,8 @@
 #include "EnemyState.h"
 #include "ResultState.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
 
 
 USING_NS_CC;
@@ -29,7 +31,7 @@ const float TO_RESULT = 200;
 const float HIT_SPEED = 10;
 
 NormalState::NormalState() :
-_wisp(NULL)
+m_pWisp(NULL)
 {
 	std::cout << "NormalState::NormalState() normal state constructor\n";
 }
@@ -39,15 +41,15 @@ NormalState::~NormalState() {}
 void NormalState::normalToEnemy()
 {
 	//敵NPCのターンへ
-	_om->getStateMachine()->changeState(new EnemyState());
+	OM::getInstance()->getStateMachine()->changeState(new EnemyState());
 }
 
 void NormalState::normalToResult()
 {
 	//レイドHPを0に設定し、リザルト画面へ
 	CCLOG("StageClear");
-	_om->setRaidHp(0);
-	_om->getStateMachine()->changeState(new ResultState());
+	OM::getInstance()->setRaidHp(0);
+	OM::getInstance()->getStateMachine()->changeState(new ResultState());
 }
 
 
@@ -56,13 +58,13 @@ bool NormalState::onStateEnter()
 	//状態の初期化
 	std::cout << "NormalState::onStateEnter()\n";
 	//Readyラベル表示
-	_hud->ready();
+	Hud::getInstance()->ready();
 	//Aimラベル表示
-	_hud->aim();
+	Hud::getInstance()->aim();
 	//MainSceneからウィスプを取得
-	_wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//リトライ後の再設定
-	_om->reset();
+	OM::getInstance()->reset();
 	//コンテナにゲームオブジェクトを代入
 	setGameObjects();
 	//ゲームオブジェクトのonStateEnter()を実行
@@ -75,8 +77,8 @@ bool NormalState::onStateEnter()
 bool NormalState::onStateExit()
 {
 	//状態終了時（次の状態へ遷移時）の処理
-	_hud->setComboCount(0);
-	_hud->hide();
+	Hud::getInstance()->setComboCount(0);
+	Hud::getInstance()->hide();
 	//ゲームオブジェクトのonStateExit()を実行
 	objectStateExit();
 	return true;
@@ -88,18 +90,18 @@ void NormalState::stateUpdate(float dt)
 	//ゲームオブジェクトのonStateUpdate()を実行
 	objectStateUpdate(dt);
 	//ウィスプの状態を更新（この状態内の、計算用メンバーへステータスを代入）
-	setWispNextPosition(_wisp->getNextPosition());
+	setWispNextPosition(m_pWisp->getNextPosition());
 	//ウィスプの推進力
-	setWispVector(_wisp->getVector());
+	setWispVector(m_pWisp->getVector());
 	//徐々に減速させる処理（運動量_wispVectorのxとyに、0.98fを掛け続ける）
-	setWispVector(ccpMult(_wispVector, 0.98f));
+	setWispVector(ccpMult(m_wispVector, 0.98f));
 	//衝突判定
 	calcCollision();
 	//最後に、ウィスプの推進力と次の目標地点に設定
-	_wisp->setVector(_wispVector);
-	_wisp->setNextPosition(_wispNextPosition);
+	m_pWisp->setVector(m_wispVector);
+	m_pWisp->setNextPosition(m_wispNextPosition);
 	//次の目標地点へ移動
-	_wisp->setPosition(_wisp->getNextPosition());
+	m_pWisp->setPosition(m_pWisp->getNextPosition());
 	//次の状態へ遷移
 	switchState();
 }
@@ -107,24 +109,24 @@ void NormalState::stateUpdate(float dt)
 bool NormalState::onTouchBeganEvent()
 {
 	//isReadyがFalseなら抜ける
-	if (!_om->getIsReady())
+	if (!OM::getInstance()->getIsReady())
 	{
 		return false;
 	}
-	CCLOG("hp:wisp%d", _wisp->getHP());
-	CCLOG("raidHp : %d", _om->getRaidHp());
-	CCLOG("playCount : %d", _om->getPlayCount());
-	return _wisp->wispTouchBegan();
+	CCLOG("hp:wisp%d", m_pWisp->getHP());
+	CCLOG("raidHp : %d", OM::getInstance()->getRaidHp());
+	CCLOG("playCount : %d", OM::getInstance()->getPlayCount());
+	return m_pWisp->wispTouchBegan();
 }
 
 void NormalState::onTouchMovedEvent()
 {
-	_wisp->wispTouchMoved();
+	m_pWisp->wispTouchMoved();
 }
 
 void NormalState::onTouchEndedEvent()
 {
-	_wisp->wispTouchEnded();
+	m_pWisp->wispTouchEnded();
 }
 
 void NormalState::switchState()
@@ -143,7 +145,7 @@ void NormalState::switchState()
 
 bool NormalState::isLessThanZero()
 {
-	int raidHp = _om->getRaidHp();
+	int raidHp = OM::getInstance()->getRaidHp();
 	if (raidHp <= 0)
 	{
 		return true;
@@ -153,7 +155,7 @@ bool NormalState::isLessThanZero()
 
 bool NormalState::isGreaterThanCount(int count)
 {
-	int timer = _wisp->getTimer();
+	int timer = m_pWisp->getTimer();
 	//ウィスプのタイマーがカウント以上ならTrue
 	if (timer > count)
 	{
@@ -165,7 +167,7 @@ bool NormalState::isGreaterThanCount(int count)
 void NormalState::calcCollision()
 {
 	//敵NPCの設定
-	for (std::vector<GameObject*>::iterator it = _gObjects.begin(); it != _gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
 	{
 		if ((*it)->getTag() == kTag_enemy)
 		{
@@ -175,12 +177,12 @@ void NormalState::calcCollision()
 			setEnemyNextPosition(enemy->getNextPosition());
 			setEnemyVector(enemy->getVector());
 			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
-			float diffx = CalcDiff(_wispNextPosition.x, enemy->getPositionX());
-			float diffy = CalcDiff(_wispNextPosition.y, enemy->getPositionY());
+			float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
+			float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
 			//ｘ、ｙの距離を２乗し、足した値を代入
 			float distOne = CalcSum(pow(diffx, 2), pow(diffy, 2));
 			//ウィスプの現在のx、y座標と、敵NPCの次のx、y座標の距離を２乗し、足した値を代入
-			float distTwo = CalcSum(pow(_wisp->getPositionX() - _enemyNextPosition.x, 2), pow(_wisp->getPositionY() - _enemyNextPosition.y, 2));
+			float distTwo = CalcSum(pow(m_pWisp->getPositionX() - m_enemyNextPosition.x, 2), pow(m_pWisp->getPositionY() - m_enemyNextPosition.y, 2));
 			
 			//衝突判定(高速時)
 			onCollisionFast(distOne, distTwo, calcVector(enemy), enemy);
@@ -204,29 +206,29 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		CCLOG("secondHit");
 
 		//ウィスプの次の座標とエネミーの現在座標との距離を取得
-		float diffx = CalcDiff(_wispNextPosition.x, enemy->getPositionX());
-		float diffy = CalcDiff(_wispNextPosition.y, enemy->getPositionY());
+		float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
+		float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
 		//ウィスプと敵NPCの衝突時の運動量を計算
-		float mag_wisp = CalcSum(pow(_wispVector.x, 2), pow(_wispVector.y, 2));
-		float mag_enemy = CalcSum(pow(_enemyVector.x, 2), pow(_enemyVector.y, 2));
+		float mag_wisp = CalcSum(pow(m_wispVector.x, 2), pow(m_wispVector.y, 2));
+		float mag_enemy = CalcSum(pow(m_enemyVector.x, 2), pow(m_enemyVector.y, 2));
 
 		//バウンドする方向への運動量
 		float force = sqrt(mag_wisp + mag_enemy);
 		//逆正接を算出（衝突位置から、跳ね返る角度を計算）
 		float angle = atan2(diffy, diffx);
 		//angleの角度へ力を加える
-		_wispVector.x = force * cos(angle);
-		_wispVector.y = (force * sin(angle));
+		m_wispVector.x = force * cos(angle);
+		m_wispVector.y = (force * sin(angle));
 		//ウィスプの移動座標を算出
-		_wispNextPosition.x = _enemyNextPosition.x + (enemy->radius() + _wisp->radius() + force) * cos(angle);
-		_wispNextPosition.y = _enemyNextPosition.y + (enemy->radius() + _wisp->radius() + force) * sin(angle);
+		m_wispNextPosition.x = m_enemyNextPosition.x + (enemy->radius() + m_pWisp->radius() + force) * cos(angle);
+		m_wispNextPosition.y = m_enemyNextPosition.y + (enemy->radius() + m_pWisp->radius() + force) * sin(angle);
 		//ボーナスダメージを攻撃力に追加
-		_wisp->addPower(ADD_POWER);
-		_hud->getAnime()->enemyDamageAnime(enemy);
+		m_pWisp->addPower(ADD_POWER);
+		Hud::getInstance()->getAnime()->enemyDamageAnime(enemy);
 		enemy->damage();
 		//ダメージ後、攻撃力を戻す
-		_wisp->drawPower(ADD_POWER);
-		_hud->getAnime()->boundSE();
+		m_pWisp->drawPower(ADD_POWER);
+		Hud::getInstance()->getAnime()->boundSE();
 	}
 
 }
@@ -259,11 +261,11 @@ float NormalState::CalcSum(float powOne, float powTwo)
 float NormalState::calcVector(Enemy *enemy)
 {
 	//ウィスプの速度がHIT_SPEED以下なら抜ける
-	if (_wispVector.x < HIT_SPEED, _wispVector.y < HIT_SPEED)
+	if (m_wispVector.x < HIT_SPEED, m_wispVector.y < HIT_SPEED)
 	{
 		return 0;
 	}
 	//敵NPC、ウィスプの半径を足し、2乗した値を返す
-	float squared_radius = pow(enemy->radius() + _wisp->radius(), 2);
+	float squared_radius = pow(enemy->radius() + m_pWisp->radius(), 2);
 	return squared_radius;
 }

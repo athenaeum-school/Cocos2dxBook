@@ -9,6 +9,7 @@ EnemyAttack* willYard
 
 
 #include "EnemyAttack.h"
+#include "Player.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
 
@@ -30,7 +31,7 @@ EnemyAttack* EnemyAttack::create(Enemy *enemy)
 	{
 		enemyAttack->initEnemyAttack(enemy, enemy->getPosition());
 		enemyAttack->autorelease();
-		Main::getInstance()->addChild(enemyAttack, z_enemyAttack, kTag_enemyAttack);
+		MS::getInstance()->addChild(enemyAttack, z_enemyAttack, kTag_enemyAttack);
 		enemyAttack->attack(enemy);
 		return enemyAttack;
 	}
@@ -73,7 +74,6 @@ void EnemyAttack::attack(Enemy *enemy)
 {
 	//呼び出した敵NPCの攻撃力を代入
 	setAtk(enemy->getAtk());
-	MainScene *main = Main::getInstance();
 	//タイプによって、攻撃方法を変える
 	switch (enemy->getEtype())
 	{
@@ -88,7 +88,7 @@ void EnemyAttack::attack(Enemy *enemy)
 
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
-				Player *wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
+				Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 				//ウィスプの座標へ0.7秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(0.7f, ccp(wisp->getPositionX(), wisp->getPositionY()));
 				//スプライトの切り替えと移動を同時に行なう
@@ -110,7 +110,7 @@ void EnemyAttack::attack(Enemy *enemy)
 
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
-				Player *wisp = static_cast<Player *>(main->getChildByTag(kTag_wisp));
+				Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 				//ウィスプの座標へ1.0秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(1.0f, ccp(wisp->getPositionX(), wisp->getPositionY()));
 				//スプライトの切り替えと移動を同時に行なう

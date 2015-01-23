@@ -21,19 +21,16 @@ using namespace CocosDenshion;
 //シングルトンの初期化
 ObjectManager* ObjectManager::s_pInstance = 0;
 
-ObjectManager::ObjectManager():
-_raidHp(0),
-_enemyCount(0),
-_playCount(0),
-m_pStateMachine(0),
-m_playerLives(3),
-m_bLevelComplete(false),
-isReady(false),
-_main(Main::getInstance())
+ObjectManager::ObjectManager() :
+m_raidHp(0),
+m_enemyCount(0),
+m_playCount(0),
+m_pStateMachine(NULL),
+m_isReady(false),
+m_pEnemyFactory(NULL)
 {
 	//状態マシーンの初期化
-    m_pStateMachine = new StateMachine();
-    m_currentLevel = 1;
+	m_pStateMachine = new StateMachine();
 }
 
 ObjectManager::~ObjectManager(){}
@@ -44,31 +41,9 @@ bool ObjectManager::init()
 	initAudio();
 	//初期状態を追加し、状態を初期化
 	m_pStateMachine->pushState(new TitleState());
-	_enemyFactory = EnemyFactory::create();
+	m_pEnemyFactory = EnemyFactory::create();
 
 	return true;
-}
-
-void ObjectManager::setGameObjectPosition(const cocos2d::CCPoint &pts)
-{
-    for (std::vector<GameObject*>::iterator it = m_gameObjects.begin() ; it != m_gameObjects.end(); ++it)
-        (*it)->setPosition(pts);
-}
-
-void ObjectManager::setTileMap(cocos2d::CCTMXTiledMap* tileMap)
-{
-    this->_tileMap = tileMap;
-}
-
-cocos2d::CCTMXTiledMap* ObjectManager::getTileMap()
-{
-    return this->_tileMap;
-}
-
-void ObjectManager::setGameObjectStrategy()
-{
-    //for (std::vector<GameObject*>::iterator it = m_gameObjects.begin() ; it != m_gameObjects.end(); ++it)
-       // (*it)->setStrategy();
 }
 
 void ObjectManager::addGameObject(GameObject* sprite)
@@ -76,31 +51,9 @@ void ObjectManager::addGameObject(GameObject* sprite)
     m_gameObjects.push_back(sprite);
 }
 
-void ObjectManager::addGameObjectMap(const std::string id, GameObject* sprite)
-{
-    m_gameObjectMap.insert(pair<std::string, GameObject*>(id, sprite));
-}
-
 std::vector<GameObject*> ObjectManager::getGameObjects()
 {
     return m_gameObjects;
-}
-
-GameObject* ObjectManager::findGameObject(std::string id)
-{
-    std::map<std::string, GameObject*>::iterator it = m_gameObjectMap.find(id);
-    if(it != m_gameObjectMap.end()){
-        return it->second;
-    } else {
-        return 0;
-    }
-}
-
-void ObjectManager::setCurrentLevel(int currentLevel)
-{
-    m_currentLevel = currentLevel;
-    m_pStateMachine->changeState(new NormalState());
-    m_bLevelComplete = false;
 }
 
 void ObjectManager::update(float dt)
@@ -127,10 +80,8 @@ void ObjectManager::handleEndedEvents()
 void ObjectManager::clean()
 {
     cout << "cleaning ObjectManager\n";
-    //m_pStateMachine->clean();
     m_pStateMachine = 0;
     delete m_pStateMachine;
-
 }
 
 //BGMとSEの初期化
@@ -151,7 +102,7 @@ void ObjectManager::initAudio()
 //プレイスタート時の初期化
 void ObjectManager::playStart()
 {
-	if (_playCount >= 1)
+	if (m_playCount >= 1)
 	{
 		return;
 	}
@@ -159,9 +110,9 @@ void ObjectManager::playStart()
 	//ウィスプ生成
 	Player::create();
 	//エネミー生成
-	_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
-	_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
-	_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
+	m_pEnemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
+	m_pEnemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
+	m_pEnemyFactory->createEnemy(kTag_rat2, 0.8, 0.5);
 	//背景生成
 	initBackground();
 }
@@ -169,7 +120,7 @@ void ObjectManager::playStart()
 void ObjectManager::addPlayCount()
 {
 	//プレイ回数を更新
-	_playCount++;
+	m_playCount++;
 }
 
 CCSprite* ObjectManager::initBackground()
@@ -179,33 +130,33 @@ CCSprite* ObjectManager::initBackground()
 	//背景画像を追加
 	CCSprite * background = CCSprite::create("background0.png");
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	_main->addChild(background, z_background, kTag_background);
+	MS::getInstance()->addChild(background, z_background, kTag_background);
 	return background;
 }
 
-void ObjectManager::initRaidHp(int hp)
+void ObjectManager::addRaidHp(int hp)
 {
 	//敵NPCのHPをレイドHPに追加
-	_raidHp += hp;
+	m_raidHp += hp;
 }
 
 void ObjectManager::damageRaidHp(int hp)
 {
 	//敵NPCへのダメージをレイドHPにも与える
-	_raidHp -= hp;
+	m_raidHp -= hp;
 }
 
 void ObjectManager::reset()
 {
 	//リセット処理
-	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
-	if (_raidHp <= 0)
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
+	if (m_raidHp <= 0)
 	{
 		wisp->resetWisp();
 		
-		_enemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
-		_enemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
-		_enemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
+		m_pEnemyFactory->createEnemy(kTag_rat1, 0.2, 0.5);
+		m_pEnemyFactory->createEnemy(kTag_vampire, 0.5, 0.8);
+		m_pEnemyFactory->createEnemy(kTag_rat2, 0.7, 0.5);
 		fadeInState();
 	}
 }
@@ -213,7 +164,7 @@ void ObjectManager::reset()
 void ObjectManager::fadeInState()
 {
 	//通常状態がフェードインするアクション
-	Player *wisp = static_cast<Player *>(_main->getChildByTag(kTag_wisp));
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	wisp->setPositionY(wisp->radius() * 3);
 	wisp->setOpacity(0);
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, -wisp->radius())), CCScaleTo::create(0,1,1), NULL);
@@ -221,7 +172,7 @@ void ObjectManager::fadeInState()
 	
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
-	CCSprite *back = static_cast<CCSprite *>(_main->getChildByTag(kTag_background));
+	CCSprite *back = static_cast<CCSprite *>(MS::getInstance()->getChildByTag(kTag_background));
 	back->setPosition(ccp(screenSize.width / 2, screenSize.height / 2.1));
 	back->setOpacity(0);
 	CCSpawn *fadeIn2 = CCSpawn::create(CCFadeIn::create(1), CCMoveTo::create(1, ccp(screenSize.width / 2, screenSize.height / 2.0)), NULL);
@@ -232,11 +183,11 @@ void ObjectManager::fadeInState()
 void ObjectManager::addEnemyCount()
 {
 	//敵NPCの総数を増加
-	this->_enemyCount++;
+	this->m_enemyCount++;
 }
 
 void ObjectManager::drawEnemyCount()
 {
 	//敵NPCの総数を減少
-	this->_enemyCount--;
+	this->m_enemyCount--;
 }

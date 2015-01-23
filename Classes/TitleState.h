@@ -14,7 +14,6 @@
 
 #include "GameState.h"
 #include <cocos2d.h>
-#include "MainScene.h"
 
 class TitleState : public GameState
 {
@@ -34,7 +33,7 @@ public:
 
 private:
 
-	int _timer;
+	int m_timer;
 	static const std::string s_titleID;
 	
 	void titleToNormal();

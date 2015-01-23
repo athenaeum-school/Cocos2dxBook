@@ -11,22 +11,27 @@
 
 #include "Player.h"
 #include "MainScene.h"
+#include "ObjectManager.h"
+#include "HudLayer.h"
 
 USING_NS_CC;
 //ショット時の運動量倍率
-const float SHOT_RATE = 0.5;
+const float SHOT_RATE = 0.4;
 //ウィスプのHP
 const int WISP_HP = 100;
 //最大HP
 const int WISP_MAXHP = 100;
 //攻撃力
 const int WISP_ATK = 10;
+//ガイド矢印の補正
+const float OFFSET = 15;
 
 Player::Player():
-_canFire(true),
-_isAttacking(false),
-_touchPoint(ccp(0, 0)),
-_timer(0)
+m_canFire(true),
+m_isAttacking(false),
+m_touchPoint(ccp(0, 0)),
+m_timer(0),
+m_angle(0)
 {
 	setHP(WISP_HP);
 	setMaxHP(WISP_MAXHP);
@@ -42,7 +47,7 @@ Player* Player::create()
 	{
 		wisp->initWisp();
 		wisp->autorelease();
-		Main::getInstance()->addChild(wisp, z_wisp, kTag_wisp);
+		MS::getInstance()->addChild(wisp, z_wisp, kTag_wisp);
 		return wisp;
 	}
 	CC_SAFE_DELETE(wisp);
@@ -58,13 +63,12 @@ Player* Player::initWisp()
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//アニメーションの初期化
-	_hud->getAnime()->wispInitAnime(this);
+	Hud::getInstance()->getAnime()->wispInitAnime(this);
 	//HPバーの追加
-	_hud->initHpbar(this);
+	Hud::getInstance()->initHpbar(this);
 
 	//vectorとmapコンテナへウィスプを追加
-	_om->addGameObjectMap("wisp", this);
-	_om->addGameObject(this);
+	OM::getInstance()->addGameObject(this);
 
 	return this;
 }
@@ -79,7 +83,7 @@ void Player::onStateEnter()
 		setTimer(0);
 		setCanFire(true);
 		//HPラベルの表示
-		_hud->drawHpLabel();
+		Hud::getInstance()->drawHpLabel();
 	}
 	else if (isEnemyState())
 	{
@@ -100,7 +104,7 @@ void Player::onStateExit()
 	} 
 	else if (isResultState())
 	{
-		_hud->initHpbar(this);
+		Hud::getInstance()->initHpbar(this);
 	}
 }
 
@@ -127,8 +131,8 @@ void Player::stateUpdate(float dt)
 bool Player::wispTouchBegan()
 {
 	bool ret = false;
-	CCTouch *touch = _main->getBeganTouch();
-	if (!_canFire)
+	CCTouch *touch = MS::getInstance()->getBeganTouch();
+	if (!m_canFire)
 	{
 		return ret;
 	}
@@ -146,7 +150,7 @@ bool Player::wispTouchBegan()
 
 void Player::wispTouchMoved()
 {
-	CCTouch* touch = _main->getMovedTouch();
+	CCTouch* touch = MS::getInstance()->getMovedTouch();
 	CCPoint movePoint = touch->getLocation();
 	if (touch)
 	{
@@ -157,13 +161,13 @@ void Player::wispTouchMoved()
 
 void Player::wispTouchEnded()
 {
-	CCTouch* touch = _main->getEndedTouch();
+	CCTouch* touch = MS::getInstance()->getEndedTouch();
 	//放した座標
 	CCPoint endPoint = touch->getLocation();
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算し、力を加える
 	this->setVector(calcForce(endPoint));
 	//矢印を削除
-	_main->removeChildByTag(kTag_arrow);
+	MS::getInstance()->removeChildByTag(kTag_arrow);
 	//ショット中の操作を不可に
 	setCanFire(false);
 	setIsAttacking(true);
@@ -172,28 +176,28 @@ void Player::wispTouchEnded()
 void Player::addPower(int power)
 {
 	//パワーアップ
-	this->_atk += power;
+	this->m_atk += power;
 }
 
 void Player::drawPower(int power)
 {
 	//パワーダウン
-	this->_atk -= power;
+	this->m_atk -= power;
 }
 
 void Player::addForceToWisp()
 {
 	//放した時の運動量をウィスプに加える
-	_nextPosition.x += _vector.x;
-	_nextPosition.y += _vector.y;
+	m_nextPosition.x += m_vector.x;
+	m_nextPosition.y += m_vector.y;
 }
 
 bool Player::isNext()
 {
 	bool ret = false;
 	//タッチ画像に触れているなら次の処理へ
-	CCSprite * touchImage = static_cast<CCSprite *>(_hud->getChildByTag(ktag_touch));
-	if (touchImage && touchImage->boundingBox().containsPoint(_touchPoint))
+	CCSprite * touchImage = static_cast<CCSprite *>(Hud::getInstance()->getChildByTag(ktag_touch));
+	if (touchImage && touchImage->boundingBox().containsPoint(m_touchPoint))
 	{
 		//タッチ画像を削除
 		touchImage->removeFromParent();
@@ -205,12 +209,12 @@ bool Player::isNext()
 
 void Player::createArrow(CCPoint movePoint)
 {
-	CCSprite *arrow = static_cast<CCSprite *>(_main->getChildByTag(kTag_arrow));
+	CCSprite *arrow = static_cast<CCSprite *>(MS::getInstance()->getChildByTag(kTag_arrow));
 	//存在しなければ、矢印を追加（１つしか作らないための処理）
 	if (!arrow)
 	{
-		arrow = _hud->getAnime()->arrowAnime();
-		_main->addChild(arrow, z_arrow, kTag_arrow);
+		arrow = Hud::getInstance()->getAnime()->arrowAnime();
+		MS::getInstance()->addChild(arrow, z_arrow, kTag_arrow);
 	}
 	//矢印の座標と角度の設定
 	arrowSettings(arrow, movePoint);
@@ -220,27 +224,56 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 {
 	arrow->setPosition(this->getPosition());
 	//タッチ開始座標に対する移動中のタッチ座標の角度
-	float angle = ((_touchPoint - movePoint)).getAngle();
-	CCPoint point = movePoint + _touchPoint.rotate(CCPoint::forAngle(angle));
-	angle = CC_RADIANS_TO_DEGREES((_touchPoint - point).getAngle() * -1.0);
+	m_angle = ((m_touchPoint - movePoint)).getAngle();
+	CCPoint point = movePoint + m_touchPoint.rotate(CCPoint::forAngle(m_angle));
+	m_angle = CC_RADIANS_TO_DEGREES((m_touchPoint - point).getAngle() * -1.0);
+	CCLOG("angle : %f", m_angle);
 	//結果を矢印に反映
-	arrow->setRotation(angle);
+	arrow->setRotation(m_angle);
 }
 
 CCPoint Player::calcForce(CCPoint endPoint)
 {
-	float diffx = _touchPoint.x - endPoint.x;
-	float diffy = _touchPoint.y - endPoint.y;
 	//タッチ開始座標から放した座標の距離 * 0.5の値を計算
-	return ccp(diffx, diffy) * SHOT_RATE;
+	float diffx = m_touchPoint.x - endPoint.x;
+	float diffy = m_touchPoint.y - endPoint.y;
+	//角度帯毎にブレを補正
+	if (m_angle > -10.0 && m_angle < 10.0)
+	{
+		CCLOG("top");
+		return ccp(diffx - 30, diffy) * SHOT_RATE;
+	}
+	else if (m_angle > 160)
+	{
+		CCLOG("bottomRight");
+		return ccp(diffx + 45, diffy + 15) * SHOT_RATE;
+	}
+	else if (m_angle < -160)
+	{
+		CCLOG("bottomLeft");
+		return ccp(diffx + 60, diffy - 45) * SHOT_RATE;
+	}
+	else if (m_angle < -91.0)
+	{
+		CCLOG("mAngle%f", m_angle);
+		CCLOG("leftlow");
+		return ccp(diffx + 30, diffy - 30) * SHOT_RATE;
+	}
+	else if (m_angle > 91.0 && m_angle < 180)
+	{
+		CCLOG("mAngle%f", m_angle);
+		CCLOG("rightlow");
+		return ccp(diffx + 15, diffy + 15) * SHOT_RATE;
+	}
+	return ccp(diffx - 15, diffy) * SHOT_RATE;
 }
 
 void Player::startTimer()
 {
 	//ショット後、タイマースタート
-	if (!_canFire)
+	if (!m_canFire)
 	{
-		++_timer;
+		++m_timer;
 	}
 }
 

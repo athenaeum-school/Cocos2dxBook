@@ -15,22 +15,18 @@
 #include <iostream>
 #include <cocos2d.h>
 
-class MainScene;
-class HudLayer;
-class ObjectManager;
-
 class GameObject : public cocos2d::CCSprite
 {
 public:
 
-	CC_SYNTHESIZE(int, _hp, HP);
-	CC_SYNTHESIZE(int, _maxHp, MaxHP);
-	CC_SYNTHESIZE(int, _atk, Atk);
-	CC_SYNTHESIZE(bool, _isDead, IsDead);
-	CC_SYNTHESIZE(std::string, _stateID, StateID);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _nextPosition, NextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, _vector, Vector);
-	CC_SYNTHESIZE_RETAIN(cocos2d::CCProgressTimer *, _hpBar, HpBar);
+	CC_SYNTHESIZE(int, m_hp, HP);
+	CC_SYNTHESIZE(int, m_maxHp, MaxHP);
+	CC_SYNTHESIZE(int, m_atk, Atk);
+	CC_SYNTHESIZE(bool, m_isDead, IsDead);
+	CC_SYNTHESIZE(std::string, m_stateID, StateID);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_nextPosition, NextPosition);
+	CC_SYNTHESIZE(cocos2d::CCPoint, m_vector, Vector);
+	CC_SYNTHESIZE_RETAIN(cocos2d::CCProgressTimer *, m_pHpBar, HpBar);
 
 	virtual void onStateEnter() = 0;
 	virtual void onStateExit() = 0;
@@ -42,10 +38,6 @@ public:
 	float getHpRatio();
 
 protected:
-
-	MainScene *_main;
-	HudLayer *_hud;
-	ObjectManager *_om;
 
 	void setStateID();
 	bool isNormalState();

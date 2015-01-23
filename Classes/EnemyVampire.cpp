@@ -11,6 +11,7 @@
 
 #include "EnemyVampire.h"
 #include "MainScene.h"
+#include "HudLayer.h"
 
 const int VAMPIRE_HP = 120;
 const int VAMPIRE_MAXHP = 120;
@@ -28,7 +29,7 @@ EnemyVampire* EnemyVampire::create(enemyType type, float xPos, float yPos)
 	{
 		enemy->initEnemy(type, xPos, yPos);
 		enemy->autorelease();
-		Main::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
+		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
 	}
 	//autoreleaseを使用しているため、deleteの代わりに使用、メモリを開放
@@ -46,13 +47,12 @@ std::string EnemyVampire::statusInit(enemyType type)
 	this->setHP(VAMPIRE_HP);
 	this->setMaxHP(VAMPIRE_MAXHP);
 	this->setAtk(VAMPIRE_ATK);
-	this->setAddMapName("vampire");
-
+	
 	return fileName;
 }
 
 void EnemyVampire::setIdleAction()
 {
 	//待機アクション
-	_hud->getAnime()->enemy_vamp_idleAnime(this);
+	Hud::getInstance()->getAnime()->enemy_vamp_idleAnime(this);
 }
