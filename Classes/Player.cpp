@@ -23,8 +23,6 @@ const int WISP_HP = 100;
 const int WISP_MAXHP = 100;
 //UŒ‚—Í
 const int WISP_ATK = 10;
-//ƒKƒCƒh–îˆó‚Ì•â³
-const float OFFSET = 15;
 
 Player::Player():
 m_canFire(true),
