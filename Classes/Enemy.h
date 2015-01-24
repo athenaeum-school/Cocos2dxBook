@@ -40,7 +40,7 @@ public:
 protected:
 
 	/**	敵NPC初期設定
-	*	@param type	enumのenemyType
+	*	@param type	敵NPCの種別
 	*	@param xPos	配置するx軸の座標
 	*	@param yPos	配置するy軸の座標
 	*	@return	生成された敵NPCを返す
@@ -48,7 +48,7 @@ protected:
 	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
 
 	/**	敵NPCの画像とステータス設定
-	*	@param type	enumのenemyType
+	*	@param type	敵NPCの種別
 	*	@return	画像ファイル名を返す
 	*/
 	virtual std::string statusInit(enemyType type) = 0;
@@ -77,7 +77,9 @@ private:
 	//攻撃を行なう
 	void attack();
 
-	////死亡しているか攻撃済みならtrue
+	/**	死亡しているか攻撃済みか
+	*	@return	真偽
+	*/
 	bool isDeadOrAttacked();
 	
 };

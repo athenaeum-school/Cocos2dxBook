@@ -13,7 +13,7 @@
 #include "MainScene.h"
 #include "HudLayer.h"
 
-const int VAMPIRE_HP = 120;
+const int VAMPIRE_HP = 1;
 const int VAMPIRE_MAXHP = 120;
 const int VAMPIRE_ATK = 20;
 
@@ -54,5 +54,5 @@ std::string EnemyVampire::statusInit(enemyType type)
 void EnemyVampire::setIdleAction()
 {
 	//待機アクション
-	Hud::getInstance()->getAnime()->enemy_vamp_idleAnime(this);
+	Hud::getInstance()->getAction()->enemyIdleAction(this, 0.2, -0.2);
 }

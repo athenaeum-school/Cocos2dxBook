@@ -31,6 +31,8 @@ m_pEnemyFactory(NULL)
 {
 	//状態マシーンの初期化
 	m_pStateMachine = new StateMachine();
+	//敵NPCファクトリーの初期化
+	m_pEnemyFactory = EnemyFactory::create();
 }
 
 ObjectManager::~ObjectManager(){}
@@ -41,8 +43,7 @@ bool ObjectManager::init()
 	initAudio();
 	//初期状態を追加し、状態を初期化
 	m_pStateMachine->pushState(new TitleState());
-	m_pEnemyFactory = EnemyFactory::create();
-
+	
 	return true;
 }
 
@@ -58,7 +59,7 @@ std::vector<GameObject*> ObjectManager::getGameObjects()
 
 void ObjectManager::update(float dt)
 {
-		m_pStateMachine->update(dt);
+	m_pStateMachine->update(dt);
 }
 
 //GameLayerで呼び出しているインプットの処理
@@ -130,6 +131,8 @@ CCSprite* ObjectManager::initBackground()
 	//背景画像を追加
 	CCSprite * background = CCSprite::create("background0.png");
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
+	//MainSceneのインスタンスを呼び出す
+	//MainSceneへ追加
 	MS::getInstance()->addChild(background, z_background, kTag_background);
 	return background;
 }
@@ -170,7 +173,7 @@ void ObjectManager::fadeInState()
 	//フェードインのため、透明に
 	wisp->setOpacity(0);
 	//1秒かけて、フェードインとウィスプ1個分下に移動するアクション（引数3個目は敗北してた場合、大きさを元に戻すため）
-	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, -wisp->radius())), CCScaleTo::create(0,1,1), NULL);
+	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, wisp->radius() * -1.0)), CCScaleTo::create(0,1,1), NULL);
 	wisp->runAction(fadeIn);
 	
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
@@ -186,11 +189,11 @@ void ObjectManager::fadeInState()
 void ObjectManager::addEnemyCount()
 {
 	//敵NPCの総数を増加
-	this->m_enemyCount++;
+	m_enemyCount++;
 }
 
 void ObjectManager::drawEnemyCount()
 {
 	//敵NPCの総数を減少
-	this->m_enemyCount--;
+	m_enemyCount--;
 }

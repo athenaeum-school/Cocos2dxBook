@@ -31,7 +31,7 @@ CCScene* MainScene::createScene()
     CCScene *scene = CCScene::create();
 	MainScene *layer = MainScene::create();
 	scene->addChild(layer);
-
+	
 	ObjectManager *om = ObjectManager::getInstance();
 	om->init();
 	scene->addChild(om);
@@ -64,6 +64,7 @@ bool MainScene::init()
 
 
 void MainScene::update(float dt) {
+	//ObjectManagerのインスタンスを呼び出す
 	//状態マシーンのループ（ゲームのループ）
 	OM::getInstance()->update(dt);
 }

@@ -29,7 +29,7 @@ m_pComboLabel(NULL),
 m_comboCount(NULL),
 m_pPlayerHpLabel(NULL)
 {
-	m_pAnime = AnimationManager::create();
+	m_pAction = ActionManager::create();
 }
 
 
@@ -38,7 +38,7 @@ HudLayer::~HudLayer()
 	CC_SAFE_RELEASE_NULL(m_pPlayerHpLabel);
 	CC_SAFE_RELEASE_NULL(m_pLabel);
 	CC_SAFE_RELEASE_NULL(m_pComboLabel);
-	CC_SAFE_RELEASE_NULL(m_pAnime);
+	CC_SAFE_RELEASE_NULL(m_pAction);
 }
 
 bool HudLayer::init()
@@ -125,6 +125,7 @@ void HudLayer::drawHpBar(GameObject *obj)
 
 void HudLayer::initHpBar(GameObject *obj)
 {
+	//ObjectManagerのインスタンスを呼び出す
 	//ウィスプのみ、リザルト状態でHPバーを最大に戻す
 	if (OM::getInstance()->getStateMachine()->getStates().back()->getStateID() == "RESULT")
 	{

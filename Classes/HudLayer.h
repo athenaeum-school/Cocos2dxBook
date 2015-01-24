@@ -14,7 +14,7 @@
 
 #include "cocos2d.h"
 #include "GameObject.h"
-#include "AnimationManager.h"
+#include "ActionManager.h"
 
 class MainScene;
 
@@ -34,7 +34,7 @@ public:
 	}
 
 	CC_SYNTHESIZE(int, m_comboCount, ComboCount);
-	CC_SYNTHESIZE_RETAIN(AnimationManager *, m_pAnime, Anime);
+	CC_SYNTHESIZE_RETAIN(ActionManager *, m_pAction, Action);
 
 	virtual bool init();
 	CREATE_FUNC(HudLayer);

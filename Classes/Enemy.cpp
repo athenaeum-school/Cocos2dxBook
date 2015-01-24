@@ -47,6 +47,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	setIdleAction();
 	//HPバーを追加
 	Hud::getInstance()->initHpBar(this);
+	//ObjectManagerのシングルトンを呼び出す
 	//レイドHPに追加
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
@@ -148,7 +149,7 @@ void Enemy::attack()
 	{
 		return;
 	}
-		//設定敵NPCタイプに応じて、攻撃を生成
+		//設定敵NPC種別に応じて、攻撃を生成
 		EnemyAttack::create(this);
 		//攻撃済みのフラグを立てる
 		setIsAttacked(true);

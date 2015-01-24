@@ -25,8 +25,6 @@ public:
 
 	void wispInitAction(Player *wisp);
 	void swingAction(GameObject *obj);
-	void wispDyingAction(PlayerHit *wisp);
-	void enemyDyingAction(EnemyHit *enemy);
 	void dyingAction(GameObject *obj);
 
 	/**	€–S‚Ì‰æ‘œƒtƒ@ƒCƒ‹–¼‚ğİ’è

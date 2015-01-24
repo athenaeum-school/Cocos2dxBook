@@ -74,7 +74,7 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 	Hud::getInstance()->damageLabel(this->getPosition(), atkPower->getAtkPower());
 	CCLOG("wispdamageHp%d", m_hp);
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
-	Hud::getInstance()->getAnime()->swingAnime(this);
+	Hud::getInstance()->getAction()->swingAction(this);
 	if (m_hp <= 0)
 	{
 		setIsDead(true);
@@ -87,7 +87,8 @@ void PlayerHit::died()
 	if (m_isDead)
 	{
 		setHP(0);
-		Hud::getInstance()->getAnime()->wispDyingAnime(this);
+		//Hud::getInstance()->getAnime()->wispDyingAnime(this);
+		Hud::getInstance()->getAction()->dyingAction(this);
 	}
 }
 

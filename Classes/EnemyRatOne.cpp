@@ -54,5 +54,5 @@ std::string EnemyRatOne::statusInit(enemyType type)
 void EnemyRatOne::setIdleAction()
 {
 	//待機アクション
-	Hud::getInstance()->getAnime()->enemyIdleAnime(this);
+	Hud::getInstance()->getAction()->enemyIdleAction(this, -0.2, 0.2);
 }

@@ -33,7 +33,9 @@ void EnemyHit::hitCheck()
 	if (isContanctWithContacted(isContact_interSects) && isAliveWithAttacking())
 	{
 		damage();
-		Hud::getInstance()->getAnime()->enemyDamageAnime(this);
+		//HudLayerのシングルトンを呼び出す
+		//ダメージ時のアニメーション
+		Hud::getInstance()->getAction()->enemyDamageAction(this);
 		//一度触れたら、離れるまで触れなくなる（重複当たり判定を防ぐフラグ）
 		setIsContacted(true);
 	}
@@ -81,7 +83,7 @@ void EnemyHit::damage()
 	
 	//ダメージを表示
 	Hud::getInstance()->damageLabel(this->getPosition(), m_pWisp->getAtkPower());
-	//ヒット数を表示
+	//ヒット数を表示し、更新する
 	Hud::getInstance()->addComboCountLabel();
 
 	if (playerAtkPower <= this->m_hp)
@@ -127,6 +129,7 @@ void EnemyHit::died()
 		this->setHP(0);
 		//敵NPCの数を減らす
 		OM::getInstance()->drawEnemyCount();
-		Hud::getInstance()->getAnime()->enemyDyingAnime(this);
+		//Hud::getInstance()->getAnime()->enemyDyingAnime(this);
+		Hud::getInstance()->getAction()->dyingAction(this);
 	}
 }

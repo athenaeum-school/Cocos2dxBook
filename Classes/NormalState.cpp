@@ -224,11 +224,11 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		m_wispNextPosition.y = m_enemyNextPosition.y + (enemy->radius() + m_pWisp->radius() + force) * sin(angle);
 		//ボーナスダメージを攻撃力に追加
 		m_pWisp->addPower(ADD_POWER);
-		Hud::getInstance()->getAnime()->enemyDamageAnime(enemy);
+		Hud::getInstance()->getAction()->enemyDamageAction(enemy);
 		enemy->damage();
 		//ダメージ後、攻撃力を戻す
 		m_pWisp->drawPower(ADD_POWER);
-		Hud::getInstance()->getAnime()->boundSE();
+		Hud::getInstance()->getAction()->boundSE();
 	}
 
 }

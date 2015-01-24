@@ -49,8 +49,8 @@ void ActionManager::dyingAction(GameObject *obj)
 	//消滅エフェクト（風が発生）
 	CCSprite *vanish = CCSprite::create(dyingSpriteFileName(obj, 1).c_str());
 	vanish->setPosition(obj->getPosition());
-	//メインシーンのシングルトンを呼び出す
-	//メインシーンへ追加
+	//MainSceneのインスタンスを呼び出す
+	//MainSceneへ追加
 	MS::getInstance()->addChild(vanish, z_vanish);
 
 	CCAnimation *vanishing = CCAnimation::create();
@@ -109,7 +109,7 @@ void ActionManager::dyingSE(GameObject *obj)
 
 void ActionManager::enemyStarAction()
 {
-	Player* wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//ダメージ時、スターエフェクト表示
 	CCSprite *star = CCSprite::create("star1.png");
 	star->setPosition(wisp->getPosition());
@@ -118,6 +118,7 @@ void ActionManager::enemyStarAction()
 	CCAnimation *animation = CCAnimation::create();
 	for (int i = 1; i <= 4; i++)
 	{
+		//ファイル名+1~4までの画像を追加
 		animation->addSpriteFrameWithFileName(spriteFileName((*"star%d.png"), i).c_str());
 	}
 	animation->setDelayPerUnit(0.1);
@@ -139,6 +140,7 @@ void ActionManager::enemyExplodeAction(EnemyHit *enemy)
 	CCAnimation *explode = CCAnimation::create();
 	for (int i = 1; i <= 4; i++)
 	{
+		//ファイル名+1~4までの画像を追加
 		explode->addSpriteFrameWithFileName(spriteFileName((*"explode%d.png"), i).c_str());
 	}
 	explode->setDelayPerUnit(0.1);
@@ -191,6 +193,7 @@ CCSprite* ActionManager::arrowAction()
 	CCAnimation *animation = CCAnimation::create();
 	for (int i = 1; i <= 5; i++)
 	{
+		//ファイル名+1~5までの画像を追加
 		animation->addSpriteFrameWithFileName(spriteFileName((*"arrow%d.png"), i).c_str());
 	}
 	animation->setDelayPerUnit(0.3);

@@ -18,7 +18,7 @@ USING_NS_CC;
 //ショット時の運動量倍率
 const float SHOT_RATE = 0.3;
 //ウィスプのHP
-const int WISP_HP = 100;
+const int WISP_HP = 1;
 //最大HP
 const int WISP_MAXHP = 100;
 //攻撃力
@@ -62,7 +62,7 @@ Player* Player::initWisp()
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//アニメーションの初期化
-	Hud::getInstance()->getAnime()->wispInitAnime(this);
+	Hud::getInstance()->getAction()->wispInitAction(this);
 	//HPバーの追加
 	Hud::getInstance()->initHpBar(this);
 	//vectorコンテナへウィスプを追加
@@ -215,7 +215,7 @@ void Player::createArrow(CCPoint movePoint)
 	//存在しなければ、矢印を追加（１つしか作らないための処理）
 	if (!arrow)
 	{
-		arrow = Hud::getInstance()->getAnime()->arrowAnime();
+		arrow = Hud::getInstance()->getAction()->arrowAction();
 		MS::getInstance()->addChild(arrow, z_arrow, kTag_arrow);
 	}
 	//矢印の座標と角度の設定
