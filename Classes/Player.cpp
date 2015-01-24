@@ -65,7 +65,7 @@ Player* Player::initWisp()
 	Hud::getInstance()->getAnime()->wispInitAnime(this);
 	//HPバーの追加
 	Hud::getInstance()->initHpBar(this);
-	//vectorとmapコンテナへウィスプを追加
+	//vectorコンテナへウィスプを追加
 	OM::getInstance()->addGameObject(this);
 
 	return this;
@@ -226,7 +226,7 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 {
 	arrow->setPosition(this->getPosition());
 	//タッチ開始座標に対する移動中のタッチ座標の角度
-	//ベクトル（m_touchPoint - movePoint）とx軸との間角度を弧度で算出
+	//ベクトル（m_touchPoint - movePoint）とx軸間の角度を弧度で算出
 	m_angle = ((m_touchPoint - movePoint)).getAngle();
 	//操作範囲のベクトルを返す
 	CCPoint point = movePoint + m_touchPoint.rotate(CCPoint::forAngle(m_angle));

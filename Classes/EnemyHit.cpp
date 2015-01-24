@@ -30,11 +30,11 @@ void EnemyHit::hitCheck()
 
 	bool isContact_interSects = setEnemyRect().intersectsRect(wispRect);
 	//敵NPCの描画領域に触れていて、それまでに触れていない、かつ、敵NPCが生存していて、ウィスプが攻撃中ならばtrue
-	if (isContanctWithContacted(isContact_interSects) && isDeadWithAttacking())
+	if (isContanctWithContacted(isContact_interSects) && isAliveWithAttacking())
 	{
 		damage();
 		Hud::getInstance()->getAnime()->enemyDamageAnime(this);
-		//描画領域に触れていたら、触れなくなる（重複当たり判定を防ぐフラグ）
+		//一度触れたら、離れるまで触れなくなる（重複当たり判定を防ぐフラグ）
 		setIsContacted(true);
 	}
 	else if (!isContact_interSects)
@@ -54,7 +54,7 @@ CCRect EnemyHit::setEnemyRect()
 	return enemyRect;
 }
 
-bool EnemyHit::isDeadWithAttacking()
+bool EnemyHit::isAliveWithAttacking()
 {
 	//敵NPCが生存していて、ウィスプが攻撃中ならば真
 	if (!this->m_isDead && m_pWisp->getIsAttacking())
@@ -115,9 +115,9 @@ void EnemyHit::normalDamage(int playerAtkPower)
 void EnemyHit::overDamage()
 {
 	//レイドHPとのずれを無くすため、オーバーダメージを防ぐ処理
-	int margeDamage = m_hp;
-	this->m_hp -= margeDamage;
-	OM::getInstance()->damageRaidHp(margeDamage);
+	int mergeDamage = m_hp;
+	this->m_hp -= mergeDamage;
+	OM::getInstance()->damageRaidHp(mergeDamage);
 }
 
 void EnemyHit::died()

@@ -43,7 +43,7 @@ std::string EnemyRatOne::statusInit(enemyType type)
 	std::string fileName;
 	//エネミータイプに応じて、ステータスを設定
 	fileName = "enemy_rat1.png";
-	this->setEtype(type);
+	this->setEnemyType(type);
 	this->setHP(RAT_ONE_HP);
 	this->setMaxHP(RAT_ONE_MAXHP);
 	this->setAtkPower(RAT_ONE_ATK);

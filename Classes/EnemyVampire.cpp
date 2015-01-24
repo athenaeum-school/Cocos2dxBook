@@ -43,7 +43,7 @@ std::string EnemyVampire::statusInit(enemyType type)
 	std::string fileName;
 	//エネミータイプに応じて、ステータスを設定
 	fileName = "enemy_vampire.png";
-	this->setEtype(type);
+	this->setEnemyType(type);
 	this->setHP(VAMPIRE_HP);
 	this->setMaxHP(VAMPIRE_MAXHP);
 	this->setAtkPower(VAMPIRE_ATK);

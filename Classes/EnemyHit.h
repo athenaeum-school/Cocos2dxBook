@@ -44,7 +44,7 @@ protected:
 	/**	当たり判定
 	*	@return	敵NPCが生存していて、プレイヤーが攻撃中ならば真
 	*/
-	bool isDeadWithAttacking();
+	bool isAliveWithAttacking();
 	
 	void normalDamage(int playerAtk);
 	void overDamage();

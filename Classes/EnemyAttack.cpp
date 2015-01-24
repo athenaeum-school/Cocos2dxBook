@@ -44,7 +44,7 @@ EnemyAttack* EnemyAttack::create(Enemy *enemy)
 EnemyAttack* EnemyAttack::initEnemyAttack(Enemy *enemy, CCPoint point)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	this->initWithFile(fileNameInit(enemy->getEtype()).c_str());
+	this->initWithFile(fileNameInit(enemy->getEnemyType()).c_str());
 	this->setPosition(point);
 	
 	return this;
@@ -75,7 +75,7 @@ void EnemyAttack::attack(Enemy *enemy)
 	//ŒÄ‚Ño‚µ‚½“GNPC‚ÌUŒ‚—Í‚ð‘ã“ü
 	setAtkPower(enemy->getAtkPower());
 	//ƒ^ƒCƒv‚É‚æ‚Á‚ÄAUŒ‚•û–@‚ð•Ï‚¦‚é
-	switch (enemy->getEtype())
+	switch (enemy->getEnemyType())
 	{
 		{
 			case enemyType::kTag_rat1:
