@@ -31,9 +31,9 @@ m_touchPoint(ccp(0, 0)),
 m_timer(0),
 m_angle(0)
 {
-	setHP(WISP_HP);
-	setMaxHP(WISP_MAXHP);
-	setAtkPower(WISP_ATK); 
+	this->setHP(WISP_HP);
+	this->setMaxHP(WISP_MAXHP);
+	this->setAtkPower(WISP_ATK); 
 }
 
 Player::~Player(){}
@@ -57,6 +57,7 @@ Player* Player::initWisp()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	this->initWithFile("wisp_1.png");
+	//x軸は中央へ、y軸は底からウィスプの半径1つ分空けた座標へ配置
 	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
@@ -64,7 +65,6 @@ Player* Player::initWisp()
 	Hud::getInstance()->getAnime()->wispInitAnime(this);
 	//HPバーの追加
 	Hud::getInstance()->initHpBar(this);
-
 	//vectorとmapコンテナへウィスプを追加
 	OM::getInstance()->addGameObject(this);
 
@@ -74,8 +74,9 @@ Player* Player::initWisp()
 
 void Player::onStateEnter()
 {	
-	setStateID();
-	if (isNormalState())
+	//現在の状態のIDを代入
+	this->setStateID();
+	if (this->isNormalState())
 	{
 		setTouchPoint(ccp(0, 0));
 		setTimer(0);
@@ -83,11 +84,11 @@ void Player::onStateEnter()
 		//HPラベルの表示
 		Hud::getInstance()->drawHpLabel();
 	}
-	else if (isEnemyState())
+	else if (this->isEnemyState())
 	{
 		
 	}
-	else if (isResultState())
+	else if (this->isResultState())
 	{
 		
 	}
@@ -95,12 +96,12 @@ void Player::onStateEnter()
 
 void Player::onStateExit()
 {
-	if (isNormalState())
+	if (this->isNormalState())
 	{
 		setIsAttacking(false);
-		setAcceleration(ccp(0, 0));
+		this->setAcceleration(ccp(0, 0));
 	} 
-	else if (isResultState())
+	else if (this->isResultState())
 	{
 		Hud::getInstance()->initHpBar(this);
 	}
@@ -109,18 +110,18 @@ void Player::onStateExit()
 void Player::stateUpdate(float dt)
 {
 	//当たり判定確認
-	hitCheck();
+	this->hitCheck();
 	//ウィスプに力を加える
 	addForceToWisp();
 	//ウィスプと壁の衝突判定
 	//西
-	collisionBlockWest();
+	this->collisionBlockWest();
 	//東
-	collisionBlockEast();
+	this->collisionBlockEast();
 	//北
-	collisionBlockNorth();
+	this->collisionBlockNorth();
 	//南
-	collisionBlockSouth();
+	this->collisionBlockSouth();
 	
 	//攻撃後、次の状態へのカウント開始
 	startTimer();
@@ -130,6 +131,7 @@ bool Player::wispTouchBegan()
 {
 	bool ret = false;
 	CCTouch *touch = MS::getInstance()->getBeganTouch();
+	//攻撃可能で無ければ抜ける
 	if (!m_canFire)
 	{
 		return ret;
@@ -149,6 +151,7 @@ bool Player::wispTouchBegan()
 void Player::wispTouchMoved()
 {
 	CCTouch* touch = MS::getInstance()->getMovedTouch();
+	//タッチの座標を取得
 	CCPoint movePoint = touch->getLocation();
 	if (touch)
 	{
@@ -162,7 +165,7 @@ void Player::wispTouchEnded()
 	CCTouch* touch = MS::getInstance()->getEndedTouch();
 	//放した座標
 	CCPoint endPoint = touch->getLocation();
-	//タッチ開始座標から放した座標の距離 * 0.5の値を計算し、力を加える
+	//タッチ開始座標から放した座標の距離 * SHOT_RATEの値を計算し、力を加える
 	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
 	MS::getInstance()->removeChildByTag(kTag_arrow);
@@ -186,15 +189,16 @@ void Player::drawPower(int power)
 void Player::addForceToWisp()
 {
 	//放した時の運動量をウィスプに加える
-	m_nextPosition.x += m_acceleration.x;
-	m_nextPosition.y += m_acceleration.y;
+	this->m_nextPosition.x += this->m_acceleration.x;
+	this->m_nextPosition.y += this->m_acceleration.y;
 }
 
 bool Player::isNext()
 {
 	bool ret = false;
-	//タッチ画像に触れているなら次の処理へ
+	//MainSceneからtouchImageのノードをキャストして取得
 	CCSprite * touchImage = static_cast<CCSprite *>(Hud::getInstance()->getChildByTag(ktag_touch));
+	//タッチ画像に触れているなら次の処理へ
 	if (touchImage && touchImage->boundingBox().containsPoint(m_touchPoint))
 	{
 		//タッチ画像を削除
@@ -222,8 +226,11 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 {
 	arrow->setPosition(this->getPosition());
 	//タッチ開始座標に対する移動中のタッチ座標の角度
+	//ベクトル（m_touchPoint - movePoint）とx軸との間角度を弧度で算出
 	m_angle = ((m_touchPoint - movePoint)).getAngle();
+	//操作範囲のベクトルを返す
 	CCPoint point = movePoint + m_touchPoint.rotate(CCPoint::forAngle(m_angle));
+	//弧度から度への変換
 	m_angle = CC_RADIANS_TO_DEGREES((m_touchPoint - point).getAngle() * -1.0);
 	CCLOG("angle : %f", m_angle);
 	//結果を矢印に反映
@@ -279,10 +286,10 @@ void Player::resetWisp()
 {
 	//リトライ後の再設定
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	setHP(100);
-	setIsDead(false);
+	this->setHP(100);
+	this->setIsDead(false);
 	setCanFire(true);
 	setTimer(0);
-	setAcceleration(ccp(0, 0));
-	setPosition(ccp(screenSize.width / 2.0, this->radius() * 2.0));
+	this->setAcceleration(ccp(0, 0));
+	this->setPosition(ccp(screenSize.width / 2.0, this->radius() * 2.0));
 }

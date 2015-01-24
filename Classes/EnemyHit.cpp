@@ -56,7 +56,7 @@ CCRect EnemyHit::setEnemyRect()
 
 bool EnemyHit::isDeadWithAttacking()
 {
-	//敵NPCが生存していて、ウィスプが攻撃中ならばtrue
+	//敵NPCが生存していて、ウィスプが攻撃中ならば真
 	if (!this->m_isDead && m_pWisp->getIsAttacking())
 	{
 		return true;
@@ -66,6 +66,7 @@ bool EnemyHit::isDeadWithAttacking()
 
 bool EnemyHit::isContanctWithContacted(bool isContact_interSects)
 {
+	//敵NPCに触れる、その接触までに触れていなければ真
 	if (isContact_interSects && !m_isContacted)
 	{
 		return true;
@@ -93,6 +94,7 @@ void EnemyHit::damage()
 		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
 		overDamage();
 	}
+	//HPバーに反映
 	Hud::getInstance()->drawHpBar(this);
 	CCLOG("EnemyHP : %d", this->m_hp);
 

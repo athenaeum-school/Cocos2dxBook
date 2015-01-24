@@ -22,7 +22,7 @@ class EnemyHit : public GameObject
 public:
 	/**
 	* @param m_isContacted
-	*重複当たり判定を防ぐためのフラグ
+	* 重複当たり判定を防ぐためのフラグ
 	*/
 	CC_SYNTHESIZE(bool, m_isContacted, IsContacted);
 
@@ -34,8 +34,18 @@ protected:
 
 	void hitCheck();
 	cocos2d::CCRect setEnemyRect();
+
+	/**	当たり判定
+	*	@param isContact_interSects	自身の当たり判定にプレイヤーが触れているか
+	*	@return	敵NPCに触れる、その接触までに触れていなければ真
+	*/
+	bool isContanctWithContacted(bool isContact_interSects);
+
+	/**	当たり判定
+	*	@return	敵NPCが生存していて、プレイヤーが攻撃中ならば真
+	*/
 	bool isDeadWithAttacking();
-	bool isContanctWithContacted(bool isContact);
+	
 	void normalDamage(int playerAtk);
 	void overDamage();
 	void died();
