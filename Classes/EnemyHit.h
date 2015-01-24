@@ -20,7 +20,10 @@ class Player;
 class EnemyHit : public GameObject
 {
 public:
-
+	/**
+	* @param m_isContacted
+	*d•¡“–‚½‚è”»’è‚ğ–h‚®‚½‚ß‚Ìƒtƒ‰ƒO
+	*/
 	CC_SYNTHESIZE(bool, m_isContacted, IsContacted);
 
 	void damage();

@@ -22,13 +22,16 @@ Enemy* EnemyFactory::createEnemy(enemyType type, float xPos, float yPos)
 {
 	Enemy *enemy = NULL;
 
-	if (type == kTag_rat1) {
+	if (type == kTag_rat1) 
+	{
 		enemy = EnemyRatOne::create(type, xPos, yPos);
 	}
-	else if (type == kTag_rat2) {
+	else if (type == kTag_rat2) 
+	{
 		enemy = EnemyRatTwo::create(type, xPos, yPos);
 	}
-	else if (type == kTag_vampire) {
+	else if (type == kTag_vampire) 
+	{
 		enemy = EnemyVampire::create(type, xPos, yPos);
 	}
 	

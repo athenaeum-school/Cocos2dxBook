@@ -34,10 +34,12 @@ void EnemyHit::hitCheck()
 	{
 		damage();
 		Hud::getInstance()->getAnime()->enemyDamageAnime(this);
+		//描画領域に触れていたら、触れなくなる（重複当たり判定を防ぐフラグ）
 		setIsContacted(true);
 	}
 	else if (!isContact_interSects)
 	{
+		//離れたら、また判定がされるようにする
 		setIsContacted(false);
 	}
 
