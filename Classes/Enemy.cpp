@@ -51,7 +51,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
 	OM::getInstance()->addEnemyCount();
-	//vectorとmapコンテナに追加
+	//vectorコンテナに追加
 	OM::getInstance()->addGameObject(this);
 	
 	return this;
@@ -59,7 +59,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 
 void Enemy::onStateEnter()
 {
-	//死亡していたら抜ける
+	//死亡していたら以降の処理をしない
 	this->isDeadWithRet();
 	
 	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
@@ -72,20 +72,21 @@ void Enemy::onStateEnter()
 	}
 	else if (this->isEnemyState())
 	{
-		this->onEnemyStateEnter();
+		//毎ターン最低１体が、50%の確率で攻撃する確率
+		if (randomAttack(SUCCESS_RATE) == 0)
+		{
+			setIsAttacked(false);
+		}
+		else if (OM::getInstance()->getEnemyCount() == 1)
+		{
+			//残り１体になると必ず攻撃
+			setIsAttacked(false);
+		}
 	}
 	else if (this->isResultState())
 	{
 		
 	}
-}
-
-void Enemy::stateUpdate(float dt)
-{
-	this->isDeadWithRet();
-
-	attack();
-	this->hitCheck();
 }
 
 void Enemy::onStateExit()
@@ -99,45 +100,36 @@ void Enemy::onStateExit()
 	}
 	else if (this->isResultState())
 	{
-		resultExit();
+		//リザルト状態が終了すると同時に、敵NPCの消去処理
+		this->setHP(0);
+		this->setIsDead(true);
+		if (this->getHpBar() && this->getChildByTag(kTag_hpbarBg))
+		{
+			//m_hpBarはHudLayerにaddChildしているため、子自身で消去処理
+			this->getHpBar()->removeFromParent();
+			//hpBar_bgはこのクラスにaddChildしているため、this->で消去
+			this->removeChildByTag(kTag_hpbarBg);
+		}
+		//敵NPCの総数をリセット
+		OM::getInstance()->setEnemyCount(0);
+		//敵NPCを見えなくさせるアクション
+		this->runAction(CCFadeOut::create(0));
 	}
 }
 
-void Enemy::onEnemyStateEnter()
+void Enemy::stateUpdate(float dt)
 {
-	//毎ターン最低１体が、50%の確率で攻撃する確率
-	if (randomAttack(SUCCESS_RATE) == 0)
-	{
-		setIsAttacked(false);
-	}
-	else if (OM::getInstance()->getEnemyCount() == 1)
-	{
-		//残り１体になると必ず攻撃
-		setIsAttacked(false);
-	}
+	this->isDeadWithRet();
+
+	attack();
+	this->hitCheck();
 }
 
-void Enemy::resultExit()
-{
-	//リザルト状態が終了すると同時に、敵NPCの消去処理
-	this->setHP(0);
-	this->setIsDead(true);
-	if (this->getHpBar() && this->getChildByTag(kTag_hpbarBg))
-	{
-		//m_hpBarはHudLayerにaddChildしているため、子自身で消去処理
-		this->getHpBar()->removeFromParent();
-		//hpBar_bgはこのクラスにaddChildしているため、this->で消去
-		this->removeChildByTag(kTag_hpbarBg);
-	}
-	//敵NPCの総数をリセット
-	OM::getInstance()->setEnemyCount(0);
-	//敵NPCを見えなくさせるアクション
-	this->runAction(CCFadeOut::create(0));
-}
+
 
 int Enemy::randomAttack(int value)
 {
-	//敵NPCの最大数 % (敵NPCの最大数 * value)を返す
+	//敵NPCの総数 % (敵NPCの総数 * value)を返す
 	int enemyCount = OM::getInstance()->getEnemyCount();
 	int random = enemyCount % calcRandom(1, enemyCount * value);
 	return random;
