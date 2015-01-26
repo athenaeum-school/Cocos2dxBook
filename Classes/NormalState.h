@@ -68,10 +68,31 @@ private:
 	*/
 	void onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy);
 
-
+	/**	//距離が半径以下か確認
+	*	@param dist onCollisionFast()のdistOneまたはdistTwo
+	*	@param radius 敵NPC、ウィスプの半径を足し、2乗した値または0
+	*	@return	真偽
+	*/
 	bool isLessThanRadius(float dist, float radius);
-	float CalcDiff(float nextPos, float getPos);
-	float CalcSum(float powOne, float powTwo);
+
+	/**	敵NPCとの距離を算出
+	*	@param nextPos ウィスプの目標座標
+	*	@param getPos 敵NPCの現在座標
+	*	@return 距離（ウィスプの目標座標 - 敵NPCの現在座標）
+	*/
+	float calcDiff(float nextPos, float getPos);
+
+	/**	和を計算
+	*	@param powOne x軸の距離
+	*	@param powTwo y軸の距離
+	*	@return 和
+	*/
+	float calcSum(float powOne, float powTwo);
+
+	/**	衝突判定
+	*	@param enemy 敵NPC
+	*	@return 衝突する領域
+	*/
 	float calcVector(Enemy *enemy);
 	
 };

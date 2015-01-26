@@ -180,12 +180,12 @@ void NormalState::calcCollision()
 
 			setEnemyNextPosition(enemy->getNextPosition());
 			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
-			float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
-			float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
+			float diffx = calcDiff(m_wispNextPosition.x, enemy->getPositionX());
+			float diffy = calcDiff(m_wispNextPosition.y, enemy->getPositionY());
 			//ｘ、ｙの距離を２乗し、足した値を代入
-			float distOne = CalcSum(pow(diffx, 2), pow(diffy, 2));
+			float distOne = calcSum(pow(diffx, 2), pow(diffy, 2));
 			//ウィスプの現在のx、y座標と、敵NPCの次のx、y座標の距離を２乗し、足した値を代入
-			float distTwo = CalcSum(pow(m_pWisp->getPositionX() - m_enemyNextPosition.x, 2), pow(m_pWisp->getPositionY() - m_enemyNextPosition.y, 2));
+			float distTwo = calcSum(pow(m_pWisp->getPositionX() - m_enemyNextPosition.x, 2), pow(m_pWisp->getPositionY() - m_enemyNextPosition.y, 2));
 			
 			//衝突判定(高速時)
 			onCollisionFast(distOne, distTwo, calcVector(enemy), enemy);
@@ -209,10 +209,10 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		CCLOG("secondHit");
 
 		//ウィスプの次の座標とエネミーの現在座標との距離を取得
-		float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
-		float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
+		float diffx = calcDiff(m_wispNextPosition.x, enemy->getPositionX());
+		float diffy = calcDiff(m_wispNextPosition.y, enemy->getPositionY());
 		//ウィスプの衝突時の運動量を計算
-		float mag_wisp = CalcSum(pow(m_wispVector.x, 2), pow(m_wispVector.y, 2));
+		float mag_wisp = calcSum(pow(m_wispVector.x, 2), pow(m_wispVector.y, 2));
 		
 		//バウンドする方向への運動量
 		float force = sqrt(mag_wisp);
@@ -245,14 +245,14 @@ bool NormalState::isLessThanRadius(float dist, float radius)
 	return false;
 }
 
-float NormalState::CalcDiff(float nextPos, float getPos)
+float NormalState::calcDiff(float nextPos, float getPos)
 {
 	//距離を算出
 	float diff = nextPos - getPos;
 	return diff;
 }
 
-float NormalState::CalcSum(float powOne, float powTwo)
+float NormalState::calcSum(float powOne, float powTwo)
 {
 	//和を算出
 	float dist = powOne + powTwo;
@@ -268,7 +268,7 @@ float NormalState::calcVector(Enemy *enemy)
 	{
 		return 0;
 	}
-	//敵NPC、ウィスプの半径を足し、2乗した値を返す
-	float squared_radius = pow(enemy->getRadius() + m_pWisp->getRadius(), 2);
+	//敵NPC、ウィスプの半径を足し、2乗した値を返す（衝突する領域）
+	float squared_radius = pow(enemy->getRadius() + m_pWisp->getRadius(), 2.0);
 	return squared_radius;
 }
