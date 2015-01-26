@@ -33,16 +33,38 @@ public:
 	virtual void stateUpdate(float dt) = 0;
 	
 	void setPosition(const cocos2d::CCPoint& pos);
+
+	/**	ゲームオブジェクトの衝突判定用サイズ
+	*	@return	画像サイズの半径
+	*/
 	float radius();
 
+	/**	ゲームオブジェクトのHPバーの割合
+	*	@return	HPバーの割合
+	*/
 	float getHpRatio();
 
 protected:
 
+	//現在の状態のIDをm_stateIDへ代入
 	void setStateID();
+
+	/**	プレイヤーターンか確認
+	*	@return	真偽
+	*/
 	bool isNormalState();
+
+	/**	敵NPCターンか確認
+	*	@return	真偽
+	*/
 	bool isEnemyState();
+
+	/**	リザルト状態か確認
+	*	@return	真偽
+	*/
 	bool isResultState();
+
+	//死亡していたら以降の処理を行なわない
 	void isDeadWithRet();
 
 	GameObject();

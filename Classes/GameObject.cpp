@@ -68,7 +68,7 @@ bool GameObject::isResultState()
 
 void GameObject::isDeadWithRet()
 {
-	//€–S‚µ‚Ä‚¢‚½‚ç”²‚¯‚é
+	//€–S‚µ‚Ä‚¢‚½‚çˆÈ~‚Ìˆ—‚ğs‚È‚í‚È‚¢
 	if (m_isDead)
 	{
 		return;
