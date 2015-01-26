@@ -98,7 +98,7 @@ void PlayerHit::collisionBlockWest()
 {
 	if (isLessThanRadius(m_nextPosition.x))
 	{
-		m_nextPosition.x = this->radius();
+		m_nextPosition.x = this->getRadius();
 		//バウンド時の摩擦
 		m_acceleration.x *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
@@ -110,7 +110,7 @@ void PlayerHit::collisionBlockEast()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	if (isGreaterThanRadius(m_nextPosition.x, screenSize.width))
 	{
-		m_nextPosition.x = screenSize.width - this->radius();
+		m_nextPosition.x = screenSize.width - this->getRadius();
 		m_acceleration.x *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
@@ -120,7 +120,7 @@ void PlayerHit::collisionBlockNorth()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	if (isGreaterThanRadius(m_nextPosition.y, screenSize.height)) {
-		m_nextPosition.y = screenSize.height - this->radius();
+		m_nextPosition.y = screenSize.height - this->getRadius();
 		m_acceleration.y *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
@@ -131,7 +131,7 @@ void PlayerHit::collisionBlockSouth()
 {
 	if (isLessThanRadius(m_nextPosition.y))
 	{
-		m_nextPosition.y = this->radius();
+		m_nextPosition.y = this->getRadius();
 		m_acceleration.y *= -0.8f;
 		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
@@ -140,7 +140,7 @@ void PlayerHit::collisionBlockSouth()
 //ウィスプの半径が壁を超えたら、衝突する判定を返す（南、西）
 bool PlayerHit::isLessThanRadius(float wispNextPos)
 {
-	if (wispNextPos < this->radius())
+	if (wispNextPos < this->getRadius())
 	{
 		return true;
 	}
@@ -150,7 +150,7 @@ bool PlayerHit::isLessThanRadius(float wispNextPos)
 //ウィスプの半径が壁を超えたら、衝突する判定を返す（北、東）
 bool PlayerHit::isGreaterThanRadius(float wispNextPos, float screenwh)
 {
-	if (wispNextPos > screenwh - this->radius())
+	if (wispNextPos > screenwh - this->getRadius())
 	{
 		return true;
 	}

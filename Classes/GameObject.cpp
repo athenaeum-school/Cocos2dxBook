@@ -75,7 +75,7 @@ void GameObject::isDeadWithRet()
 	}
 }
 
-float GameObject::radius()
+float GameObject::getRadius()
 {
 	//‰æ‘œƒTƒCƒY‚Ì”¼Œa‚ð•Ô‚·
 	return getTexture()->getContentSize().width * 0.5;

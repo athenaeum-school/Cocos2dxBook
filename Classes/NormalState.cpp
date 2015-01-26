@@ -220,8 +220,8 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		m_wispVector.x = force * cos(angle);
 		m_wispVector.y = (force * sin(angle));
 		//ウィスプの移動座標を算出
-		m_wispNextPosition.x = m_enemyNextPosition.x + (enemy->radius() + m_pWisp->radius() + force) * cos(angle);
-		m_wispNextPosition.y = m_enemyNextPosition.y + (enemy->radius() + m_pWisp->radius() + force) * sin(angle);
+		m_wispNextPosition.x = m_enemyNextPosition.x + (enemy->getRadius() + m_pWisp->getRadius() + force) * cos(angle);
+		m_wispNextPosition.y = m_enemyNextPosition.y + (enemy->getRadius() + m_pWisp->getRadius() + force) * sin(angle);
 		//ボーナスダメージを攻撃力に追加
 		m_pWisp->addPower(ADD_POWER);
 		Hud::getInstance()->getAction()->enemyDamageAction(enemy);
@@ -266,6 +266,6 @@ float NormalState::calcVector(Enemy *enemy)
 		return 0;
 	}
 	//敵NPC、ウィスプの半径を足し、2乗した値を返す
-	float squared_radius = pow(enemy->radius() + m_pWisp->radius(), 2);
+	float squared_radius = pow(enemy->getRadius() + m_pWisp->getRadius(), 2);
 	return squared_radius;
 }

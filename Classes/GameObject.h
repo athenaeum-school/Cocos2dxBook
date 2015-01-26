@@ -37,7 +37,7 @@ public:
 	/**	ゲームオブジェクトの衝突判定用サイズ
 	*	@return	画像サイズの半径
 	*/
-	float radius();
+	float getRadius();
 
 	/**	ゲームオブジェクトのHPバーの割合
 	*	@return	HPバーの割合

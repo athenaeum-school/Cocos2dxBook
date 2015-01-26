@@ -37,11 +37,11 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	//敵NPCのステータスを追加
 	//引数のstatusInit()は純粋仮想関数であり、派生クラス（敵NPCタイプ）に応じて、実装を変えている
 	this->initWithFile(statusInit(type).c_str());
-	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - this->radius() * 1.0));
+	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - this->getRadius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//移動しながらフェードインするアクション
-	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - this->radius() * 10.0)), NULL);
+	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - this->getRadius() * 10.0)), NULL);
 	this->runAction(fadeIn);
 	//待機アクション（純粋仮想関数）
 	setIdleAction();

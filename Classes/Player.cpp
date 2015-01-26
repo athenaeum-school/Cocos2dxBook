@@ -58,7 +58,7 @@ Player* Player::initWisp()
 
 	this->initWithFile("wisp_1.png");
 	//x軸は中央へ、y軸は底からウィスプの半径1つ分空けた座標へ配置
-	this->setPosition(ccp(screenSize.width * 0.5, this->radius() * 1.0));
+	this->setPosition(ccp(screenSize.width * 0.5, this->getRadius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//アニメーションの初期化
@@ -291,5 +291,5 @@ void Player::resetWisp()
 	setCanFire(true);
 	setTimer(0);
 	this->setAcceleration(ccp(0, 0));
-	this->setPosition(ccp(screenSize.width / 2.0, this->radius() * 2.0));
+	this->setPosition(ccp(screenSize.width / 2.0, this->getRadius() * 2.0));
 }

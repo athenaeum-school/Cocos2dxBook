@@ -23,9 +23,9 @@ ActionManager::~ActionManager(){}
 void ActionManager::wispInitAction(Player *wisp)
 {
 	//ˆÚ“®‚µ‚È‚ª‚çƒtƒF[ƒhƒCƒ“‚·‚é
-	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, wisp->radius())), NULL);
+	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, wisp->getRadius())), NULL);
 	//cŽ²‚É—h‚ê‘±‚¯‚é
-	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, wisp->radius() * -0.2)), CCMoveBy::create(2, ccp(0, wisp->radius() * 0.2)), NULL);
+	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, wisp->getRadius() * -0.2)), CCMoveBy::create(2, ccp(0, wisp->getRadius() * 0.2)), NULL);
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	wisp->runAction(fadeIn);
 	wisp->runAction(repeat);
@@ -180,7 +180,7 @@ void ActionManager::boundSE()
 void ActionManager::enemyIdleAction(Enemy *enemy, float start, float next)
 {
 	//cŽ²‚É—h‚ê‘±‚¯‚é
-	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, enemy->radius() * start)), CCMoveBy::create(2, ccp(0, enemy->radius() * next)), NULL);
+	CCSequence *seq = CCSequence::create(CCMoveBy::create(2, ccp(0, enemy->getRadius() * start)), CCMoveBy::create(2, ccp(0, enemy->getRadius() * next)), NULL);
 	CCRepeatForever *repeat = CCRepeatForever::create(seq);
 	enemy->runAction(repeat);
 }
