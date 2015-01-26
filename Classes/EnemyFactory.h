@@ -22,6 +22,13 @@ class EnemyFactory : public cocos2d::CCNode
 public:
 
 	CREATE_FUNC(EnemyFactory);
+
+	/**	敵NPCを生成
+	*	@param type 敵NPCの種類
+	*	@param xPos 設置する座標（x軸）
+	*	@param yPos 設置する座標（y軸）
+	*	@return	敵NPC
+	*/
 	Enemy* createEnemy(enemyType type, float xPos, float yPos);
 
 private:
