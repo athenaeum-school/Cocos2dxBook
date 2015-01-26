@@ -21,7 +21,12 @@ public:
 
 	CC_SYNTHESIZE(int, m_atkPower, AtkPower);
 
+	/**	“GNPC‚ÌUŒ‚‚ğ¶¬
+	*	@param enemy UŒ‚‚ğs‚È‚¤NPC
+	*	@return	¶¬‚³‚ê‚½UŒ‚‚ğ•Ô‚·
+	*/
 	static EnemyAttack* create(Enemy *enemy);
+
 	void attack(Enemy *enemy);
 
 	EnemyAttack();
@@ -29,7 +34,17 @@ public:
 
 private:
 
-	std::string fileNameInit(enemyType type);
+	/**	UŒ‚‚Ì‰æ‘œƒtƒ@ƒCƒ‹‚ğw’è
+	*	@param type “GNPC‚Ìí•Ê
+	*	@return	í•Ê‚É‰‚¶‚½UŒ‚‚Ì‰æ‘œƒtƒ@ƒCƒ‹–¼
+	*/
+	std::string initFileName(enemyType type);
+
+	/**	UŒ‚‚ÌˆÊ’u‚Æƒtƒ@ƒCƒ‹î•ñ‚ğİ’è
+	*	@param enemy UŒ‚‚ğs‚È‚¤“GNPC
+	*	@param point UŒ‚‚ğ”­¶‚³‚¹‚éÀ•W
+	*	@return	
+	*/
 	EnemyAttack* initEnemyAttack(Enemy *enemy, cocos2d::CCPoint point);
 
 };

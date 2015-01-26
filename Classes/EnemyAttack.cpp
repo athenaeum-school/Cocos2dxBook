@@ -44,13 +44,13 @@ EnemyAttack* EnemyAttack::create(Enemy *enemy)
 EnemyAttack* EnemyAttack::initEnemyAttack(Enemy *enemy, CCPoint point)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	this->initWithFile(fileNameInit(enemy->getEnemyType()).c_str());
+	this->initWithFile(initFileName(enemy->getEnemyType()).c_str());
 	this->setPosition(point);
 	
 	return this;
 }
 
-std::string EnemyAttack::fileNameInit(enemyType type)
+std::string EnemyAttack::initFileName(enemyType type)
 {
 	std::string fileName;
 	
