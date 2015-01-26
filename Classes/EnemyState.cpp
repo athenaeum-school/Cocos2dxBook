@@ -23,6 +23,7 @@ const std::string EnemyState::s_enemyID = "ENEMY";
 
 void EnemyState::enemyToNormal()
 {
+	//ObjectManagerのインスタンスを呼び出し、NormalStateへ遷移
 	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
@@ -41,12 +42,12 @@ EnemyState::~EnemyState(){}
 bool EnemyState::onStateEnter()
 {
 	//ターン開始ラベル表示
-	turnOnEnemy();
+	turnOnEnemyImage();
 	//コンテナにゲームオブジェクトを代入
-	setGameObjects();
+	this->setGameObjects();
 	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//ゲームオブジェクトのonStateEnter()を実行
-	objectStateEnter();
+	this->objectStateEnter();
 
 	return true;
 }
@@ -58,12 +59,13 @@ bool EnemyState::onStateExit()
 
 void EnemyState::stateUpdate(float dt) 
 {
+	//真でなければ以降の処理を行なわない
 	if (!m_isTurn)
 	{
 		return;
 	}
 	//ゲームオブジェクトのStateUpdate()を実行
-	objectStateUpdate(dt);
+	this->objectStateUpdate(dt);
 	//次の状態へ
 	switchState();
 }
@@ -77,14 +79,16 @@ void EnemyState::onTouchMovedEvent(){}
 
 void EnemyState::onTouchEndedEvent(){}
 
-void EnemyState::turnOnEnemy()
+void EnemyState::turnOnEnemyImage()
 {
 	//ターン開始ラベル表示
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	CCSprite *turn = CCSprite::create("enemtState_turn.png");
 	turn->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 1.5));
+	//フェードインのため、透明に
 	turn->setOpacity(0);
+	//HudLayerのインスタンスを呼び出し、そこに追加
 	Hud::getInstance()->addChild(turn);
 	//ラベルフェードアウト後、setIsTurn()を実行
 	CCSequence *fadeTurn = CCSequence::create(CCFadeIn::create(0.5), CCFadeOut::create(0.5), CCCallFunc::create(this, callfunc_selector(EnemyState::setIsTurn)), CCRemoveSelf::create(), NULL);
@@ -117,6 +121,7 @@ void EnemyState::switchState()
 
 bool EnemyState::isGreaterThanCount(int count)
 {
+	//m_timerがcountを超えたら真
 	if (++m_timer > count)
 	{
 		return true;

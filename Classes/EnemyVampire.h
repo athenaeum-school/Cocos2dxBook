@@ -29,7 +29,7 @@ public:
 private:
 
 	/**	敵NPCの画像とステータス設定
-	*	@param type	敵NPCの種類
+	*	@param type 敵NPCの種類
 	*	@return	画像ファイル名
 	*/
 	std::string statusInit(enemyType type) override;

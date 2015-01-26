@@ -42,9 +42,20 @@ private:
 
 	void enemyToNormal();
 	void enemyToResult();
-	void turnOnEnemy();
+
+	//敵NPCターン開始時、イメージを表示
+	void turnOnEnemyImage();
+
+	//m_isTurnを真にし、stateUpdate()を開始(selectorで呼び出す関数)
 	void setIsTurn();
+
+	//次の状態を判断する
 	void switchState();
+
+	/**	m_timerがcountを超えたか
+	*	@param count 指定する時間
+	*	@return	真偽
+	*/
 	bool isGreaterThanCount(int count);
 	
 };
