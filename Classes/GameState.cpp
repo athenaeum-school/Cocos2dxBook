@@ -19,14 +19,15 @@ GameState::~GameState() {}
 
 void GameState::setGameObjects()
 {
+	//ObjectManagerのインスタンスを呼び出し、
 	//ゲームオブジェクトのコンテナをメンバーヘ代入
-	m_gObjects = OM::getInstance()->getGameObjects();
+	m_gameObjects = OM::getInstance()->getGameObjects();
 }
 
 void GameState::objectStateEnter()
 {
 	//ゲームオブジェクトの状態開始処理を実行
-	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
 		(*it)->onStateEnter();
 	}
@@ -35,7 +36,7 @@ void GameState::objectStateEnter()
 void GameState::objectStateExit()
 {
 	//ゲームオブジェクトの状態終了処理を実行
-	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
 		(*it)->onStateExit();
 	}
@@ -44,7 +45,7 @@ void GameState::objectStateExit()
 void GameState::objectStateUpdate(float dt)
 {
 	//ゲームオブジェクトの状態更新処理を実行
-	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
 		(*it)->stateUpdate(dt);
 	}

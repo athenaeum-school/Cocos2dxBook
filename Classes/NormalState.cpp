@@ -167,7 +167,7 @@ bool NormalState::isGreaterThanCount(int count)
 void NormalState::calcCollision()
 {
 	//敵NPCの設定
-	for (std::vector<GameObject*>::iterator it = m_gObjects.begin(); it != m_gObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
 		if ((*it)->getTag() == kTag_enemy)
 		{

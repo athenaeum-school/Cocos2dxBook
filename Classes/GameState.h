@@ -33,11 +33,18 @@ public:
     
 protected:
 
-	std::vector<GameObject*> m_gObjects;
+	std::vector<GameObject*> m_gameObjects;
 
+	//ゲームオブジェクトのコンテナをメンバーヘ代入
 	void setGameObjects();
+
+	//ゲームオブジェクトの状態開始処理を実行
 	void objectStateEnter();
+
+	//ゲームオブジェクトの状態終了処理を実行
 	void objectStateExit();
+
+	//ゲームオブジェクトの状態更新処理を実行
 	void objectStateUpdate(float dt);
 
 };
