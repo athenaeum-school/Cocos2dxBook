@@ -35,7 +35,7 @@ protected:
 
 	std::vector<GameObject*> m_gameObjects;
 
-	//ゲームオブジェクトのコンテナをメンバーヘ代入
+	//ゲームオブジェクトのコンテナをm_gameObjectsヘ代入
 	void setGameObjects();
 
 	//ゲームオブジェクトの状態開始処理を実行

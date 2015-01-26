@@ -40,6 +40,7 @@ NormalState::~NormalState() {}
 
 void NormalState::normalToEnemy()
 {
+	//OnjectManagerのインスタンスを呼び出し、
 	//敵NPCのターンへ
 	OM::getInstance()->getStateMachine()->changeState(new EnemyState());
 }
@@ -57,6 +58,7 @@ bool NormalState::onStateEnter()
 {
 	//状態の初期化
 	std::cout << "NormalState::onStateEnter()\n";
+	//HudLayerのインスタンスを呼び出し、
 	//Readyラベル表示
 	Hud::getInstance()->readyImage();
 	//Aimラベル表示
@@ -66,9 +68,9 @@ bool NormalState::onStateEnter()
 	//リトライ後の再設定
 	OM::getInstance()->reset();
 	//コンテナにゲームオブジェクトを代入
-	setGameObjects();
+	this->setGameObjects();
 	//ゲームオブジェクトのonStateEnter()を実行
-	objectStateEnter();
+	this->objectStateEnter();
 		
 	return true;
 }
@@ -80,7 +82,7 @@ bool NormalState::onStateExit()
 	Hud::getInstance()->setComboCount(0);
 	Hud::getInstance()->hideComboLabel();
 	//ゲームオブジェクトのonStateExit()を実行
-	objectStateExit();
+	this->objectStateExit();
 	return true;
 }
 
@@ -88,7 +90,7 @@ bool NormalState::onStateExit()
 void NormalState::stateUpdate(float dt) 
 {
 	//ゲームオブジェクトのonStateUpdate()を実行
-	objectStateUpdate(dt);
+	this->objectStateUpdate(dt);
 	//ウィスプの状態を更新（この状態内の、計算用メンバーへステータスを代入）
 	setWispNextPosition(m_pWisp->getNextPosition());
 	//ウィスプの推進力
@@ -108,7 +110,7 @@ void NormalState::stateUpdate(float dt)
 
 bool NormalState::onTouchBeganEvent()
 {
-	//isReadyがFalseなら抜ける
+	//isReadyが偽なら以降の処理を行なわない
 	if (!OM::getInstance()->getIsReady())
 	{
 		return false;
@@ -116,6 +118,7 @@ bool NormalState::onTouchBeganEvent()
 	CCLOG("hp:wisp%d", m_pWisp->getHP());
 	CCLOG("raidHp : %d", OM::getInstance()->getRaidHp());
 	CCLOG("playCount : %d", OM::getInstance()->getPlayCount());
+	//ウィスプのインスタンスからタッチ操作を呼び出す
 	return m_pWisp->wispTouchBegan();
 }
 
@@ -136,15 +139,16 @@ void NormalState::switchState()
 		//ウィスプのタイマーが250を超えたら敵NPCのターンへ
 		normalToEnemy();
 	}
-	else if (isLessThanZero() && isGreaterThanCount(TO_RESULT))
+	else if (isRaidHpLessThanZero() && isGreaterThanCount(TO_RESULT))
 	{
 		//レイドHPが0かつ、ウィスプのタイマーが200を超えたらリザルト状態へ
 		normalToResult();
 	}
 }
 
-bool NormalState::isLessThanZero()
+bool NormalState::isRaidHpLessThanZero()
 {
+	//ObjectManagerのレイドHPが0以下なら真
 	int raidHp = OM::getInstance()->getRaidHp();
 	if (raidHp <= 0)
 	{
@@ -156,7 +160,7 @@ bool NormalState::isLessThanZero()
 bool NormalState::isGreaterThanCount(int count)
 {
 	int timer = m_pWisp->getTimer();
-	//ウィスプのタイマーがカウント以上ならTrue
+	//ウィスプのタイマーがカウント以上なら真
 	if (timer > count)
 	{
 		return true;
@@ -167,7 +171,7 @@ bool NormalState::isGreaterThanCount(int count)
 void NormalState::calcCollision()
 {
 	//敵NPCの設定
-	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = this->m_gameObjects.begin(); it != this->m_gameObjects.end(); ++it)
 	{
 		if ((*it)->getTag() == kTag_enemy)
 		{
@@ -175,7 +179,6 @@ void NormalState::calcCollision()
 			Enemy *enemy = static_cast<Enemy *>((*it));
 
 			setEnemyNextPosition(enemy->getNextPosition());
-			setEnemyVector(enemy->getAcceleration());
 			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
 			float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
 			float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
@@ -194,7 +197,7 @@ void NormalState::calcCollision()
 //衝突（高速時）の処理
 void NormalState::onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy)
 {
-	//敵NPCが死亡しているなら、判定を行なわない
+	//敵NPCが死亡しているなら、衝突判定を行なわない
 	if (enemy->getIsDead())
 	{
 		return;
@@ -208,12 +211,11 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		//ウィスプの次の座標とエネミーの現在座標との距離を取得
 		float diffx = CalcDiff(m_wispNextPosition.x, enemy->getPositionX());
 		float diffy = CalcDiff(m_wispNextPosition.y, enemy->getPositionY());
-		//ウィスプと敵NPCの衝突時の運動量を計算
+		//ウィスプの衝突時の運動量を計算
 		float mag_wisp = CalcSum(pow(m_wispVector.x, 2), pow(m_wispVector.y, 2));
-		float mag_enemy = CalcSum(pow(m_enemyVector.x, 2), pow(m_enemyVector.y, 2));
-
+		
 		//バウンドする方向への運動量
-		float force = sqrt(mag_wisp + mag_enemy);
+		float force = sqrt(mag_wisp);
 		//逆正接を算出（衝突位置から、跳ね返る角度を計算）
 		float angle = atan2(diffy, diffx);
 		//angleの角度へ力を加える
@@ -235,6 +237,7 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 
 bool NormalState::isLessThanRadius(float dist, float radius)
 {
+	//距離が半径以下なら真
 	if (dist <= radius)
 	{
 		return true;

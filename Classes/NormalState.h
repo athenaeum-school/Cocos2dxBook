@@ -20,10 +20,9 @@
 class NormalState : public GameState
 {
 public:
-
+	//計算用メンバー
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_wispVector, WispVector);
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_wispNextPosition, WispNextPosition);
-	CC_SYNTHESIZE(cocos2d::CCPoint, m_enemyVector, EnemyVector);
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_enemyNextPosition, EnemyNextPosition);
 
 	bool onStateEnter() override;
@@ -45,11 +44,31 @@ private:
     
 	void normalToEnemy();
 	void normalToResult();
+
+	//次の状態を判断する
     void switchState();
-	bool isLessThanZero();
+
+	/**	ObjectManagerのレイドHPが0以下か確認
+	*	@return	真偽
+	*/
+	bool isRaidHpLessThanZero();
+
+	/**	ウィスプのタイマーが0以上か確認
+	*	@return	真偽
+	*/
 	bool isGreaterThanCount(int count);
+
+	//高速衝突判定のための計算
 	void calcCollision();
+
+	/**	ウィスプのタイマーが0以上か確認
+	*	@param distOne ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離をそれぞれ２乗し、そのxとyの和
+	*	@param distTwo ウィスプの現在のx、y座標と、敵NPCの次のx、y座標の距離をそれぞれ２乗し、そのxとyの和
+	*	@param enemy 敵NPC 
+	*/
 	void onCollisionFast(float distOne, float distTwo, float radius, Enemy *enemy);
+
+
 	bool isLessThanRadius(float dist, float radius);
 	float CalcDiff(float nextPos, float getPos);
 	float CalcSum(float powOne, float powTwo);
