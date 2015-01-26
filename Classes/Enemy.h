@@ -40,16 +40,16 @@ public:
 protected:
 
 	/**	敵NPC初期設定
-	*	@param type	敵NPCの種別
+	*	@param type	敵NPCの種類
 	*	@param xPos	配置するx軸の座標
 	*	@param yPos	配置するy軸の座標
-	*	@return	生成された敵NPCを返す
+	*	@return	生成された敵NPC
 	*/
 	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
 
 	/**	敵NPCの画像とステータス設定
-	*	@param type	敵NPCの種別
-	*	@return	画像ファイル名を返す
+	*	@param type	敵NPCの種類
+	*	@return	画像ファイル名
 	*/
 	virtual std::string statusInit(enemyType type) = 0;
 
@@ -63,7 +63,7 @@ private:
 	
 	/**	敵NPCの攻撃成功確率
 	*	@param value 敵NPCの総数に乗算する値
-	*	@return	敵NPCの総数 % (敵NPCの総数 * value)を返す
+	*	@return	敵NPCの総数 % (敵NPCの総数 * value)
 	*/
 	int randomAttack(int value);
 

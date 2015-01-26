@@ -29,6 +29,7 @@ EnemyRatOne* EnemyRatOne::create(enemyType type, float xPos, float yPos)
 	{
 		enemy->initEnemy(type, xPos, yPos);
 		enemy->autorelease();
+		//MainSceneのインスタンスを呼び出し、そこに追加
 		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
 		return enemy;
 	}
@@ -53,6 +54,7 @@ std::string EnemyRatOne::statusInit(enemyType type)
 
 void EnemyRatOne::setIdleAction()
 {
+	//HudLayerのインスタンスを呼び出す
 	//待機アクション
 	Hud::getInstance()->getAction()->enemyIdleAction(this, -0.2, 0.2);
 }

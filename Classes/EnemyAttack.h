@@ -35,7 +35,7 @@ public:
 private:
 
 	/**	攻撃の画像ファイルを指定
-	*	@param type 敵NPCの種別
+	*	@param type 敵NPCの種類
 	*	@return	種別に応じた攻撃の画像ファイル名
 	*/
 	std::string initFileName(enemyType type);
