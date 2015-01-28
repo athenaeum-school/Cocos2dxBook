@@ -11,9 +11,12 @@
 
 #include "AudioComponent.h"
 #include "SimpleAudioEngine.h"
+#include "MainScene.h"
 #include "ObjectManager.h"
 #include "TitleState.h"
+#include "Player.h"
 
+USING_NS_CC;
 using namespace CocosDenshion;
 
 AudioComponent::AudioComponent()
@@ -25,15 +28,44 @@ AudioComponent::~AudioComponent(){}
 
 void AudioComponent::update(float dt, GameObject *obj)
 {
-	if (obj->getIsContact())
+	switch (obj->getTag())
 	{
-		CCLOG("damageSEWISP");
-		enemyDamageSE();
-		obj->setIsContact(false);
-	}
-	else if (!obj->getIsContact())
-	{
-		//this->stopEffect(this->playEffect("se_maoudamashii_battle18.mp3"));
+	case tag::kTag_wisp:
+		if (obj->getIsPlayHitSE())
+		{
+			collisionSE();
+			obj->setIsPlayHitSE(false);
+		}
+		else if (obj->getIsPlayHitBlockSE())
+		{
+			collisionSE();
+			obj->setIsPlayHitBlockSE(false);
+		}
+		else if (obj->getIsPlayDyingSE())
+		{
+			wispDyingSE();
+			obj->setIsPlayDyingSE(false);
+		}
+		break;
+	case tag::kTag_enemy:
+		if (obj->getIsPlayHitSE())
+		{
+			enemyDamageSE();
+			obj->setIsPlayHitSE(false);
+		}
+		else if (obj->getIsHitFastSE())
+		{
+			collisionFastSE();
+			obj->setIsHitFastSE(false);
+		}
+		else if (obj->getIsPlayDyingSE())
+		{
+			enemyDyingSE();
+			obj->setIsPlayDyingSE(false);
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -58,9 +90,8 @@ void AudioComponent::initAudio()
 bool AudioComponent::isStart()
 {
 	int playCount = OM::getInstance()->getPlayCount();
-	std::string stateID = OM::getInstance()->getStateMachine()->getStates().back()->getStateID();
-
-	if (playCount > 0 || stateID != "TITLE")
+	
+	if (playCount > 0)
 	{
 		return false;
 	}
@@ -114,5 +145,8 @@ void AudioComponent::enemyVampireAttackSE()
 
 void AudioComponent::pushButtonSE()
 {
-	this->playEffect("se_maoudamashii_system28.mp3");
+	AudioComponent *audio = new AudioComponent();
+	audio->playEffect("se_maoudamashii_system28.mp3");
+	delete audio;
+	audio = NULL;
 }

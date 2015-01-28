@@ -24,6 +24,8 @@ public:
 	void update(float dt, GameObject *obj);
 	void titleToNormalSE();
 	
+	static void pushButtonSE();
+
 	AudioComponent();
 	~AudioComponent();
 
