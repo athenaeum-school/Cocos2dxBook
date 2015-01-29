@@ -65,8 +65,6 @@ void ActionManager::dyingAction(GameObject *obj)
 	CCSequence *vanishSequence = CCSequence::create(vanishSpawn, CCRemoveSelf::create(), nullptr);
 
 	vanish->runAction(vanishSequence);
-	//死亡時の効果音
-	dyingSE(obj);
 }
 
 std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
@@ -74,9 +72,8 @@ std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
 	//死亡時の画像ファイル名を設定
 	std::string fileName;
 	CCString* editFileName;
-	tag tags = static_cast<tag>(obj->getTag());
-
-	switch (tags)
+	//ゲームオブジェクトのタグで判定
+	switch (obj->getTag())
 	{
 	case tag::kTag_wisp:
 		editFileName = CCString::createWithFormat("wisp_dying%d.png", number);
@@ -92,19 +89,6 @@ std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
 	}
 
 	return fileName;
-}
-
-void ActionManager::dyingSE(GameObject *obj)
-{
-	tag tags = static_cast<tag>(obj->getTag());
-	if (tags == kTag_wisp)
-	{
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire06.mp3");
-	}
-	else if (tags == kTag_enemy)
-	{
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
-	}
 }
 
 void ActionManager::enemyStarAction()
@@ -168,8 +152,6 @@ void ActionManager::enemyDamageAction(EnemyHit *enemy)
 	swingAction(enemy);
 	//ダメージ時、爆発エフェクト表示
 	enemyExplodeAction(enemy);
-	//ダメージ音
-	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_battle18.mp3");
 }
 
 void ActionManager::boundSE()

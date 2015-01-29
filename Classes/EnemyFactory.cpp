@@ -24,7 +24,7 @@ Enemy* EnemyFactory::createEnemy(enemyType type, float xPos, float yPos)
 
 	if (type == kTag_rat1) 
 	{
-		enemy = EnemyRatOne::create(type, xPos, yPos);
+		enemy = EnemyRatOne::create(type ,xPos, yPos);
 	}
 	else if (type == kTag_rat2) 
 	{

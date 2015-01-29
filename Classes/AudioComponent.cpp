@@ -33,12 +33,12 @@ void AudioComponent::update(float dt, GameObject *obj)
 	case tag::kTag_wisp:
 		if (obj->getIsPlayHitSE())
 		{
-			collisionSE();
+			collisionBlockSE();
 			obj->setIsPlayHitSE(false);
 		}
 		else if (obj->getIsPlayHitBlockSE())
 		{
-			collisionSE();
+			collisionBlockSE();
 			obj->setIsPlayHitBlockSE(false);
 		}
 		else if (obj->getIsPlayDyingSE())
@@ -108,7 +108,7 @@ void AudioComponent::playBGM()
 	this->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 }
 
-void AudioComponent::collisionSE()
+void AudioComponent::collisionBlockSE()
 {
 	this->playEffect("se_maoudamashii_system45.mp3");
 }
@@ -145,8 +145,5 @@ void AudioComponent::enemyVampireAttackSE()
 
 void AudioComponent::pushButtonSE()
 {
-	AudioComponent *audio = new AudioComponent();
-	audio->playEffect("se_maoudamashii_system28.mp3");
-	delete audio;
-	audio = NULL;
+	this->playEffect("se_maoudamashii_system28.mp3");
 }

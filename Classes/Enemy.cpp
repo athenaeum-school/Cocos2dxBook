@@ -35,8 +35,8 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//敵NPCのステータスを追加
-	//引数のstatusInit()は純粋仮想関数であり、派生クラス（敵NPCタイプ）に応じて、実装を変えている
-	this->initWithFile(statusInit(type).c_str());
+	//引数のstatusInit()は純粋仮想関数であり、派生クラス（敵NPCタイプ）に応じて、実装を変える
+	this->initWithFile(initStatus(type).c_str());
 	this->setPosition(ccp(screenSize.width * xPos, screenSize.height * yPos - this->getRadius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
@@ -47,7 +47,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	setIdleAction();
 	//HPバーを追加
 	Hud::getInstance()->initHpBar(this);
-	//ObjectManagerのシングルトンを呼び出す
+	//ObjectManagerのインスタンスを呼び出す
 	//レイドHPに追加
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
@@ -66,7 +66,6 @@ void Enemy::onStateEnter()
 		return;
 	}
 	
-	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
 	this->setStateID();
 	//状態の判別
@@ -110,13 +109,8 @@ void Enemy::onStateExit()
 		//リザルト状態が終了すると同時に、敵NPCの消去処理
 		this->setHP(0);
 		this->setIsDead(true);
-		if (this->getHpBar() && this->getChildByTag(kTag_hpbarBg))
-		{
-			//m_hpBarはHudLayerにaddChildしているため、子自身で消去処理
-			this->getHpBar()->removeFromParent();
-			//hpBar_bgはこのクラスにaddChildしているため、this->で消去
-			this->removeChildByTag(kTag_hpbarBg);
-		}
+		//親クラスからHPバー消去処理を呼び出す
+		this->removeHpBar();
 		//敵NPCの総数をリセット
 		OM::getInstance()->setEnemyCount(0);
 		//敵NPCを見えなくさせるアクション
@@ -135,7 +129,7 @@ void Enemy::stateUpdate(float dt)
 	}
 	
 	attack();
-	activateHitCheck();
+	this->hitCheck();
 	
 }
 
@@ -166,11 +160,6 @@ void Enemy::attack()
 		EnemyAttack::create(this);
 		//攻撃済みのフラグを立てる
 		setIsAttacked(true);
-}
-
-void Enemy::activateHitCheck()
-{
-	this->hitCheck();
 }
 
 bool Enemy::isDeadOrAttacked()

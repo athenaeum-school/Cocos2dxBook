@@ -26,14 +26,15 @@ EnemyHit::~EnemyHit(){}
 void EnemyHit::hitCheck()
 {
 	CCPoint enemyPosition = this->getPosition();
-	CCRect wispRect = m_pWisp->boundingBox();
+	CCRect wispRect = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp))->boundingBox();
 
 	bool isContact_interSects = setEnemyRect().intersectsRect(wispRect);
 	//敵NPCの描画領域に触れていて、それまでに触れていない、かつ、敵NPCが生存していて、ウィスプが攻撃中ならばtrue
 	if (isContanctWithContacted(isContact_interSects) && isAliveWithAttacking())
 	{
+		//ダメージ処理
 		damage();
-		//HudLayerのシングルトンを呼び出す
+		//HudLayerのインスタンスを呼び出す
 		//ダメージ時のアニメーション
 		Hud::getInstance()->getAction()->enemyDamageAction(this);
 		//ダメージ効果音を鳴らすためのフラグを真に
@@ -43,7 +44,7 @@ void EnemyHit::hitCheck()
 	}
 	else if (!isContact_interSects)
 	{
-		//離れたら、また判定がされるようにする
+		//離れたら、また判定がされるように
 		setIsContacted(false);
 	}
 
@@ -60,8 +61,9 @@ CCRect EnemyHit::setEnemyRect()
 
 bool EnemyHit::isAliveWithAttacking()
 {
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//敵NPCが生存していて、ウィスプが攻撃中ならば真
-	if (!this->m_isDead && m_pWisp->getIsAttacking())
+	if (!this->m_isDead && wisp->getIsAttacking())
 	{
 		return true;
 	}
@@ -80,13 +82,13 @@ bool EnemyHit::isContanctWithContacted(bool isContact_interSects)
 
 void EnemyHit::damage()
 {
-
-	int playerAtkPower = m_pWisp->getAtkPower();
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
+	int playerAtkPower = wisp->getAtkPower();
 	
 	//ダメージを表示
-	Hud::getInstance()->damageLabel(this->getPosition(), m_pWisp->getAtkPower());
+	Hud::getInstance()->damageLabel(this->getPosition(), wisp->getAtkPower());
 	//ヒット数を表示し、更新する
-	Hud::getInstance()->addComboCountLabel();
+	Hud::getInstance()->addHitCountLabel();
 
 	if (playerAtkPower <= this->m_hp)
 	{
@@ -104,7 +106,7 @@ void EnemyHit::damage()
 
 	if (this->m_hp <= 0)
 	{
-		setIsDead(true);
+		this->setIsDead(true);
 		died();
 	}
 }
@@ -113,6 +115,7 @@ void EnemyHit::normalDamage(int playerAtkPower)
 {
 	//通常ダメージ
 	this->m_hp -= playerAtkPower;
+	//ObjectManagerのインスタンスを呼び出し、共有HPを減らす
 	OM::getInstance()->damageRaidHp(playerAtkPower);
 }
 
@@ -132,7 +135,12 @@ void EnemyHit::died()
 		//敵NPCの数を減らす
 		OM::getInstance()->drawEnemyCount();
 		Hud::getInstance()->getAction()->dyingAction(this);
+		//HPバー消去処理
+		this->removeHpBar();
 		//死亡効果音を鳴らすためのフラグを真に
 		this->setIsPlayDyingSE(true);
+		//AudioComponentの削除
+		delete this->m_pAudio;
+		m_pAudio = NULL;
 	}
 }

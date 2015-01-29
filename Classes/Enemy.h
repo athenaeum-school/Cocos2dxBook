@@ -47,13 +47,14 @@ protected:
 	*/
 	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
 
-	/**	敵NPCの画像とステータス設定
+
+	/**	敵NPCの画像とステータス設定（派生クラスで実装する純粋仮想関数）
 	*	@param type	敵NPCの種類
 	*	@return	画像ファイル名
 	*/
-	virtual std::string statusInit(enemyType type) = 0;
+	virtual std::string initStatus(enemyType type) = 0;
 
-	//待機時のアクション
+	//待機時のアクション（派生クラスで実装する純粋仮想関数）
 	virtual void setIdleAction() = 0;
 
 	Enemy();
@@ -76,8 +77,7 @@ private:
 
 	//攻撃を行なう
 	void attack();
-	//EnemyHitクラスのHitCheck()を呼び出す仮想関数をoverride
-	void activateHitCheck() override;
+
 	/**	死亡しているか攻撃済みか
 	*	@return	真偽
 	*/

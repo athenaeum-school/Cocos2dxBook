@@ -55,6 +55,9 @@ private:
 
 	float m_angle;
 
+	//衝突に関する関数をPlayerHitクラスからまとめて呼び出す純粋仮想関数
+	void activateCollision() override;
+
 	//プレイヤーの初期設定
 	Player* initWisp();
 
@@ -77,6 +80,9 @@ private:
 	*/
 	void arrowSettings(cocos2d::CCSprite *arrow, cocos2d::CCPoint movePoint);
 
+	//ガイド矢印を削除
+	void removeArrow();
+
 	/**	プレイヤーに加速度を加える（角度の補正も行なう）
 	*	@param endPoint 放した時のタッチ座標
 	*	@return 加える力
@@ -88,4 +94,4 @@ private:
 
 };
 
-#endif /*defined(__WillYard__Player__)*/
+#endif /* defined(__WillYard__Player__) */

@@ -45,6 +45,7 @@ Player* Player::create()
 	{
 		wisp->initWisp();
 		wisp->autorelease();
+		//MainSceneのインスタンスを取得し、そこに追加
 		MS::getInstance()->addChild(wisp, z_wisp, kTag_wisp);
 		return wisp;
 	}
@@ -78,6 +79,7 @@ void Player::onStateEnter()
 	this->setStateID();
 	if (this->isNormalState())
 	{
+		//プレイヤーのターン開始時の初期化
 		setTouchPoint(ccp(0, 0));
 		setTimer(0);
 		setCanFire(true);
@@ -109,20 +111,17 @@ void Player::onStateExit()
 
 void Player::stateUpdate(float dt)
 {
-	//当たり判定確認
-	this->hitCheck();
+	//AudioComponentから効果音を呼び出す
+	this->m_pAudio->update(dt, this);
+	//敗北していたら以降の処理を行なわない
+	if (this->m_isDead)
+	{
+		return;
+	}
 	//ウィスプに力を加える
 	addForceToWisp();
-	//ウィスプと壁の衝突判定
-	//西
-	this->collisionBlockWest();
-	//東
-	this->collisionBlockEast();
-	//北
-	this->collisionBlockNorth();
-	//南
-	this->collisionBlockSouth();
-	
+	//衝突判定
+	activateCollision();
 	//攻撃後、次の状態へのカウント開始
 	startTimer();
 }
@@ -131,7 +130,7 @@ bool Player::wispTouchBegan()
 {
 	bool ret = false;
 	CCTouch *touch = MS::getInstance()->getBeganTouch();
-	//攻撃可能で無ければ抜ける
+	//攻撃可能で無ければ以降の処理を行なわない
 	if (!m_canFire)
 	{
 		return ret;
@@ -168,10 +167,26 @@ void Player::wispTouchEnded()
 	//タッチ開始座標から放した座標の距離 * SHOT_RATEの値を計算し、力を加える
 	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
-	MS::getInstance()->removeChildByTag(kTag_arrow);
+	//MS::getInstance()->removeChildByTag(kTag_arrow);
+	removeArrow();
 	//ショット中の操作を不可に
 	setCanFire(false);
 	setIsAttacking(true);
+}
+
+void Player::activateCollision()
+{
+	//衝突判定（敵NPCの攻撃）
+	this->hitCheck();
+	//ウィスプと壁の衝突判定
+	//西
+	this->collisionBlockWest();
+	//東
+	this->collisionBlockEast();
+	//北
+	this->collisionBlockNorth();
+	//南
+	this->collisionBlockSouth();
 }
 
 void Player::addPower(int power)
@@ -237,12 +252,22 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 	arrow->setRotation(m_angle);
 }
 
+void Player::removeArrow()
+{
+	CCSprite *arrow = static_cast<CCSprite *>(MS::getInstance()->getChildByTag(kTag_arrow));
+	if (arrow)
+	{
+		//ガイド矢印が存在するなら、MainSceneから削除
+		arrow->removeFromParent();
+	}
+}
+
 CCPoint Player::calcForce(CCPoint endPoint)
 {
-	//タッチ開始座標から放した座標の距離 * 0.5の値を計算
+	//タッチ開始座標から放した座標の距離
 	float diffx = m_touchPoint.x - endPoint.x;
 	float diffy = m_touchPoint.y - endPoint.y;
-	//角度帯毎にブレを補正
+	//角度帯毎にブレを補正した値 * SHOT_RATEの値を計算
 	if (m_angle > -10.0 && m_angle < 10.0)
 	{
 		CCLOG("top");

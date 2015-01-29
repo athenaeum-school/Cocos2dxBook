@@ -25,14 +25,14 @@ public:
 	*	@return	敵NPC
 	*/
 	static EnemyRatOne* create(enemyType type, float xPos, float yPos);
-	
+
 private:
 
 	/**	敵NPCの画像とステータス設定
 	*	@param type 敵NPCの種類
 	*	@return	画像ファイル名
 	*/
-	std::string statusInit(enemyType type) override;
+	std::string initStatus(enemyType type) override;
 
 	//待機時のアクション
 	void setIdleAction() override;

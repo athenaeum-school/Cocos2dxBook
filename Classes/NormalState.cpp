@@ -36,7 +36,7 @@ m_pWisp(NULL)
 	std::cout << "NormalState::NormalState() normal state constructor\n";
 }
 
-NormalState::~NormalState() {}
+NormalState::~NormalState(){}
 
 void NormalState::normalToEnemy()
 {
@@ -78,9 +78,9 @@ bool NormalState::onStateEnter()
 
 bool NormalState::onStateExit()
 {
-	//状態終了時（次の状態へ遷移時）の処理
-	Hud::getInstance()->setComboCount(0);
-	Hud::getInstance()->hideComboLabel();
+	//ヒットカウントをリセットし、非表示に
+	Hud::getInstance()->setHitCount(0);
+	Hud::getInstance()->hideHitCountLabel();
 	//ゲームオブジェクトのonStateExit()を実行
 	this->objectStateExit();
 	return true;
@@ -141,14 +141,14 @@ void NormalState::switchState()
 	}
 	else if (isRaidHpLessThanZero() && isGreaterThanCount(TO_RESULT))
 	{
-		//レイドHPが0かつ、ウィスプのタイマーが200を超えたらリザルト状態へ
+		//共有HPが0かつ、ウィスプのタイマーが200を超えたらリザルト状態へ
 		normalToResult();
 	}
 }
 
 bool NormalState::isRaidHpLessThanZero()
 {
-	//ObjectManagerのレイドHPが0以下なら真
+	//ObjectManagerの共有HPが0以下なら真
 	int raidHp = OM::getInstance()->getRaidHp();
 	if (raidHp <= 0)
 	{
@@ -177,7 +177,7 @@ void NormalState::calcCollision()
 		{
 			//kTag_enemy付きのゲームオブジェクトを取り出し、Enemy型へキャスト
 			Enemy *enemy = static_cast<Enemy *>((*it));
-
+			
 			setEnemyNextPosition(enemy->getNextPosition());
 			//ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離を算出
 			float diffx = calcDiff(m_wispNextPosition.x, enemy->getPositionX());
@@ -228,9 +228,10 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		m_pWisp->addPower(ADD_POWER);
 		Hud::getInstance()->getAction()->enemyDamageAction(enemy);
 		enemy->damage();
+		//高速衝突効果音を鳴らすフラグを真に
+		enemy->setIsHitFastSE(true);
 		//ダメージ後、攻撃力を戻す
 		m_pWisp->drawPower(ADD_POWER);
-		Hud::getInstance()->getAction()->boundSE();
 	}
 
 }

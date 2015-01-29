@@ -19,15 +19,23 @@ USING_NS_CC;
 
 GameObject::GameObject() : 
 	m_isDead(false),
+	m_isPlayHitSE(false),
+	m_isPlayHitFastSE(false),
+	m_isPlayHitBlockSE(false),
+	m_isPlayDyingSE(false),
 	m_nextPosition(ccp(0, 0)),
 	m_acceleration(ccp(0, 0)),
-	m_pHpBar(NULL)
+	m_pHpBar(NULL),
+	m_pAudio(NULL)
 {
+	m_pAudio = new AudioComponent();
 }
 
 GameObject::~GameObject()
 {
 	CC_SAFE_RELEASE_NULL(m_pHpBar);
+	delete m_pAudio;
+	m_pAudio = NULL;
 }
 
 void GameObject::setStateID()
@@ -66,15 +74,6 @@ bool GameObject::isResultState()
 	return false;
 }
 
-void GameObject::isDeadWithRet()
-{
-	//死亡していたら以降の処理を行なわない
-	if (m_isDead)
-	{
-		return;
-	}
-}
-
 float GameObject::getRadius()
 {
 	//画像サイズの半径を返す
@@ -95,4 +94,15 @@ float GameObject::getHpRatio()
 {
 	//HPバーの割合
 	return m_hp * 100.0 / m_maxHp;
+}
+
+void GameObject::removeHpBar()
+{
+	if (m_pHpBar && this->getChildByTag(kTag_hpbarBg))
+	{
+		//hpBarBgから消去
+		m_pHpBar->removeFromParent();
+		//hpBar_bgはこのクラスに追加しているため、removeChildByTag()で消去
+		this->removeChildByTag(kTag_hpbarBg);
+	}
 }

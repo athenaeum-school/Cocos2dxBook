@@ -32,9 +32,9 @@ void EnemyState::enemyToResult()
 	OM::getInstance()->getStateMachine()->changeState(new ResultState());
 }
 
-EnemyState::EnemyState()
-	:m_timer(0)
-	, m_isTurn(false)
+EnemyState::EnemyState() :
+m_timer(0),
+m_isTurn(false)
 {}
 
 EnemyState::~EnemyState(){}
@@ -91,7 +91,12 @@ void EnemyState::turnOnEnemyImage()
 	//HudLayerのインスタンスを呼び出し、そこに追加
 	Hud::getInstance()->addChild(turn);
 	//ラベルフェードアウト後、setIsTurn()を実行
-	CCSequence *fadeTurn = CCSequence::create(CCFadeIn::create(0.5), CCFadeOut::create(0.5), CCCallFunc::create(this, callfunc_selector(EnemyState::setIsTurn)), CCRemoveSelf::create(), NULL);
+	CCSequence *fadeTurn = CCSequence::create(
+		CCFadeIn::create(0.5),
+		CCFadeOut::create(0.5),
+		CCCallFunc::create(this, callfunc_selector(EnemyState::setIsTurn)),
+		CCRemoveSelf::create(),
+		NULL);
 	turn->runAction(fadeTurn);
 }
 
@@ -103,9 +108,10 @@ void EnemyState::setIsTurn()
 
 void EnemyState::switchState()
 {
+	//ウィスプが消滅し、タイマーが90を超えた場合
 	if (m_pWisp->getIsDead() && isGreaterThanCount(90))
 	{
-		//ウィスプが消滅し、タイマーが190を超えたらResultStateへ
+		//190を超えたらリザルト状態へ
 		if (isGreaterThanCount(190))
 		{
 			enemyToResult();

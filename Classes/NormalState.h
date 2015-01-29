@@ -61,7 +61,7 @@ private:
 	//高速衝突判定のための計算
 	void calcCollision();
 
-	/**	ウィスプのタイマーが0以上か確認
+	/**	高速衝突時の、当たり判定および跳ね返る角度、速度を計算
 	*	@param distOne ウィスプの次のx、y座標と、敵NPCの現在のx、y座標の距離をそれぞれ２乗し、そのxとyの和
 	*	@param distTwo ウィスプの現在のx、y座標と、敵NPCの次のx、y座標の距離をそれぞれ２乗し、そのxとyの和
 	*	@param enemy 敵NPC 

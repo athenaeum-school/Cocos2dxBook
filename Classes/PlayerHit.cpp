@@ -24,7 +24,10 @@ PlayerHit::~PlayerHit(){}
 void PlayerHit::hitCheck()
 {
 	//”s–k‚µ‚Ä‚¢‚½‚ç”²‚¯‚é
-	this->isDeadWithRet();
+	if (this->getIsDead())
+	{
+		return;
+	}
 
 	CCPoint wispPosition = this->getPosition();
 	EnemyAttack *enemyAttack = static_cast<EnemyAttack *>(MS::getInstance()->getChildByTag(kTag_enemyAttack));
@@ -36,8 +39,10 @@ void PlayerHit::hitCheck()
 		if (isContact)
 		{
 			CCLOG("wispHit");
+			this->setIsPlayHitSE(true);
 			damage(enemyAttack);
-			enemyAttack->removeFromParentAndCleanup(true);
+			//“–‚½‚Á‚½UŒ‚‚ðíœ
+			enemyAttack->removeFromParent();
 		}
 	}
 
@@ -45,7 +50,7 @@ void PlayerHit::hitCheck()
 
 CCRect PlayerHit::enemyAtkRect(EnemyAttack *enemyAttack)
 {
-	//“GNPCUŒ‚•`‰æ”»’è
+	//“GNPCUŒ‚•`‰æ—Ìˆæ
 	CCRect atkRect = CCRectMake(enemyAttack->getPositionX() - (enemyAttack->getContentSize().width / 10),
 		enemyAttack->getPositionY() - (enemyAttack->getContentSize().height / 10),
 		enemyAttack->getContentSize().width / 2, enemyAttack->getContentSize().height / 2);
@@ -58,37 +63,39 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 	//ƒ_ƒ[ƒW
 	int damage = atkPower->getAtkPower();
 
-	if (damage > m_hp)
+	if (damage > this->m_hp)
 	{
 		//HP‚ªƒ}ƒCƒiƒX‚É•\Ž¦‚³‚ê‚é‚Ì‚ð–h‚®
-		m_hp -= m_hp;
+		this->m_hp -= this->m_hp;
 	}
 	else
 	{
-		m_hp -= damage;
+		this->m_hp -= damage;
 	}
+	//HudLayer‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ðŒÄ‚Ño‚µA
 	//HPƒo[‚É”½‰f
 	Hud::getInstance()->drawHpBar(this);
 	//HPƒ‰ƒxƒ‹‚É”½‰f
 	Hud::getInstance()->drawHpLabel();
 	Hud::getInstance()->damageLabel(this->getPosition(), atkPower->getAtkPower());
-	CCLOG("wispdamageHp%d", m_hp);
-	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
+	//—h‚ê‚éƒAƒNƒVƒ‡ƒ“
 	Hud::getInstance()->getAction()->swingAction(this);
-	if (m_hp <= 0)
+	if (this->m_hp <= 0)
 	{
-		setIsDead(true);
+		this->setIsDead(true);
 		died();
 	}
 }
 
 void PlayerHit::died()
 {
-	if (m_isDead)
+	if (this->m_isDead)
 	{
-		setHP(0);
-		//Hud::getInstance()->getAnime()->wispDyingAnime(this);
+		this->setHP(0);
+		//”s–kŽž‚ÌƒAƒNƒVƒ‡ƒ“
 		Hud::getInstance()->getAction()->dyingAction(this);
+		//AudioComponent‚ÅŒø‰Ê‰¹‚ð–Â‚ç‚·‚½‚ß‚Ìƒtƒ‰ƒO‚ð^‚É
+		this->setIsPlayDyingSE(true);
 	}
 }
 
@@ -96,44 +103,45 @@ void PlayerHit::died()
 //¼
 void PlayerHit::collisionBlockWest()
 {
-	if (isLessThanRadius(m_nextPosition.x))
+	if (isLessThanRadius(this->m_nextPosition.x))
 	{
-		m_nextPosition.x = this->getRadius();
+		this->m_nextPosition.x = this->getRadius();
 		//ƒoƒEƒ“ƒhŽž‚Ì–€ŽC
-		m_acceleration.x *= -0.8f;
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
+		this->m_acceleration.x *= -0.8f;
+		//AudioComponent‚ÅŒø‰Ê‰¹‚ð–Â‚ç‚·‚½‚ß‚Ìƒtƒ‰ƒO‚ð^‚É
+		this->setIsPlayHitBlockSE(true);
 	}
 }
 //“Œ
 void PlayerHit::collisionBlockEast()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (isGreaterThanRadius(m_nextPosition.x, screenSize.width))
+	if (isGreaterThanRadius(this->m_nextPosition.x, screenSize.width))
 	{
-		m_nextPosition.x = screenSize.width - this->getRadius();
-		m_acceleration.x *= -0.8f;
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
+		this->m_nextPosition.x = screenSize.width - this->getRadius();
+		this->m_acceleration.x *= -0.8f;
+		this->setIsPlayHitBlockSE(true);
 	}
 }
 //–k
 void PlayerHit::collisionBlockNorth()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (isGreaterThanRadius(m_nextPosition.y, screenSize.height)) {
-		m_nextPosition.y = screenSize.height - this->getRadius();
-		m_acceleration.y *= -0.8f;
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
+	if (isGreaterThanRadius(this->m_nextPosition.y, screenSize.height)) {
+		this->m_nextPosition.y = screenSize.height - this->getRadius();
+		this->m_acceleration.y *= -0.8f;
+		this->setIsPlayHitBlockSE(true);
 	}
 
 }
 //“ì
 void PlayerHit::collisionBlockSouth()
 {
-	if (isLessThanRadius(m_nextPosition.y))
+	if (isLessThanRadius(this->m_nextPosition.y))
 	{
-		m_nextPosition.y = this->getRadius();
-		m_acceleration.y *= -0.8f;
-		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
+		this->m_nextPosition.y = this->getRadius();
+		this->m_acceleration.y *= -0.8f;
+		this->setIsPlayHitBlockSE(true);
 	}
 }
 

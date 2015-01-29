@@ -20,12 +20,16 @@ class GameObject;
 class AudioComponent : public CocosDenshion::SimpleAudioEngine
 {
 public:
-	
-	void update(float dt, GameObject *obj);
-	void titleToNormalSE();
-	
-	static void pushButtonSE();
 
+	/**	効果音の判定	
+	*	@param obj ゲームオブジェクト（Playerまたは敵NPC） 
+	*/
+	void update(float dt, GameObject *obj);
+
+	void titleToNormalSE();
+	void playBGM();
+	void pushButtonSE();
+	
 	AudioComponent();
 	~AudioComponent();
 
@@ -33,15 +37,13 @@ private:
 
 	bool isStart();
 	void initAudio();
-	void playBGM();
-	void collisionSE();
+	void collisionBlockSE();
 	void collisionFastSE();
 	void enemyDamageSE();
 	void wispDyingSE();
 	void enemyDyingSE();
 	void enemyRatsAttackSE();
 	void enemyVampireAttackSE();
-	void pushButtonSE();
 
 };
 

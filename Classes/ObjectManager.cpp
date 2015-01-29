@@ -39,9 +39,7 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::init()
 {
-	//BGMとSEの初期化
-	initAudio();
-	//初期状態を追加し、状態を初期化
+	//初期状態を追加
 	m_pStateMachine->pushState(new TitleState());
 	
 	return true;
@@ -85,22 +83,7 @@ void ObjectManager::clean()
     delete m_pStateMachine;
 }
 
-//BGMとSEの初期化
-void ObjectManager::initAudio()
-{
-	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
-	audio->preloadEffect("se_maoudamashii_element_fire07.mp3");
-	audio->preloadEffect("se_maoudamashii_system48.mp3");
-	audio->preloadEffect("se_maoudamashii_system45.mp3");
-	audio->preloadEffect("se_maoudamashii_element_fire06.mp3");
-	audio->preloadEffect("se_maoudamashii_magical23.mp3");
-	audio->preloadEffect("se_maoudamashii_element_wind02.mp3");
-	audio->preloadEffect("se_maoudamashii_system28.mp3");
-	audio->preloadEffect("se_maoudamashii_battle18.mp3");
-	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
-}
-
-//プレイスタート時の初期化
+//起動から始めのプレイ時の初期化
 void ObjectManager::playStart()
 {
 	if (m_playCount >= 1)
@@ -139,14 +122,26 @@ CCSprite* ObjectManager::initBackground()
 
 void ObjectManager::addRaidHp(int hp)
 {
-	//敵NPCのHPをレイドHPに追加
+	//敵NPCのHPを共有HPに追加
 	m_raidHp += hp;
 }
 
 void ObjectManager::damageRaidHp(int hp)
 {
-	//敵NPCへのダメージをレイドHPにも与える
+	//敵NPCへのダメージを共有HPにも与える
 	m_raidHp -= hp;
+}
+
+void ObjectManager::addEnemyCount()
+{
+	//敵NPCの総数を増加
+	m_enemyCount++;
+}
+
+void ObjectManager::drawEnemyCount()
+{
+	//敵NPCの総数を減少
+	m_enemyCount--;
 }
 
 void ObjectManager::reset()
@@ -166,7 +161,7 @@ void ObjectManager::reset()
 
 void ObjectManager::fadeInState()
 {
-	//通常状態がフェードインするアクション
+	//プレイヤーのターンがフェードインするアクション
 	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//画面底からウィスプ3個分の高さへ設定
 	wisp->setPositionY(wisp->getRadius() * 3);
@@ -184,16 +179,4 @@ void ObjectManager::fadeInState()
 	CCSpawn *fadeIn2 = CCSpawn::create(CCFadeIn::create(1), CCMoveTo::create(1, ccp(screenSize.width / 2, screenSize.height / 2.0)), NULL);
 	back->runAction(fadeIn2);
 
-}
-
-void ObjectManager::addEnemyCount()
-{
-	//敵NPCの総数を増加
-	m_enemyCount++;
-}
-
-void ObjectManager::drawEnemyCount()
-{
-	//敵NPCの総数を減少
-	m_enemyCount--;
 }
