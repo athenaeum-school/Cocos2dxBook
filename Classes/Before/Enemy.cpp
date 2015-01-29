@@ -135,7 +135,7 @@ void Enemy::stateUpdate(float dt)
 	}
 	
 	attack();
-	activateHitCheck();
+	this->hitCheck();
 	
 }
 
@@ -166,11 +166,6 @@ void Enemy::attack()
 		EnemyAttack::create(this);
 		//UŒ‚Ï‚Ý‚Ìƒtƒ‰ƒO‚ð—§‚Ä‚é
 		setIsAttacked(true);
-}
-
-void Enemy::activateHitCheck()
-{
-	this->hitCheck();
 }
 
 bool Enemy::isDeadOrAttacked()

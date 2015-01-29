@@ -31,8 +31,7 @@ public:
 protected:
 
 	Player *m_pWisp;
-	//サブクラスにてhitCheck()を呼び出す仮想関数
-	virtual void activateHitCheck() = 0;
+
 	void hitCheck();
 	cocos2d::CCRect setEnemyRect();
 
