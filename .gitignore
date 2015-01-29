@@ -18,3 +18,6 @@ proj.wp8-xaml/
 proj.marmalade/
 proj.tizen/
 proj.win32/
+Classes/Before_SubClass_EnemyHit/
+Classes/SubClass_Enemy_Apply1/
+Classes/SubClass_Enemy_Apply2_public/
