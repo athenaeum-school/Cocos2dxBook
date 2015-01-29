@@ -19,5 +19,7 @@ proj.marmalade/
 proj.tizen/
 proj.win32/
 Classes/Before_SubClass_EnemyHit/
+Classes/Before_SubClass_Enemy/
 Classes/SubClass_Enemy_Apply1/
 Classes/SubClass_Enemy_Apply2_public/
+Classes/SubClass_Enemy_Apply2_protected/
