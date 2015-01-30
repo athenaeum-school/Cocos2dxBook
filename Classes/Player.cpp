@@ -111,8 +111,6 @@ void Player::onStateExit()
 
 void Player::stateUpdate(float dt)
 {
-	//AudioComponent‚©‚çŒø‰Ê‰¹‚ðŒÄ‚Ño‚·
-	this->m_pAudio->update(dt, this);
 	//”s–k‚µ‚Ä‚¢‚½‚çˆÈ~‚Ìˆ—‚ðs‚È‚í‚È‚¢
 	if (this->m_isDead)
 	{

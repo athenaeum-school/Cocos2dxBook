@@ -120,9 +120,6 @@ void Enemy::onStateExit()
 
 void Enemy::stateUpdate(float dt)
 {
-	//AudioComponent‚©‚çŒø‰Ê‰¹‚ğŒÄ‚Ño‚·
-	this->m_pAudio->update(dt, this);
-
 	if (this->m_isDead)
 	{
 		return;

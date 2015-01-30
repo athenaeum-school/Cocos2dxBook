@@ -41,8 +41,24 @@ bool ObjectManager::init()
 {
 	//初期状態を追加
 	m_pStateMachine->pushState(new TitleState());
-	
+	//音源を準備
+	initAudio();
 	return true;
+}
+
+void ObjectManager::initAudio()
+{
+	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
+	audio->preloadEffect("se_maoudamashii_element_fire07.mp3");
+	audio->preloadEffect("se_maoudamashii_system48.mp3");
+	audio->preloadEffect("se_maoudamashii_system45.mp3");
+	audio->preloadEffect("se_maoudamashii_element_fire06.mp3");
+	audio->preloadEffect("se_maoudamashii_explosion04.mp3");
+	audio->preloadEffect("se_maoudamashii_magical23.mp3");
+	audio->preloadEffect("se_maoudamashii_system28.mp3");
+	audio->preloadEffect("se_maoudamashii_retro18.mp3");
+	audio->preloadEffect("se_maoudamashii_battle18.mp3");
+	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
 }
 
 void ObjectManager::addGameObject(GameObject* sprite)

@@ -17,25 +17,16 @@
 
 USING_NS_CC;
 
-GameObject::GameObject() : 
-	m_isDead(false),
-	m_isPlayHitSE(false),
-	m_isPlayHitFastSE(false),
-	m_isPlayHitBlockSE(false),
-	m_isPlayDyingSE(false),
-	m_nextPosition(ccp(0, 0)),
-	m_acceleration(ccp(0, 0)),
-	m_pHpBar(NULL),
-	m_pAudio(NULL)
-{
-	m_pAudio = new AudioComponent();
-}
+GameObject::GameObject():
+m_isDead(false),
+m_nextPosition(ccp(0, 0)),
+m_acceleration(ccp(0, 0)),
+m_pHpBar(NULL)
+{}
 
 GameObject::~GameObject()
 {
 	CC_SAFE_RELEASE_NULL(m_pHpBar);
-	delete m_pAudio;
-	m_pAudio = NULL;
 }
 
 void GameObject::setStateID()

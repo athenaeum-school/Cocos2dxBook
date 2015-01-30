@@ -228,8 +228,8 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		m_pWisp->addPower(ADD_POWER);
 		Hud::getInstance()->getAction()->enemyDamageAction(enemy);
 		enemy->damage();
-		//高速衝突効果音を鳴らすフラグを真に
-		enemy->setIsHitFastSE(true);
+		//効果音を再生
+		Hud::getInstance()->getAction()->boundSE();
 		//ダメージ後、攻撃力を戻す
 		m_pWisp->drawPower(ADD_POWER);
 	}

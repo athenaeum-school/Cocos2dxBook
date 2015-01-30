@@ -24,3 +24,6 @@ Classes/SubClass_Enemy_Apply2_protected/
 Classes/SubClass_EnemyHit_Before/
 Classes/SubClass_Enemy_Before/
 Classes/Component_Apply/
+Classes/Component_Before/
+Classes/Component_Before_ALL/
+Classes/Component_Apply_ALL/

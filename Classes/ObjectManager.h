@@ -86,6 +86,8 @@ private:
     static ObjectManager* s_pInstance;
     std::vector<GameObject*> m_gameObjects;
 	
+	void initAudio();
+
     ObjectManager();
     ~ObjectManager();
     

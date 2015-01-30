@@ -34,7 +34,6 @@ public:
 	*/
 	std::string dyingSpriteFileName(GameObject *obj, int number);
 
-	void dyingSE(GameObject *obj);
 	void enemyStarAction();
 	void enemyExplodeAction(EnemyHit *enemy);
 
@@ -60,6 +59,9 @@ public:
 	ActionManager();
 	~ActionManager();
 
+private:
+
+	void dyingSE(GameObject *obj);
 };
 
 #endif /*defined(__WillYard__ActionManager__)*/

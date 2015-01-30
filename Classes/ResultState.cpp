@@ -24,15 +24,9 @@ const std::string ResultState::s_resultID = "RESULT";
 
 ResultState::ResultState():
 m_timer(0)
-{
-	m_pAudio = new AudioComponent();
-}
+{}
 
-ResultState::~ResultState()
-{
-	delete m_pAudio;
-	m_pAudio = NULL;
-}
+ResultState::~ResultState(){}
 
 void ResultState::resultToNormal()
 {
@@ -115,15 +109,15 @@ void ResultState::onResult()
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数
 void ResultState::retry(CCObject *pSender){
-	//AudioComponentから効果音を呼び出す
-	m_pAudio->pushButtonSE();
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
 	resultToNormal();
 }
 
 //ボタン押下時、TitleStateへ遷移するコールバック関数
 void ResultState::back(CCObject *pSender){
-	m_pAudio->pushButtonSE();
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
 	//BGMを停止
-	m_pAudio->stopBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
 	resultToTitle();
 }

@@ -65,6 +65,8 @@ void ActionManager::dyingAction(GameObject *obj)
 	CCSequence *vanishSequence = CCSequence::create(vanishSpawn, CCRemoveSelf::create(), nullptr);
 
 	vanish->runAction(vanishSequence);
+	//効果音を再生
+	dyingSE(obj);
 }
 
 std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
@@ -89,6 +91,18 @@ std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
 	}
 
 	return fileName;
+}
+
+void ActionManager::dyingSE(GameObject *obj)
+{
+	if (obj->getTag() == kTag_wisp)
+	{
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire06.mp3");
+	}
+	else if (obj->getTag() == kTag_enemy)
+	{
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
+	}
 }
 
 void ActionManager::enemyStarAction()
@@ -152,6 +166,8 @@ void ActionManager::enemyDamageAction(EnemyHit *enemy)
 	swingAction(enemy);
 	//ダメージ時、爆発エフェクト表示
 	enemyExplodeAction(enemy);
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_battle18.mp3");
 }
 
 void ActionManager::boundSE()

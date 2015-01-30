@@ -37,8 +37,6 @@ void EnemyHit::hitCheck()
 		//HudLayerのインスタンスを呼び出す
 		//ダメージ時のアニメーション
 		Hud::getInstance()->getAction()->enemyDamageAction(this);
-		//ダメージ効果音を鳴らすためのフラグを真に
-		this->setIsPlayHitSE(true);
 		//一度触れたら、離れるまで触れなくなる（重複当たり判定を防ぐフラグ）
 		setIsContacted(true);
 	}
@@ -137,10 +135,5 @@ void EnemyHit::died()
 		Hud::getInstance()->getAction()->dyingAction(this);
 		//HPバー消去処理
 		this->removeHpBar();
-		//死亡効果音を鳴らすためのフラグを真に
-		this->setIsPlayDyingSE(true);
-		//AudioComponentの削除
-		delete this->m_pAudio;
-		m_pAudio = NULL;
 	}
 }

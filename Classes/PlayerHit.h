@@ -47,7 +47,7 @@ private:
 
 	/**	“GNPC‚ÌUŒ‚‚Ì•`‰æ—Ìˆæ‚ğŒvZ
 	*	@param enemyAttack “GNPC‚ÌUŒ‚
-	*	@param enemyAttack •`‰æ—Ìˆæ
+	*	@return •`‰æ—Ìˆæ
 	*/
 	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
 
