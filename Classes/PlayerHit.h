@@ -47,17 +47,20 @@ private:
 
 	/**	敵NPCの攻撃の描画領域を計算
 	*	@param enemyAttack 敵NPCの攻撃
+	*	@param enemyAttack 描画領域
 	*/
 	cocos2d::CCRect enemyAtkRect(EnemyAttack *enemyAttack);
 
 	/**	壁との衝突を判定（南、西）
 	*	@param wispNextPos プレイヤーの移動先
+	*	@return 真偽
 	*/
 	bool isLessThanRadius(float wispNextPos);
 
 	/**	壁との衝突を判定（北、東）
 	*	@param wispNextPos プレイヤーの移動先
 	*	@param screenwh 画面サイズの横幅と高さ
+	*	@return 真偽
 	*/
 	bool isGreaterThanRadius(float wispNextPos, float screenwh);
 	
