@@ -1,0 +1,56 @@
+/*
+* AudioComponent.h
+* willYard
+*
+* All Rights Reserved by Athenaeum Society
+*
+* Written by Nadd3564 on 2015/01/04.
+*
+*/
+
+
+#ifndef __WillYard__AudioComponent__
+#define __WillYard__AudioComponent__
+
+#include <cocos2d.h>
+#include "SimpleAudioEngine.h"
+
+class GameObject;
+
+class AudioComponent : public CocosDenshion::SimpleAudioEngine
+{
+public:
+
+	/**	効果音の判定	
+	*	@param obj ゲームオブジェクト（Playerまたは敵NPC） 
+	*/
+	void update(float dt, GameObject *obj);
+
+	void titleToNormalSE();
+	void playBGM();
+	void pushButtonSE();
+	
+	AudioComponent();
+	~AudioComponent();
+
+private:
+
+	bool isStart();
+	void initAudio();
+	void collisionBlockSE();
+	void collisionFastSE();
+	void enemyDamageSE();
+	void wispDyingSE();
+	void enemyDyingSE();
+
+	/**	攻撃効果音の判定（敵NPC）
+	*	@param obj ゲームオブジェクト（敵NPC）
+	*/
+	void switchEnemyAttackSE(GameObject * obj);
+
+	void enemyRatsAttackSE();
+	void enemyVampireAttackSE();
+
+};
+
+#endif /* defined(__WillYard__AudioComponent__) */
