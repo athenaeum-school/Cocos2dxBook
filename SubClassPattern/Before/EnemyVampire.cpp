@@ -39,7 +39,7 @@ EnemyVampire* EnemyVampire::create(enemyType type, float xPos, float yPos)
 	return NULL;
 }
 
-std::string EnemyVampire::statusInit(enemyType type)
+std::string EnemyVampire::initStatus(enemyType type)
 {
 	std::string fileName;
 	//エネミータイプに応じて、ステータスを設定

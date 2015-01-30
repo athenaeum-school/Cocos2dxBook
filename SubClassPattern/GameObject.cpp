@@ -74,15 +74,6 @@ bool GameObject::isResultState()
 	return false;
 }
 
-void GameObject::isDeadWithRet()
-{
-	//死亡していたら以降の処理を行なわない
-	if (m_isDead)
-	{
-		return;
-	}
-}
-
 float GameObject::getRadius()
 {
 	//画像サイズの半径を返す
@@ -103,4 +94,15 @@ float GameObject::getHpRatio()
 {
 	//HPバーの割合
 	return m_hp * 100.0 / m_maxHp;
+}
+
+void GameObject::removeHpBar()
+{
+	if (m_pHpBar && this->getChildByTag(kTag_hpbarBg))
+	{
+		//hpBarBgから消去
+		m_pHpBar->removeFromParent();
+		//hpBar_bgはこのクラスに追加しているため、removeChildByTag()で消去
+		this->removeChildByTag(kTag_hpbarBg);
+	}
 }

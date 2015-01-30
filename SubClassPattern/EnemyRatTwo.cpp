@@ -39,7 +39,7 @@ EnemyRatTwo* EnemyRatTwo::create(enemyType type, float xPos, float yPos)
 	return NULL;
 }
 
-std::string EnemyRatTwo::statusInit(enemyType type)
+std::string EnemyRatTwo::initStatus(enemyType type)
 {
 	std::string fileName;
 	//エネミータイプに応じて、ステータスを設定

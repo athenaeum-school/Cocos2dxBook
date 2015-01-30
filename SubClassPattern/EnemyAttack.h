@@ -27,6 +27,9 @@ public:
 	*/
 	static EnemyAttack* create(Enemy *enemy);
 
+	/**	“GNPC‚ÌUŒ‚
+	*	@param enemy UŒ‚‚ğs‚È‚¤NPC
+	*/
 	void attack(Enemy *enemy);
 
 	EnemyAttack();

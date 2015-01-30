@@ -30,23 +30,25 @@ public:
 	
 protected:
 
-	Player *m_pWisp;
-
 	void hitCheck();
 	cocos2d::CCRect setEnemyRect();
 
-	/**	当たり判定
-	*	@param isContact_interSects	自身の当たり判定にプレイヤーが触れているか
+	/**	当たり判定用の処理
+	*	@param isContact_interSects	敵NPCの当たり判定にプレイヤーが触れているか
 	*	@return	敵NPCに触れる、その接触までに触れていなければ真
 	*/
 	bool isContanctWithContacted(bool isContact_interSects);
 
-	/**	当たり判定
+	/**	当たり判定用の処理
 	*	@return	敵NPCが生存していて、プレイヤーが攻撃中ならば真
 	*/
 	bool isAliveWithAttacking();
 	
-	void normalDamage(int playerAtk);
+	/**	通常ダメージ処理
+	*	@param AtkPower プレイヤーの攻撃力
+	*/
+	void normalDamage(int PlayerAtkPower);
+
 	void overDamage();
 	void died();
 	

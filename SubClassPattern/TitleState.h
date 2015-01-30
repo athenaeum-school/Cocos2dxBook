@@ -39,8 +39,18 @@ private:
 	AudioComponent *m_pAudio;
 	
 	void titleToNormal();
+
+	//スタートボタンを表示
 	void onNormal();
+
+	/**	背景を追加
+	*	@param screenSize 画面サイズ
+	*/
 	void initBackground(cocos2d::CCSize screenSize);
+
+	/**	ボタン押下時、プレイヤーターンへ遷移するコールバック関数
+	*	@param pSender menuSelectorの引数の引数の型
+	*/
 	void play(cocos2d::CCObject *pSender);
 
 };

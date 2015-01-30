@@ -27,6 +27,7 @@ public:
 	void update(float dt, GameObject *obj);
 
 	void titleToNormalSE();
+	void playBGM();
 	void pushButtonSE();
 	
 	AudioComponent();
@@ -36,7 +37,6 @@ private:
 
 	bool isStart();
 	void initAudio();
-	void playBGM();
 	void collisionBlockSE();
 	void collisionFastSE();
 	void enemyDamageSE();

@@ -71,8 +71,8 @@ protected:
 	*/
 	bool isResultState();
 
-	//€–S‚µ‚Ä‚¢‚½‚çˆÈ~‚Ìˆ—‚ğs‚È‚í‚È‚¢
-	void isDeadWithRet();
+	//HPƒo[Á‹
+	void removeHpBar();
 
 	GameObject();
 	~GameObject();

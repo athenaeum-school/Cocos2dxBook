@@ -41,11 +41,8 @@ void PlayerHit::hitCheck()
 			CCLOG("wispHit");
 			this->setIsPlayHitSE(true);
 			damage(enemyAttack);
-			enemyAttack->removeFromParentAndCleanup(true);
-		}
-		else if (!isContact)
-		{
-			this->setIsPlayHitSE(false);
+			//当たった攻撃を削除
+			enemyAttack->removeFromParent();
 		}
 	}
 
@@ -53,7 +50,7 @@ void PlayerHit::hitCheck()
 
 CCRect PlayerHit::enemyAtkRect(EnemyAttack *enemyAttack)
 {
-	//敵NPC攻撃描画判定
+	//敵NPC攻撃描画領域
 	CCRect atkRect = CCRectMake(enemyAttack->getPositionX() - (enemyAttack->getContentSize().width / 10),
 		enemyAttack->getPositionY() - (enemyAttack->getContentSize().height / 10),
 		enemyAttack->getContentSize().width / 2, enemyAttack->getContentSize().height / 2);
@@ -66,37 +63,39 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 	//ダメージ
 	int damage = atkPower->getAtkPower();
 
-	if (damage > m_hp)
+	if (damage > this->m_hp)
 	{
 		//HPがマイナスに表示されるのを防ぐ
-		m_hp -= m_hp;
+		this->m_hp -= this->m_hp;
 	}
 	else
 	{
-		m_hp -= damage;
+		this->m_hp -= damage;
 	}
+	//HudLayerのインスタンスを呼び出し、
 	//HPバーに反映
 	Hud::getInstance()->drawHpBar(this);
 	//HPラベルに反映
 	Hud::getInstance()->drawHpLabel();
 	Hud::getInstance()->damageLabel(this->getPosition(), atkPower->getAtkPower());
-	CCLOG("wispdamageHp%d", m_hp);
+	//揺れるアクション
 	Hud::getInstance()->getAction()->swingAction(this);
-	if (m_hp <= 0)
+	if (this->m_hp <= 0)
 	{
-		setIsDead(true);
+		this->setIsDead(true);
 		died();
 	}
 }
 
 void PlayerHit::died()
 {
-	if (m_isDead)
+	if (this->m_isDead)
 	{
-		setHP(0);
+		this->setHP(0);
+		//敗北時のアクション
 		Hud::getInstance()->getAction()->dyingAction(this);
+		//AudioComponentで効果音を鳴らすためのフラグを真に
 		this->setIsPlayDyingSE(true);
-		CCLOG("diued");
 	}
 }
 
@@ -104,11 +103,11 @@ void PlayerHit::died()
 //西
 void PlayerHit::collisionBlockWest()
 {
-	if (isLessThanRadius(m_nextPosition.x))
+	if (isLessThanRadius(this->m_nextPosition.x))
 	{
-		m_nextPosition.x = this->getRadius();
+		this->m_nextPosition.x = this->getRadius();
 		//バウンド時の摩擦
-		m_acceleration.x *= -0.8f;
+		this->m_acceleration.x *= -0.8f;
 		//AudioComponentで効果音を鳴らすためのフラグを真に
 		this->setIsPlayHitBlockSE(true);
 	}
@@ -117,10 +116,10 @@ void PlayerHit::collisionBlockWest()
 void PlayerHit::collisionBlockEast()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (isGreaterThanRadius(m_nextPosition.x, screenSize.width))
+	if (isGreaterThanRadius(this->m_nextPosition.x, screenSize.width))
 	{
-		m_nextPosition.x = screenSize.width - this->getRadius();
-		m_acceleration.x *= -0.8f;
+		this->m_nextPosition.x = screenSize.width - this->getRadius();
+		this->m_acceleration.x *= -0.8f;
 		this->setIsPlayHitBlockSE(true);
 	}
 }
@@ -128,9 +127,9 @@ void PlayerHit::collisionBlockEast()
 void PlayerHit::collisionBlockNorth()
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
-	if (isGreaterThanRadius(m_nextPosition.y, screenSize.height)) {
-		m_nextPosition.y = screenSize.height - this->getRadius();
-		m_acceleration.y *= -0.8f;
+	if (isGreaterThanRadius(this->m_nextPosition.y, screenSize.height)) {
+		this->m_nextPosition.y = screenSize.height - this->getRadius();
+		this->m_acceleration.y *= -0.8f;
 		this->setIsPlayHitBlockSE(true);
 	}
 
@@ -138,10 +137,10 @@ void PlayerHit::collisionBlockNorth()
 //南
 void PlayerHit::collisionBlockSouth()
 {
-	if (isLessThanRadius(m_nextPosition.y))
+	if (isLessThanRadius(this->m_nextPosition.y))
 	{
-		m_nextPosition.y = this->getRadius();
-		m_acceleration.y *= -0.8f;
+		this->m_nextPosition.y = this->getRadius();
+		this->m_acceleration.y *= -0.8f;
 		this->setIsPlayHitBlockSE(true);
 	}
 }

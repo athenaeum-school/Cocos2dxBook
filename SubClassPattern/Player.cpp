@@ -79,6 +79,7 @@ void Player::onStateEnter()
 	this->setStateID();
 	if (this->isNormalState())
 	{
+		//プレイヤーのターン開始時の初期化
 		setTouchPoint(ccp(0, 0));
 		setTimer(0);
 		setCanFire(true);
@@ -117,20 +118,10 @@ void Player::stateUpdate(float dt)
 	{
 		return;
 	}
-	//当たり判定確認
-	this->hitCheck();
 	//ウィスプに力を加える
 	addForceToWisp();
-	//ウィスプと壁の衝突判定
-	//西
-	this->collisionBlockWest();
-	//東
-	this->collisionBlockEast();
-	//北
-	this->collisionBlockNorth();
-	//南
-	this->collisionBlockSouth();
-	
+	//衝突判定
+	activateCollision();
 	//攻撃後、次の状態へのカウント開始
 	startTimer();
 }
@@ -139,7 +130,7 @@ bool Player::wispTouchBegan()
 {
 	bool ret = false;
 	CCTouch *touch = MS::getInstance()->getBeganTouch();
-	//攻撃可能で無ければ抜ける
+	//攻撃可能で無ければ以降の処理を行なわない
 	if (!m_canFire)
 	{
 		return ret;
@@ -176,10 +167,26 @@ void Player::wispTouchEnded()
 	//タッチ開始座標から放した座標の距離 * SHOT_RATEの値を計算し、力を加える
 	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
-	MS::getInstance()->removeChildByTag(kTag_arrow);
+	//MS::getInstance()->removeChildByTag(kTag_arrow);
+	removeArrow();
 	//ショット中の操作を不可に
 	setCanFire(false);
 	setIsAttacking(true);
+}
+
+void Player::activateCollision()
+{
+	//衝突判定（敵NPCの攻撃）
+	this->hitCheck();
+	//ウィスプと壁の衝突判定
+	//西
+	this->collisionBlockWest();
+	//東
+	this->collisionBlockEast();
+	//北
+	this->collisionBlockNorth();
+	//南
+	this->collisionBlockSouth();
 }
 
 void Player::addPower(int power)
@@ -243,6 +250,16 @@ void Player::arrowSettings(CCSprite *arrow, CCPoint movePoint)
 	CCLOG("angle : %f", m_angle);
 	//結果を矢印に反映
 	arrow->setRotation(m_angle);
+}
+
+void Player::removeArrow()
+{
+	CCSprite *arrow = static_cast<CCSprite *>(MS::getInstance()->getChildByTag(kTag_arrow));
+	if (arrow)
+	{
+		//ガイド矢印が存在するなら、MainSceneから削除
+		arrow->removeFromParent();
+	}
 }
 
 CCPoint Player::calcForce(CCPoint endPoint)

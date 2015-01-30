@@ -47,25 +47,44 @@ public:
 	void addGameObject(GameObject* sprite);
 	std::vector<GameObject*> getGameObjects();
 	StateMachine* getStateMachine() { return m_pStateMachine; }
-	
-	void addRaidHp(int hp);
-	void damageRaidHp(int damage);
-	void addEnemyCount();
-	void drawEnemyCount();
-    void playStart();
+
+	//起動から始めのプレイ時の初期化
+	void playStart();
+
+	//プレイ回数を更新
 	void addPlayCount();
+
+	//背景を追加
 	cocos2d::CCSprite* initBackground();
+
+	/**	共有HPに追加
+	*	@param hp 敵NPCのHP
+	*/
+	void addRaidHp(int hp);
+
+	/**	共有HPを減少
+	*	@param damage プレイヤーの攻撃力
+	*/
+	void damageRaidHp(int damage);
+
+	//敵NPCの総数を増加
+	void addEnemyCount();
+
+	//敵NPCの総数を減少
+	void drawEnemyCount();
+
+	//リセット処理
 	void reset();
+
+	//プレイヤーのターンがフェードインするアクション
 	void fadeInState();
 	
 private:
     
     StateMachine* m_pStateMachine;
-    static ObjectManager* s_pInstance;
 	EnemyFactory *m_pEnemyFactory;
+    static ObjectManager* s_pInstance;
     std::vector<GameObject*> m_gameObjects;
-	
-	void initAudio();
 	
     ObjectManager();
     ~ObjectManager();

@@ -22,10 +22,12 @@ using namespace CocosDenshion;
 //状態のID
 const std::string TitleState::s_titleID = "TITLE";
 
-TitleState::TitleState() :
+TitleState::TitleState():
 m_timer(0),
 m_pAudio(NULL)
-{}
+{
+	m_pAudio = new AudioComponent();
+}
 
 TitleState::~TitleState() 
 {
@@ -36,30 +38,31 @@ TitleState::~TitleState()
 
 void TitleState::titleToNormal()
 {
+	//ObjectManagerのインスタンスを呼び出し、プレイヤーターンへ遷移
 	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
 bool TitleState::onStateEnter() 
 {
-	//オーディオの初期化
-	m_pAudio = new AudioComponent();
-	//NormalStateへのボタンを追加
+	//プレイヤーターンへのボタンを追加
 	onNormal();
 	return true;
 }
 
 bool TitleState::onStateExit()
 {
-	CCLOG("TitleToNormal");
+	//タイトル画面の背景とスタートボタンを削除
 	Hud::getInstance()->removeChildByTag(kTag_background);
-	Hud::getInstance()->removeChildByTag(kTag_retry);
+	Hud::getInstance()->removeChildByTag(ktag_touch);
+	//プレイスタート時の処理
 	OM::getInstance()->playStart();
-	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
+	//SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
+	//BGMを再生
+	m_pAudio->playBGM();
 	return true;
 }
 
-void TitleState::stateUpdate(float dt) 
-{}
+void TitleState::stateUpdate(float dt){}
 
 bool TitleState::onTouchBeganEvent()
 {
@@ -76,13 +79,17 @@ void TitleState::onNormal()
 	//背景画像の設定
 	initBackground(screenSize);
 	//スタートボタン
-	CCMenuItemImage *playButton = CCMenuItemImage::create("title_button_normal.png",
-		"title_button_selected.png", this, menu_selector(TitleState::play));
+	CCMenuItemImage *playButton = CCMenuItemImage::create(
+		"title_button_normal.png",
+		"title_button_selected.png",
+		this,
+		menu_selector(TitleState::play));
 	//ボタンからメニューを作成する
 	CCMenu *menu = CCMenu::create(playButton, NULL);
 	//画面の中央へ表示
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	Hud::getInstance()->addChild(menu, z_retry, kTag_retry);
+	//HudLayerのインスタンスを呼び出し、そこに追加
+	Hud::getInstance()->addChild(menu, z_touch, ktag_touch);
 }
 
 void TitleState::initBackground(CCSize screenSize)
@@ -93,7 +100,7 @@ void TitleState::initBackground(CCSize screenSize)
 	Hud::getInstance()->addChild(background, z_background, kTag_background);
 }
 
-//ボタン押下時、NormalStateへ遷移するコールバック関数
+//ボタン押下時、プレイヤーターンへ遷移するコールバック関数
 void TitleState::play(CCObject *pSender)
 {
 	m_pAudio->titleToNormalSE();

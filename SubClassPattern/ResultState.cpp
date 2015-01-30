@@ -22,7 +22,7 @@ using namespace CocosDenshion;
 //状態のID
 const std::string ResultState::s_resultID = "RESULT";
 
-ResultState::ResultState() :
+ResultState::ResultState():
 m_timer(0)
 {
 	m_pAudio = new AudioComponent();
@@ -36,6 +36,7 @@ ResultState::~ResultState()
 
 void ResultState::resultToNormal()
 {
+	//ObjectManagerのインスタンスを呼び出し、プレイヤーのターンへ遷移させる
 	OM::getInstance()->getStateMachine()->changeState(new NormalState());
 }
 
@@ -46,13 +47,12 @@ void ResultState::resultToTitle()
 
 bool ResultState::onStateEnter()
 {
-	CCLOG("Changed : resultState");
-	//プレイカウントを増加
+	//プレイ回数を増加
 	OM::getInstance()->addPlayCount();
-	//_gObjectsへ、コンテナを代入
-	setGameObjects();
+	//メンバーへゲームオブジェクトコンテナを代入
+	this->setGameObjects();
 	//ゲームオブジェクトのonStateEnter()を実行
-	objectStateEnter();
+	this->objectStateEnter();
 	//retryとbackボタンを表示
 	onResult();
 
@@ -61,13 +61,14 @@ bool ResultState::onStateEnter()
 
 bool ResultState::onStateExit()
 {
+	//HudLayerのインスタンスを呼び出し、
 	//ボタンを削除
 	Hud::getInstance()->removeChildByTag(kTag_retry);
 	//ゲームオブジェクトのonStateExit()を実行
-	objectStateExit();
+	this->objectStateExit();
 	OM::getInstance()->setIsReady(false);
 	OM::getInstance()->setRaidHp(0);
-	//ウィスプのHPラベルを非表示に
+	//プレイヤーのHPラベルを非表示に
 	Hud::getInstance()->setHpLabelVisible(false);
 	return true;
 }
@@ -90,20 +91,20 @@ void ResultState::onResult()
 	//リトライボタン
 	CCMenuItemImage *retryButton = CCMenuItemImage::create(
 		"result_button_retry_normal.png",
-		"result_button_retry_selected.png", 
+		"result_button_retry_selected.png",
 		this,
 		menu_selector(ResultState::retry));
 	//バックボタン
 	CCMenuItemImage *backButton = CCMenuItemImage::create(
 		"result_button_back_normal.png",
-		"result_button_back_selected.png", 
-		this, 
+		"result_button_back_selected.png",
+		this,
 		menu_selector(ResultState::back));
 
 	//ボタンからメニューを作成する
 	CCMenu *menu = CCMenu::create(retryButton, backButton, NULL);
 	
-	//画面の真ん中へ表示
+	//画面の中央へ表示
 	menu->alignItemsVerticallyWithPadding(30);
 	menu->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	//フェードインするため、透明に
