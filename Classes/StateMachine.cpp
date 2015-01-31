@@ -11,7 +11,7 @@
 
 #include "StateMachine.h"
 
-StateMachine::StateMachine() {}
+StateMachine::StateMachine(){}
 
 StateMachine::~StateMachine() {}
 
