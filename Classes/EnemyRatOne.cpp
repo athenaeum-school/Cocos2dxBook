@@ -15,7 +15,7 @@
 
 const int RAT_ONE_HP = 50;
 const int RAT_ONE_MAXHP = 50;
-const int RAT_ONE_ATK = 5;
+const int RAT_ONE_ATKPOWER = 5;
 
 EnemyRatOne::EnemyRatOne(){}
 
@@ -47,7 +47,7 @@ std::string EnemyRatOne::initStatus(enemyType type)
 	this->setEnemyType(type);
 	this->setHP(RAT_ONE_HP);
 	this->setMaxHP(RAT_ONE_MAXHP);
-	this->setAtkPower(RAT_ONE_ATK);
+	this->setAtkPower(RAT_ONE_ATKPOWER);
 	
 	return fileName;
 }

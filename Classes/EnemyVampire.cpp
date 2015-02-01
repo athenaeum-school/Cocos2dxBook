@@ -13,9 +13,9 @@
 #include "MainScene.h"
 #include "HudLayer.h"
 
-const int VAMPIRE_HP = 1;
+const int VAMPIRE_HP = 120;
 const int VAMPIRE_MAXHP = 120;
-const int VAMPIRE_ATK = 20;
+const int VAMPIRE_ATKPOWER = 20;
 
 EnemyVampire::EnemyVampire(){}
 
@@ -47,7 +47,7 @@ std::string EnemyVampire::initStatus(enemyType type)
 	this->setEnemyType(type);
 	this->setHP(VAMPIRE_HP);
 	this->setMaxHP(VAMPIRE_MAXHP);
-	this->setAtkPower(VAMPIRE_ATK);
+	this->setAtkPower(VAMPIRE_ATKPOWER);
 	
 	return fileName;
 }

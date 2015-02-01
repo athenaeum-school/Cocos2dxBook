@@ -19,7 +19,7 @@ class GameState : public cocos2d::CCSprite
 {
 public:
 
-    virtual void stateUpdate(float dt) = 0;
+	virtual void stateUpdate(float dt) = 0;
     virtual bool onStateEnter() = 0;
     virtual bool onStateExit() = 0;
     virtual bool onTouchBeganEvent() = 0;
