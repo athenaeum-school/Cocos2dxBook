@@ -2,6 +2,11 @@ Cocos2dxBook
 ============
 タイトル：willYard<br>
 ジャンル：引っ張りアクションゲーム<br>
+開発環境：<br>
+Visual Studio Community 2013<br>
+Cocos2d-x Ver 2.2.6<br>
+*Xcodeでの動作はサポートしておりません。
+
 
 概要：<br>
 敵を全滅させる目的のゲーム。<br>
