@@ -23,8 +23,19 @@ public:
 
 	CREATE_FUNC(ActionManager);
 
+	/**	アクションを設定
+	*	@param wisp プレイヤー
+	*/
 	void wispInitAction(Player *wisp);
+
+	/**	被弾時のアクションを設定
+	*	@param obj ゲームオブジェクト（プレイヤー、敵NPC）
+	*/
 	void swingAction(GameObject *obj);
+
+	/**	死亡時のアクションを設定
+	*	@param obj ゲームオブジェクト（プレイヤー、敵NPC）
+	*/
 	void dyingAction(GameObject *obj);
 
 	/**	死亡時の画像ファイル名を設定
@@ -34,7 +45,12 @@ public:
 	*/
 	std::string dyingSpriteFileName(GameObject *obj, int number);
 
+	//敵NPCの被弾時のアクションを設定（星を表示）
 	void enemyStarAction();
+
+	/**	敵NPC被弾時のアクションを設定（爆発を表示）
+	*	@param enemyHit 敵NPC
+	*/
 	void enemyExplodeAction(EnemyHit *enemy);
 
 	/**	アクションの画像ファイル名を設定（アニメーションを使用しているアクション）
@@ -44,6 +60,9 @@ public:
 	*/
 	std::string spriteFileName(const char *fileName, int number);
 
+	/**	敵NPC被弾時のアクションを設定
+	*	@param enemyHit 敵NPC
+	*/
 	void enemyDamageAction(EnemyHit *enemy);
 	
 	/**	敵NPCの待機アクション
@@ -53,6 +72,9 @@ public:
 	*/
 	void enemyIdleAction(Enemy *enemy, float start, float next);
 
+	/**	ガイド矢印を追加
+	*	@return	ガイド矢印
+	*/
 	cocos2d::CCSprite* arrowAction();
 
 	ActionManager();

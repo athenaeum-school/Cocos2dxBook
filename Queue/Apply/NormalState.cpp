@@ -109,8 +109,8 @@ void NormalState::stateUpdate(float dt)
 
 bool NormalState::onTouchBeganEvent()
 {
-	//isReadyが偽なら以降の処理を行なわない
-	if (!OM::getInstance()->getIsReady())
+	//Readyの表示が終わるまでは操作不可に
+	if (OM::getInstance()->getIsReady())
 	{
 		return false;
 	}

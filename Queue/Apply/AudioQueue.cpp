@@ -81,7 +81,8 @@ void AudioQueue::dequeue()
 	}
 }
 
-void AudioQueue::playAudio(const char *fileName) {
+void AudioQueue::playAudio(const char *fileName)
+{
 	if (front == tail)
 	{
 		return;

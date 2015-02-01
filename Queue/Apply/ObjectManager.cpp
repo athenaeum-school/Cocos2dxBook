@@ -27,7 +27,7 @@ m_enemyCount(0),
 m_playCount(0),
 m_soundCount(0),
 m_pStateMachine(NULL),
-m_isReady(false),
+m_isReady(true),
 m_pEnemyFactory(NULL),
 m_pAudioQueue(NULL)
 {

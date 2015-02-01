@@ -17,7 +17,7 @@
 
 USING_NS_CC;
 
-GameObject::GameObject() :
+GameObject::GameObject():
 m_hp(0),
 m_maxHp(0),
 m_atkPower(0),

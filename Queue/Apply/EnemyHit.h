@@ -22,10 +22,12 @@ public:
 	//重複当たり判定を防ぐためのフラグ
 	CC_SYNTHESIZE(bool, m_isContacted, IsContacted);
 
+	//ダメージ処理
 	void damage();
 	
 protected:
 
+	//当たり判定の総合処理
 	void hitCheck();
 
 	/**	当たり判定用の処理
@@ -49,7 +51,10 @@ protected:
 	*/
 	void normalDamage(int PlayerAtkPower);
 
+	//HP以上のダメージを受けないようにする
 	void overDamage();
+
+	//死亡処理
 	void died();
 	
 	EnemyHit();
