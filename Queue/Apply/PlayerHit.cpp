@@ -36,7 +36,6 @@ void PlayerHit::hitCheck()
 		bool isContact = enemyAtkRect(enemyAttack).containsPoint(wispPosition);
 		if (isContact)
 		{
-			CCLOG("wispHit");
 			//AudioQueueで効果音を再生するフラグを真に
 			this->setIsPlayHitSE(true);
 			//ダメージ

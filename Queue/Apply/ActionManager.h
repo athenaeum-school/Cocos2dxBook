@@ -39,9 +39,9 @@ public:
 	void dyingAction(GameObject *obj);
 
 	/**	死亡時の画像ファイル名を設定
-	*	@param	obj ゲームオブジェクト（プレイヤー、敵NPC）
-	*	@param	number ファイル名の連番
-	*	@return	ファイル名+連番の文字列
+	*	@param obj ゲームオブジェクト（プレイヤー、敵NPC）
+	*	@param number ファイル名の連番
+	*	@return ファイル名+連番の文字列
 	*/
 	std::string dyingSpriteFileName(GameObject *obj, int number);
 
@@ -54,9 +54,9 @@ public:
 	void enemyExplodeAction(EnemyHit *enemy);
 
 	/**	アクションの画像ファイル名を設定（アニメーションを使用しているアクション）
-	*	@param	fileName "ファイル名%d"を入力
-	*	@param	number ファイル名の連番
-	*	@return	ファイル名+連番の文字列
+	*	@param fileName "ファイル名%d"を入力
+	*	@param number ファイル名の連番
+	*	@return ファイル名+連番の文字列
 	*/
 	std::string spriteFileName(const char *fileName, int number);
 
@@ -66,9 +66,9 @@ public:
 	void enemyDamageAction(EnemyHit *enemy);
 	
 	/**	敵NPCの待機アクション
-	*	@param	enemy 敵NPC
-	*	@param	start y軸の座標（はじめに揺れる方向）
-	*	@param	next y軸の座標（次に揺れる方向）
+	*	@param enemy 敵NPC
+	*	@param start y軸の座標（はじめに揺れる方向）
+	*	@param next y軸の座標（次に揺れる方向）
 	*/
 	void enemyIdleAction(Enemy *enemy, float start, float next);
 

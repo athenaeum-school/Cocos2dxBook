@@ -39,14 +39,13 @@ NormalState::~NormalState(){}
 
 void NormalState::normalToEnemy()
 {
-	//OnjectManagerのインスタンスを呼び出し、
-	//敵NPCのターンへ
+	//OnjectManagerのインスタンスを呼び出し、敵NPCのターンへ
 	OM::getInstance()->getStateMachine()->changeState(new EnemyState());
 }
 
 void NormalState::normalToResult()
 {
-	//レイドHPを0に設定し、リザルト画面へ
+	//共有HPを0に設定し、リザルト画面へ
 	CCLOG("StageClear");
 	OM::getInstance()->setRaidHp(0);
 	OM::getInstance()->getStateMachine()->changeState(new ResultState());
