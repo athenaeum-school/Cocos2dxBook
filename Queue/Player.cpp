@@ -164,7 +164,6 @@ void Player::wispTouchEnded()
 	//タッチ開始座標から放した座標の距離 * SHOT_RATEの値を計算し、力を加える
 	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
-	//MS::getInstance()->removeChildByTag(kTag_arrow);
 	removeArrow();
 	//ショット中の操作を不可に
 	setCanFire(false);
