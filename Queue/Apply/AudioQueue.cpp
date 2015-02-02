@@ -100,7 +100,7 @@ void AudioQueue::playAudio(const char *fileName)
 	//BGM‚Ìê‡AÄ¶ˆ—‚ð•Ï‚¦‚é
 	if (fileName == "game_maoudamashii_7_rock46.mp3")
 	{
-		this->playBackgroundMusic(fileName, true);
+		this->playBackgroundMusic(&front->fileName, true);
 	}
 
 	this->playEffect(&front->fileName);
