@@ -36,7 +36,7 @@ protected:
 	cocos2d::CCRect setEnemyRect();
 
 	/**	当たり判定用の処理
-	*	@param isContact_interSects	敵NPCの当たり判定にプレイヤーが触れているか
+	*	@param isContact_interSects 敵NPCの当たり判定にプレイヤーが触れているか
 	*	@return 敵NPCに触れる、その接触までに触れていなければ真
 	*/
 	bool isContanctWithContacted(bool isContact_interSects);
@@ -49,7 +49,7 @@ protected:
 	/**	通常ダメージ処理
 	*	@param AtkPower プレイヤーの攻撃力
 	*/
-	void normalDamage(int PlayerAtkPower);
+	void normalDamage(int playerAtkPower);
 
 	//HP以上のダメージを受けないようにする
 	void overDamage();
