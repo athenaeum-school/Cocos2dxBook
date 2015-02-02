@@ -58,7 +58,9 @@ private:
 	//衝突に関する関数をPlayerHitクラスからまとめて呼び出す純粋仮想関数
 	void activateCollision() override;
 
-	//プレイヤーの初期設定
+	/**	プレイヤーの初期設定
+	*	@return 設定されたプレイヤー
+	*/
 	Player* initWisp();
 
 	//放した時の運動量をプレイヤーに加える

@@ -97,7 +97,7 @@ void EnemyHit::damage()
 	}
 	else if (playerAtkPower > this->m_hp)
 	{
-		//レイドHPとの不整合を無くすため、オーバーダメージを防ぐ処理
+		//共有HPとのずれを無くすため、オーバーダメージを防ぐ処理
 		overDamage();
 	}
 	//HPバーに反映
@@ -121,7 +121,7 @@ void EnemyHit::normalDamage(int playerAtkPower)
 
 void EnemyHit::overDamage()
 {
-	//レイドHPとのずれを無くすため、オーバーダメージを防ぐ処理
+	//共有HPとのずれを無くすため、オーバーダメージを防ぐ処理
 	int mergeDamage = m_hp;
 	this->m_hp -= mergeDamage;
 	OM::getInstance()->damageRaidHp(mergeDamage);

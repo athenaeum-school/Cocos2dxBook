@@ -14,7 +14,6 @@
 
 #include "GameState.h"
 #include <cocos2d.h>
-#include "MainScene.h"
 #include "AudioComponent.h"
 
 class ResultState : public GameState

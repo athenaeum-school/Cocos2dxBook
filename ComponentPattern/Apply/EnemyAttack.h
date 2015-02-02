@@ -45,7 +45,7 @@ private:
 
 	/**	攻撃の位置とファイル情報を設定
 	*	@param enemy 攻撃を行なう敵NPC
-	*	@param point 攻撃を発生させる座標
+	*	@param point 敵NPCの座標（攻撃発生座標）
 	*	@return	設定された攻撃
 	*/
 	EnemyAttack* initEnemyAttack(Enemy *enemy, cocos2d::CCPoint point);

@@ -38,7 +38,7 @@ void PlayerHit::hitCheck()
 		bool isContact = enemyAtkRect(enemyAttack).containsPoint(wispPosition);
 		if (isContact)
 		{
-			CCLOG("wispHit");
+			//ダメージ処理
 			damage(enemyAttack);
 			//当たった攻撃を削除
 			enemyAttack->removeFromParent();
@@ -71,8 +71,7 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 	{
 		this->m_hp -= damage;
 	}
-	//HudLayerのインスタンスを呼び出し、
-	//HPバーに反映
+	//HudLayerのインスタンスを呼び出し、HPバーに反映
 	Hud::getInstance()->drawHpBar(this);
 	//HPラベルに反映
 	Hud::getInstance()->drawHpLabel();

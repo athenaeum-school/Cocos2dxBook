@@ -20,13 +20,9 @@ USING_NS_CC;
 //“GNPC‚ÌUŒ‚Šm—¦
 const int SUCCESS_RATE = 2;
 
-Enemy::Enemy() :
- m_isAttacked(true)
-{
-	this->setAtkPower(0);
-	this->setHP(0);
-	this->setMaxHP(0);
-}
+Enemy::Enemy():
+m_isAttacked(true)
+{}
 
 Enemy::~Enemy(){}
 
@@ -47,8 +43,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	setIdleAction();
 	//HPƒo[‚ğ’Ç‰Á
 	Hud::getInstance()->initHpBar(this);
-	//ObjectManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒÄ‚Ño‚·
-	//ƒŒƒCƒhHP‚É’Ç‰Á
+	//ObjectManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒÄ‚Ño‚µA‹¤—LHP‚É’Ç‰Á
 	OM::getInstance()->addRaidHp(this->getHP());
 	//ƒGƒlƒ~[ƒJƒEƒ“ƒg‘‰Á
 	OM::getInstance()->addEnemyCount();
@@ -60,7 +55,7 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 
 void Enemy::onStateEnter()
 {
-	//€–S‚µ‚Ä‚¢‚½‚çˆÈ~‚Ìˆ—‚ğ‚µ‚È‚¢
+	//€–S‚µ‚Ä‚¢‚½‚çˆÈ~‚Ìˆ—‚ğs‚È‚í‚È‚¢
 	if (this->m_isDead)
 	{
 		return;
@@ -75,7 +70,7 @@ void Enemy::onStateEnter()
 	}
 	else if (this->isEnemyState())
 	{
-		//–ˆƒ^[ƒ“Å’á‚P‘Ì‚ªA50%‚ÌŠm—¦‚ÅUŒ‚‚·‚éŠm—¦
+		//–ˆƒ^[ƒ““G‘”‚Ì‚¤‚¿Å’á‚P‘Ì‚ªA50%‚ÌŠm—¦‚ÅUŒ‚‚·‚éŠm—¦
 		if (randomAttack(SUCCESS_RATE) == 0)
 		{
 			setIsAttacked(false);
@@ -148,8 +143,8 @@ int Enemy::calcRandom(int min, int max)
 
 void Enemy::attack()
 {
-	//€–S‚µ‚Ä‚¢‚é‚©AUŒ‚Ï‚İ‚Ü‚½‚Í“GNPCƒ^[ƒ“ˆÈŠO‚È‚çUŒ‚‚ğ‚µ‚È‚¢
-	if (isDeadOrAttacked() || !this->isEnemyState())
+	//UŒ‚Ï‚İ‚Ü‚½‚Í“GNPCƒ^[ƒ“ˆÈŠO‚È‚çUŒ‚‚ğ‚µ‚È‚¢
+	if (m_isAttacked || !this->isEnemyState())
 	{
 		return;
 	}
@@ -157,14 +152,4 @@ void Enemy::attack()
 		EnemyAttack::create(this);
 		//UŒ‚Ï‚İ‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚é
 		setIsAttacked(true);
-}
-
-bool Enemy::isDeadOrAttacked()
-{
-	//€–S‚µ‚Ä‚¢‚é‚©UŒ‚Ï‚İ‚È‚çtrue
-	if (this->m_isDead || m_isAttacked)
-	{
-		return true;
-	}
-	return false;
 }

@@ -18,6 +18,9 @@
 USING_NS_CC;
 
 GameObject::GameObject():
+m_hp(0),
+m_maxHp(0),
+m_atkPower(0),
 m_isDead(false),
 m_isPlayHitSE(false),
 m_isPlayHitFastSE(false),

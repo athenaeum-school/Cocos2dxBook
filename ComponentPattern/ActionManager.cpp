@@ -117,7 +117,7 @@ void ActionManager::enemyStarAction()
 	for (int i = 1; i <= 4; i++)
 	{
 		//ファイル名+1~4までの画像を追加
-		animation->addSpriteFrameWithFileName(spriteFileName((*"star%d.png"), i).c_str());
+		animation->addSpriteFrameWithFileName(spriteFileName("star%d.png", i).c_str());
 	}
 	animation->setDelayPerUnit(0.1);
 
@@ -139,7 +139,7 @@ void ActionManager::enemyExplodeAction(EnemyHit *enemy)
 	for (int i = 1; i <= 4; i++)
 	{
 		//ファイル名+1~4までの画像を追加
-		explode->addSpriteFrameWithFileName(spriteFileName((*"explode%d.png"), i).c_str());
+		explode->addSpriteFrameWithFileName(spriteFileName("explode%d.png", i).c_str());
 	}
 	explode->setDelayPerUnit(0.1);
 
@@ -149,10 +149,10 @@ void ActionManager::enemyExplodeAction(EnemyHit *enemy)
 	ex->runAction(exSequence);
 }
 
-std::string ActionManager::spriteFileName(const char& fileName, int number)
+std::string ActionManager::spriteFileName(const char *fileName, int number)
 {
 	//アクションの画像ファイル名を設定（アニメーションを使用しているアクション）
-	CCString* editFileName = CCString::createWithFormat(&fileName, number);
+	CCString* editFileName = CCString::createWithFormat(fileName, number);
 	std::string fileNameWithNumber = editFileName->getCString();
 
 	return fileNameWithNumber;
@@ -170,8 +170,9 @@ void ActionManager::enemyDamageAction(EnemyHit *enemy)
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_battle18.mp3");
 }
 
-void ActionManager::boundSE()
+void ActionManager::hitFastSE()
 {
+	//高速衝突時の効果音
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system48.mp3");
 }
 
@@ -192,7 +193,7 @@ CCSprite* ActionManager::arrowAction()
 	for (int i = 1; i <= 5; i++)
 	{
 		//ファイル名+1~5までの画像を追加
-		animation->addSpriteFrameWithFileName(spriteFileName((*"arrow%d.png"), i).c_str());
+		animation->addSpriteFrameWithFileName(spriteFileName("arrow%d.png", i).c_str());
 	}
 	animation->setDelayPerUnit(0.3);
 	//初めの画像に戻す

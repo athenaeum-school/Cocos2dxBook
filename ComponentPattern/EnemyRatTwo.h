@@ -22,7 +22,7 @@ public:
 	*	@param type 敵NPCの種類
 	*	@param xPos 設置する座標（x軸）
 	*	@param yPos 設置する座標（y軸）
-	*	@return	敵NPC
+	*	@return 敵NPC
 	*/
 	static EnemyRatTwo* create(enemyType type, float xPos, float yPos);
 
@@ -30,7 +30,7 @@ private:
 
 	/**	敵NPCの画像とステータス設定
 	*	@param type 敵NPCの種類
-	*	@return	画像ファイル名
+	*	@return 画像ファイル名
 	*/
 	std::string initStatus(enemyType type) override;
 

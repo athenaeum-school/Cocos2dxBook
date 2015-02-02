@@ -56,7 +56,6 @@ bool TitleState::onStateExit()
 	Hud::getInstance()->removeChildByTag(ktag_touch);
 	//プレイスタート時の処理
 	OM::getInstance()->playStart();
-	//SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 	//BGMを再生
 	m_pAudio->playBGM();
 	return true;

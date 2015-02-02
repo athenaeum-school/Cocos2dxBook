@@ -54,7 +54,9 @@ public:
 	//ƒvƒŒƒC‰ñ”‚ğXV
 	void addPlayCount();
 
-	//”wŒi‚ğ’Ç‰Á
+	/**	”wŒi‚ğ’Ç‰Á
+	*	@return ”wŒi
+	*/
 	cocos2d::CCSprite* initBackground();
 
 	/**	‹¤—LHP‚É’Ç‰Á

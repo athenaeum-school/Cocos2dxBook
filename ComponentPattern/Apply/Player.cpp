@@ -18,11 +18,11 @@ USING_NS_CC;
 //ショット時の運動量倍率
 const float SHOT_RATE = 0.3;
 //ウィスプのHP
-const int WISP_HP = 1;
+const int WISP_HP = 100;
 //最大HP
 const int WISP_MAXHP = 100;
 //攻撃力
-const int WISP_ATK = 10;
+const int WISP_ATKPOWER = 10;
 
 Player::Player():
 m_canFire(true),
@@ -33,7 +33,7 @@ m_angle(0)
 {
 	this->setHP(WISP_HP);
 	this->setMaxHP(WISP_MAXHP);
-	this->setAtkPower(WISP_ATK); 
+	this->setAtkPower(WISP_ATKPOWER);
 }
 
 Player::~Player(){}
@@ -62,7 +62,7 @@ Player* Player::initWisp()
 	this->setPosition(ccp(screenSize.width * 0.5, this->getRadius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
-	//アニメーションの初期化
+	//HudLayerのインスタンスを呼び出し、アクションの追加
 	Hud::getInstance()->getAction()->wispInitAction(this);
 	//HPバーの追加
 	Hud::getInstance()->initHpBar(this);
@@ -128,23 +128,22 @@ void Player::stateUpdate(float dt)
 
 bool Player::wispTouchBegan()
 {
-	bool ret = false;
 	CCTouch *touch = MS::getInstance()->getBeganTouch();
 	//攻撃可能で無ければ以降の処理を行なわない
 	if (!m_canFire)
 	{
-		return ret;
+		return false;
 	}
-	
+
 	if (touch)
 	{
 		//タッチ位置を取得
 		setTouchPoint(touch->getLocation());
 		//タッチ画像に触れているなら次の処理へ
-		ret = isNext();
+		return isNext();
 	}
 
-	return ret;
+	return false;
 }
 
 void Player::wispTouchMoved()
@@ -167,7 +166,6 @@ void Player::wispTouchEnded()
 	//タッチ開始座標から放した座標の距離 * SHOT_RATEの値を計算し、力を加える
 	this->setAcceleration(calcForce(endPoint));
 	//矢印を削除
-	//MS::getInstance()->removeChildByTag(kTag_arrow);
 	removeArrow();
 	//ショット中の操作を不可に
 	setCanFire(false);
@@ -210,7 +208,6 @@ void Player::addForceToWisp()
 
 bool Player::isNext()
 {
-	bool ret = false;
 	//MainSceneからtouchImageのノードをキャストして取得
 	CCSprite * touchImage = static_cast<CCSprite *>(Hud::getInstance()->getChildByTag(ktag_touch));
 	//タッチ画像に触れているなら次の処理へ
@@ -218,10 +215,9 @@ bool Player::isNext()
 	{
 		//タッチ画像を削除
 		touchImage->removeFromParent();
-		ret = true;
+		return true;
 	}
-
-	return ret;
+	return false;
 }
 
 void Player::createArrow(CCPoint movePoint)
