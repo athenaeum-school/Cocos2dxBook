@@ -15,7 +15,7 @@
 
 const int RAT_ONE_HP = 50;
 const int RAT_ONE_MAXHP = 50;
-const int RAT_ONE_ATK = 5;
+const int RAT_ONE_ATKPOWER = 5;
 
 EnemyRatOne::EnemyRatOne(){}
 
@@ -44,7 +44,7 @@ Enemy* EnemyRatOne::activateSettings(float xPos, float yPos)
 {
 	//Enemyクラスの、initEnemy(),initStatus(),setIdleAction()を呼び出し、
 	//敵NPCの設定をする
-	this->initStatus(kTag_rat1, RAT_ONE_HP, RAT_ONE_MAXHP, RAT_ONE_ATK);
+	this->initStatus(kTag_rat1, RAT_ONE_HP, RAT_ONE_MAXHP, RAT_ONE_ATKPOWER);
 	this->initEnemy(xPos, yPos);
 	this->setIdleAction(-0.2, 0.2);
 	return this;

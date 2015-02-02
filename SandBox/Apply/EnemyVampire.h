@@ -22,7 +22,7 @@ public:
 	*	@param type 敵NPCの種類
 	*	@param xPos 設置する座標（x軸）
 	*	@param yPos 設置する座標（y軸）
-	*	@return	敵NPC
+	*	@return 敵NPC
 	*/
 	static EnemyVampire* create(float xPos, float yPos);
 
@@ -30,7 +30,7 @@ private:
 
 	/**	Enemyクラスの、initEnemy(),initStatus(),setIdleAction()を呼び出し、
 	*	敵NPCの設定をする純粋仮想関数
-	*	@param xPos	敵NPCのx軸配置座標
+	*	@param xPos 敵NPCのx軸配置座標
 	*	@param yPos 敵NPCのy軸配置座標
 	*	@return 設定済みの敵NPC
 	*/

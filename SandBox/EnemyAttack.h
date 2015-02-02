@@ -26,7 +26,7 @@ public:
 	*	@return	¶¬‚³‚ê‚½UŒ‚
 	*/
 	static EnemyAttack* create(Enemy *enemy);
-
+	
 	/**	“GNPC‚ÌUŒ‚
 	*	@param enemy UŒ‚‚ğs‚È‚¤NPC
 	*/
@@ -45,7 +45,7 @@ private:
 
 	/**	UŒ‚‚ÌˆÊ’u‚Æƒtƒ@ƒCƒ‹î•ñ‚ğİ’è
 	*	@param enemy UŒ‚‚ğs‚È‚¤“GNPC
-	*	@param point UŒ‚‚ğ”­¶‚³‚¹‚éÀ•W
+	*	@param point “GNPC‚ÌÀ•WiUŒ‚”­¶À•Wj
 	*	@return	İ’è‚³‚ê‚½UŒ‚
 	*/
 	EnemyAttack* initEnemyAttack(Enemy *enemy, cocos2d::CCPoint point);

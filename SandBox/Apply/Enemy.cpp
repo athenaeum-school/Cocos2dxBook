@@ -20,13 +20,9 @@ USING_NS_CC;
 //敵NPCの攻撃確率
 const int SUCCESS_RATE = 2;
 
-Enemy::Enemy() :
- m_isAttacked(true)
-{
-	this->setAtkPower(0);
-	this->setHP(0);
-	this->setMaxHP(0);
-}
+Enemy::Enemy():
+m_isAttacked(true)
+{}
 
 Enemy::~Enemy(){}
 
@@ -41,11 +37,9 @@ Enemy* Enemy::initEnemy(float xPos, float yPos)
 	//移動しながらフェードインするアクション
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * yPos - this->getRadius() * 10.0)), NULL);
 	this->runAction(fadeIn);
-	//HudLayerのインスタンスを呼び出す
-	//HPバーを追加
+	//HudLayerのインスタンスを呼び出し、HPバーを追加
 	Hud::getInstance()->initHpBar(this);
-	//ObjectManagerのインスタンスを呼び出す
-	//レイドHPに追加
+	//ObjectManagerのインスタンスを呼び出し、共有HPに追加
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
 	OM::getInstance()->addEnemyCount();
@@ -78,7 +72,6 @@ void Enemy::onStateEnter()
 		return;
 	}
 	
-	m_pWisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//状態のIDをメンバーへ代入
 	this->setStateID();
 	//状態の判別
@@ -122,13 +115,8 @@ void Enemy::onStateExit()
 		//リザルト状態が終了すると同時に、敵NPCの消去処理
 		this->setHP(0);
 		this->setIsDead(true);
-		if (this->getHpBar() && this->getChildByTag(kTag_hpbarBg))
-		{
-			//m_hpBarはHudLayerにaddChildしているため、子自身で消去処理
-			this->getHpBar()->removeFromParent();
-			//hpBar_bgはこのクラスにaddChildしているため、this->で消去
-			this->removeChildByTag(kTag_hpbarBg);
-		}
+		//親クラスからHPバー消去処理を呼び出す
+		this->removeHpBar();
 		//敵NPCの総数をリセット
 		OM::getInstance()->setEnemyCount(0);
 		//敵NPCを見えなくさせるアクション
@@ -138,17 +126,14 @@ void Enemy::onStateExit()
 
 void Enemy::stateUpdate(float dt)
 {
-	//AudioComponentから効果音を呼び出す
-	this->m_pAudio->update(dt, this);
-
 	if (this->m_isDead)
 	{
 		return;
 	}
 	
 	attack();
+	//親クラスからHitCheck()を呼び出す
 	activateHitCheck();
-	
 }
 
 
@@ -169,8 +154,8 @@ int Enemy::calcRandom(int min, int max)
 
 void Enemy::attack()
 {
-	//死亡しているか、攻撃済みまたは敵NPCターン以外なら攻撃をしない
-	if (isDeadOrAttacked() || !this->isEnemyState())
+	//攻撃済みまたは敵NPCターン以外なら攻撃をしない
+	if (m_isAttacked || !this->isEnemyState())
 	{
 		return;
 	}
@@ -182,15 +167,6 @@ void Enemy::attack()
 
 void Enemy::activateHitCheck()
 {
+	//親クラスからHitCheck()を呼び出す
 	this->hitCheck();
-}
-
-bool Enemy::isDeadOrAttacked()
-{
-	//死亡しているか攻撃済みならtrue
-	if (this->m_isDead || m_isAttacked)
-	{
-		return true;
-	}
-	return false;
 }

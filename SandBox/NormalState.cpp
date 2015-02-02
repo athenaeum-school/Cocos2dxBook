@@ -16,7 +16,6 @@
 #include "ObjectManager.h"
 #include "HudLayer.h"
 
-
 USING_NS_CC;
 
 //状態のID
@@ -40,14 +39,13 @@ NormalState::~NormalState(){}
 
 void NormalState::normalToEnemy()
 {
-	//OnjectManagerのインスタンスを呼び出し、
-	//敵NPCのターンへ
+	//OnjectManagerのインスタンスを呼び出し、敵NPCのターンへ
 	OM::getInstance()->getStateMachine()->changeState(new EnemyState());
 }
 
 void NormalState::normalToResult()
 {
-	//レイドHPを0に設定し、リザルト画面へ
+	//共有HPを0に設定し、リザルト画面へ
 	CCLOG("StageClear");
 	OM::getInstance()->setRaidHp(0);
 	OM::getInstance()->getStateMachine()->changeState(new ResultState());
@@ -110,8 +108,8 @@ void NormalState::stateUpdate(float dt)
 
 bool NormalState::onTouchBeganEvent()
 {
-	//isReadyが偽なら以降の処理を行なわない
-	if (!OM::getInstance()->getIsReady())
+	//Readyの表示が終わるまでは操作不可に
+	if (OM::getInstance()->getIsReady())
 	{
 		return false;
 	}
@@ -228,8 +226,8 @@ void NormalState::onCollisionFast(float distOne, float distTwo, float radius, En
 		m_pWisp->addPower(ADD_POWER);
 		Hud::getInstance()->getAction()->enemyDamageAction(enemy);
 		enemy->damage();
-		//高速衝突効果音を鳴らすフラグを真に
-		enemy->setIsHitFastSE(true);
+		//効果音を再生
+		Hud::getInstance()->getAction()->hitFastSE();
 		//ダメージ後、攻撃力を戻す
 		m_pWisp->drawPower(ADD_POWER);
 	}

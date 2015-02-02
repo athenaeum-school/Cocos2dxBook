@@ -15,7 +15,7 @@
 
 const int RAT_TWO_HP = 80;
 const int RAT_TWO_MAXHP = 80;
-const int RAT_TWO_ATK = 10;
+const int RAT_TWO_ATKPOWER = 10;
 
 EnemyRatTwo::EnemyRatTwo(){}
 
@@ -44,7 +44,7 @@ Enemy* EnemyRatTwo::activateSettings(float xPos, float yPos)
 {
 	//Enemyクラスの、initEnemy(),initStatus(),setIdleAction()を呼び出し、
 	//敵NPCの設定をする
-	this->initStatus(kTag_rat1, RAT_TWO_HP, RAT_TWO_MAXHP, RAT_TWO_ATK);
+	this->initStatus(kTag_rat1, RAT_TWO_HP, RAT_TWO_MAXHP, RAT_TWO_ATKPOWER);
 	this->initEnemy(xPos, yPos);
 	this->setIdleAction(-0.2, 0.2);
 	return this;

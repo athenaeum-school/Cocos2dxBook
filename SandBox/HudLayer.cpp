@@ -155,7 +155,7 @@ void HudLayer::drawHpBar(GameObject *obj)
 
 void HudLayer::readyImage()
 {
-	if (OM::getInstance()->getIsReady())
+	if (!OM::getInstance()->getIsReady())
 	{
 		return;
 	}
@@ -183,12 +183,12 @@ void HudLayer::fireImage()
 	CCSpawn *scaleOut = CCSpawn::create(CCEaseIn::create(CCScaleTo::create(0.5, 2.0), 0.5), CCFadeOut::create(1), NULL);
 	CCSequence *action = CCSequence::create(scaleOut, CCCallFunc::create(this, callfunc_selector(HudLayer::touchImage)),CCRemoveSelf::create(), NULL);
 	fire->runAction(action);
-	OM::getInstance()->setIsReady(true);
+	OM::getInstance()->setIsReady(false);
 }
 
 void HudLayer::aimImage()
 {
-	if (OM::getInstance()->getIsReady())
+	if (!OM::getInstance()->getIsReady())
 	{
 		//Aimƒ‰ƒxƒ‹‚ð’Ç‰Á
 		CCSprite *aim = CCSprite::create("normalState_aim.png");

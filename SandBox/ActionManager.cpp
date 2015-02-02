@@ -65,6 +65,8 @@ void ActionManager::dyingAction(GameObject *obj)
 	CCSequence *vanishSequence = CCSequence::create(vanishSpawn, CCRemoveSelf::create(), nullptr);
 
 	vanish->runAction(vanishSequence);
+	//効果音を再生
+	dyingSE(obj);
 }
 
 std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
@@ -91,6 +93,18 @@ std::string ActionManager::dyingSpriteFileName(GameObject *obj, int number)
 	return fileName;
 }
 
+void ActionManager::dyingSE(GameObject *obj)
+{
+	if (obj->getTag() == kTag_wisp)
+	{
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire06.mp3");
+	}
+	else if (obj->getTag() == kTag_enemy)
+	{
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_explosion04.mp3");
+	}
+}
+
 void ActionManager::enemyStarAction()
 {
 	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
@@ -103,7 +117,7 @@ void ActionManager::enemyStarAction()
 	for (int i = 1; i <= 4; i++)
 	{
 		//ファイル名+1~4までの画像を追加
-		animation->addSpriteFrameWithFileName(spriteFileName((*"star%d.png"), i).c_str());
+		animation->addSpriteFrameWithFileName(spriteFileName("star%d.png", i).c_str());
 	}
 	animation->setDelayPerUnit(0.1);
 
@@ -125,7 +139,7 @@ void ActionManager::enemyExplodeAction(EnemyHit *enemy)
 	for (int i = 1; i <= 4; i++)
 	{
 		//ファイル名+1~4までの画像を追加
-		explode->addSpriteFrameWithFileName(spriteFileName((*"explode%d.png"), i).c_str());
+		explode->addSpriteFrameWithFileName(spriteFileName("explode%d.png", i).c_str());
 	}
 	explode->setDelayPerUnit(0.1);
 
@@ -135,10 +149,10 @@ void ActionManager::enemyExplodeAction(EnemyHit *enemy)
 	ex->runAction(exSequence);
 }
 
-std::string ActionManager::spriteFileName(const char& fileName, int number)
+std::string ActionManager::spriteFileName(const char *fileName, int number)
 {
 	//アクションの画像ファイル名を設定（アニメーションを使用しているアクション）
-	CCString* editFileName = CCString::createWithFormat(&fileName, number);
+	CCString* editFileName = CCString::createWithFormat(fileName, number);
 	std::string fileNameWithNumber = editFileName->getCString();
 
 	return fileNameWithNumber;
@@ -152,10 +166,13 @@ void ActionManager::enemyDamageAction(EnemyHit *enemy)
 	swingAction(enemy);
 	//ダメージ時、爆発エフェクト表示
 	enemyExplodeAction(enemy);
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_battle18.mp3");
 }
 
-void ActionManager::boundSE()
+void ActionManager::hitFastSE()
 {
+	//高速衝突時の効果音
 	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system48.mp3");
 }
 
@@ -176,7 +193,7 @@ CCSprite* ActionManager::arrowAction()
 	for (int i = 1; i <= 5; i++)
 	{
 		//ファイル名+1~5までの画像を追加
-		animation->addSpriteFrameWithFileName(spriteFileName((*"arrow%d.png"), i).c_str());
+		animation->addSpriteFrameWithFileName(spriteFileName("arrow%d.png", i).c_str());
 	}
 	animation->setDelayPerUnit(0.3);
 	//初めの画像に戻す

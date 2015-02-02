@@ -14,8 +14,6 @@
 
 #include "GameState.h"
 #include <cocos2d.h>
-#include "MainScene.h"
-#include "AudioComponent.h"
 
 class ResultState : public GameState
 {
@@ -35,7 +33,6 @@ public:
 
 private:
 
-	AudioComponent *m_pAudio;
 	int m_timer;
 	static const std::string s_resultID;
 

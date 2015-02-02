@@ -14,7 +14,6 @@
 
 #include "GameState.h"
 #include <cocos2d.h>
-#include "AudioComponent.h"
 
 class TitleState : public GameState
 {
@@ -36,7 +35,6 @@ private:
 
 	int m_timer;
 	static const std::string s_titleID;
-	AudioComponent *m_pAudio;
 	
 	void titleToNormal();
 

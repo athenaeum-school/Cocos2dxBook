@@ -40,16 +40,16 @@ public:
 protected:
 
 	/**	敵NPC初期設定
-	*	@param type	敵NPCの種類
-	*	@param xPos	配置するx軸の座標
-	*	@param yPos	配置するy軸の座標
+	*	@param type 敵NPCの種類
+	*	@param xPos 配置するx軸の座標
+	*	@param yPos 配置するy軸の座標
 	*	@return	生成された敵NPC
 	*/
 	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
 
 
 	/**	敵NPCの画像とステータス設定（派生クラスで実装する純粋仮想関数）
-	*	@param type	敵NPCの種類
+	*	@param type 敵NPCの種類
 	*	@return	画像ファイル名
 	*/
 	virtual std::string initStatus(enemyType type) = 0;
@@ -78,11 +78,6 @@ private:
 	//攻撃を行なう
 	void attack();
 
-	/**	死亡しているか攻撃済みか
-	*	@return	真偽
-	*/
-	bool isDeadOrAttacked();
-	
 };
 
 #endif /*defined(__WillYard__Enemy__)*/

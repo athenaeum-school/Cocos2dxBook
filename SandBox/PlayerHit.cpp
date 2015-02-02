@@ -38,8 +38,7 @@ void PlayerHit::hitCheck()
 		bool isContact = enemyAtkRect(enemyAttack).containsPoint(wispPosition);
 		if (isContact)
 		{
-			CCLOG("wispHit");
-			this->setIsPlayHitSE(true);
+			//ダメージ処理
 			damage(enemyAttack);
 			//当たった攻撃を削除
 			enemyAttack->removeFromParent();
@@ -72,14 +71,15 @@ void PlayerHit::damage(EnemyAttack *atkPower)
 	{
 		this->m_hp -= damage;
 	}
-	//HudLayerのインスタンスを呼び出し、
-	//HPバーに反映
+	//HudLayerのインスタンスを呼び出し、HPバーに反映
 	Hud::getInstance()->drawHpBar(this);
 	//HPラベルに反映
 	Hud::getInstance()->drawHpLabel();
 	Hud::getInstance()->damageLabel(this->getPosition(), atkPower->getAtkPower());
 	//揺れるアクション
 	Hud::getInstance()->getAction()->swingAction(this);
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	if (this->m_hp <= 0)
 	{
 		this->setIsDead(true);
@@ -94,8 +94,6 @@ void PlayerHit::died()
 		this->setHP(0);
 		//敗北時のアクション
 		Hud::getInstance()->getAction()->dyingAction(this);
-		//AudioComponentで効果音を鳴らすためのフラグを真に
-		this->setIsPlayDyingSE(true);
 	}
 }
 
@@ -108,8 +106,8 @@ void PlayerHit::collisionBlockWest()
 		this->m_nextPosition.x = this->getRadius();
 		//バウンド時の摩擦
 		this->m_acceleration.x *= -0.8f;
-		//AudioComponentで効果音を鳴らすためのフラグを真に
-		this->setIsPlayHitBlockSE(true);
+		//効果音を再生
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
 //東
@@ -120,7 +118,7 @@ void PlayerHit::collisionBlockEast()
 	{
 		this->m_nextPosition.x = screenSize.width - this->getRadius();
 		this->m_acceleration.x *= -0.8f;
-		this->setIsPlayHitBlockSE(true);
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
 //北
@@ -130,7 +128,7 @@ void PlayerHit::collisionBlockNorth()
 	if (isGreaterThanRadius(this->m_nextPosition.y, screenSize.height)) {
 		this->m_nextPosition.y = screenSize.height - this->getRadius();
 		this->m_acceleration.y *= -0.8f;
-		this->setIsPlayHitBlockSE(true);
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 
 }
@@ -141,7 +139,7 @@ void PlayerHit::collisionBlockSouth()
 	{
 		this->m_nextPosition.y = this->getRadius();
 		this->m_acceleration.y *= -0.8f;
-		this->setIsPlayHitBlockSE(true);
+		SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system45.mp3");
 	}
 }
 

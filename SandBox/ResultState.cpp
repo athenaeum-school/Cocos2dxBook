@@ -12,6 +12,7 @@
 #include "ResultState.h"
 #include "NormalState.h"
 #include "TitleState.h"
+#include "MainScene.h"
 #include "ObjectManager.h"
 #include "HudLayer.h"
 #include "SimpleAudioEngine.h"
@@ -24,15 +25,9 @@ const std::string ResultState::s_resultID = "RESULT";
 
 ResultState::ResultState():
 m_timer(0)
-{
-	m_pAudio = new AudioComponent();
-}
+{}
 
-ResultState::~ResultState()
-{
-	delete m_pAudio;
-	m_pAudio = NULL;
-}
+ResultState::~ResultState(){}
 
 void ResultState::resultToNormal()
 {
@@ -61,12 +56,12 @@ bool ResultState::onStateEnter()
 
 bool ResultState::onStateExit()
 {
-	//HudLayerのインスタンスを呼び出し、
-	//ボタンを削除
+	//HudLayerのインスタンスを呼び出し、ボタンを削除
 	Hud::getInstance()->removeChildByTag(kTag_retry);
 	//ゲームオブジェクトのonStateExit()を実行
 	this->objectStateExit();
-	OM::getInstance()->setIsReady(false);
+	//ゲーム開始時のReadyを再度表示させるためのフラグを真に
+	OM::getInstance()->setIsReady(true);
 	OM::getInstance()->setRaidHp(0);
 	//プレイヤーのHPラベルを非表示に
 	Hud::getInstance()->setHpLabelVisible(false);
@@ -89,13 +84,16 @@ void ResultState::onResult()
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//リトライボタン
-	CCMenuItemImage *retryButton = CCMenuItemImage::create(
+	CCMenuItemImage *retryButton =
+		CCMenuItemImage::create(
 		"result_button_retry_normal.png",
 		"result_button_retry_selected.png",
 		this,
 		menu_selector(ResultState::retry));
+
 	//バックボタン
-	CCMenuItemImage *backButton = CCMenuItemImage::create(
+	CCMenuItemImage *backButton =
+		CCMenuItemImage::create(
 		"result_button_back_normal.png",
 		"result_button_back_selected.png",
 		this,
@@ -110,20 +108,24 @@ void ResultState::onResult()
 	//フェードインするため、透明に
 	menu->setOpacity(0);
 	Hud::getInstance()->addChild(menu, z_retry, kTag_retry);
+	//2秒かけてフェードインするアクション
 	menu->runAction(CCFadeIn::create(2));
 }
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数
-void ResultState::retry(CCObject *pSender){
-	//AudioComponentから効果音を呼び出す
-	m_pAudio->pushButtonSE();
+void ResultState::retry(CCObject *pSender)
+{
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
 	resultToNormal();
 }
 
 //ボタン押下時、TitleStateへ遷移するコールバック関数
-void ResultState::back(CCObject *pSender){
-	m_pAudio->pushButtonSE();
+void ResultState::back(CCObject *pSender)
+{
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_system28.mp3");
 	//BGMを停止
-	m_pAudio->stopBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
 	resultToTitle();
 }

@@ -14,7 +14,6 @@
 
 #include <iostream>
 #include <cocos2d.h>
-#include "AudioComponent.h"
 
 class GameObject : public cocos2d::CCSprite
 {
@@ -24,10 +23,6 @@ public:
 	CC_SYNTHESIZE(int, m_maxHp, MaxHP);
 	CC_SYNTHESIZE(int, m_atkPower, AtkPower);
 	CC_SYNTHESIZE(bool, m_isDead, IsDead);
-	CC_SYNTHESIZE(bool, m_isPlayHitSE, IsPlayHitSE);
-	CC_SYNTHESIZE(bool, m_isPlayHitFastSE, IsHitFastSE);
-	CC_SYNTHESIZE(bool, m_isPlayHitBlockSE, IsPlayHitBlockSE);
-	CC_SYNTHESIZE(bool, m_isPlayDyingSE, IsPlayDyingSE);
 	CC_SYNTHESIZE(std::string, m_stateID, StateID);
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_nextPosition, NextPosition);
 	CC_SYNTHESIZE(cocos2d::CCPoint, m_acceleration, Acceleration);
@@ -50,8 +45,6 @@ public:
 	float getHpRatio();
 
 protected:
-
-	AudioComponent *m_pAudio;
 
 	//åªç›ÇÃèÛë‘ÇÃIDÇm_stateIDÇ÷ë„ì¸
 	void setStateID();

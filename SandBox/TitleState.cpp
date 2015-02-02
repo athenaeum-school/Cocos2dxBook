@@ -14,7 +14,7 @@
 #include "MainScene.h"
 #include "ObjectManager.h"
 #include "HudLayer.h"
-#include "AudioComponent.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -23,18 +23,10 @@ using namespace CocosDenshion;
 const std::string TitleState::s_titleID = "TITLE";
 
 TitleState::TitleState():
-m_timer(0),
-m_pAudio(NULL)
-{
-	m_pAudio = new AudioComponent();
-}
+m_timer(0)
+{}
 
-TitleState::~TitleState() 
-{
-	delete m_pAudio;
-	m_pAudio = NULL;
-}
-
+TitleState::~TitleState(){}
 
 void TitleState::titleToNormal()
 {
@@ -56,9 +48,8 @@ bool TitleState::onStateExit()
 	Hud::getInstance()->removeChildByTag(ktag_touch);
 	//プレイスタート時の処理
 	OM::getInstance()->playStart();
-	//SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 	//BGMを再生
-	m_pAudio->playBGM();
+	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 	return true;
 }
 
@@ -103,6 +94,7 @@ void TitleState::initBackground(CCSize screenSize)
 //ボタン押下時、プレイヤーターンへ遷移するコールバック関数
 void TitleState::play(CCObject *pSender)
 {
-	m_pAudio->titleToNormalSE();
+	//効果音を再生
+	SimpleAudioEngine::sharedEngine()->playEffect("se_maoudamashii_element_fire07.mp3");
 	titleToNormal();
 }

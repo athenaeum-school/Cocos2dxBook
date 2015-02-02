@@ -26,7 +26,7 @@ m_raidHp(0),
 m_enemyCount(0),
 m_playCount(0),
 m_pStateMachine(NULL),
-m_isReady(false),
+m_isReady(true),
 m_pEnemyFactory(NULL)
 {
 	//状態マシーンの初期化
@@ -41,19 +41,26 @@ bool ObjectManager::init()
 {
 	//初期状態を追加
 	m_pStateMachine->pushState(new TitleState());
-	
+	//音源を準備
+	initAudio();
 	return true;
 }
 
-void ObjectManager::addGameObject(GameObject* sprite)
+void ObjectManager::initAudio()
 {
-    m_gameObjects.push_back(sprite);
+	SimpleAudioEngine *audio = SimpleAudioEngine::sharedEngine();
+	audio->preloadEffect("se_maoudamashii_element_fire07.mp3");
+	audio->preloadEffect("se_maoudamashii_system48.mp3");
+	audio->preloadEffect("se_maoudamashii_system45.mp3");
+	audio->preloadEffect("se_maoudamashii_element_fire06.mp3");
+	audio->preloadEffect("se_maoudamashii_explosion04.mp3");
+	audio->preloadEffect("se_maoudamashii_magical23.mp3");
+	audio->preloadEffect("se_maoudamashii_system28.mp3");
+	audio->preloadEffect("se_maoudamashii_retro18.mp3");
+	audio->preloadEffect("se_maoudamashii_battle18.mp3");
+	audio->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
 }
 
-std::vector<GameObject*> ObjectManager::getGameObjects()
-{
-    return m_gameObjects;
-}
 
 void ObjectManager::update(float dt)
 {
@@ -76,6 +83,16 @@ void ObjectManager::handleEndedEvents()
 	m_pStateMachine->onEndedEvent();
 }
 
+void ObjectManager::addGameObject(GameObject* sprite)
+{
+	m_gameObjects.push_back(sprite);
+}
+
+std::vector<GameObject*> ObjectManager::getGameObjects()
+{
+	return m_gameObjects;
+}
+
 void ObjectManager::clean()
 {
     cout << "cleaning ObjectManager\n";
@@ -86,6 +103,7 @@ void ObjectManager::clean()
 //起動から始めのプレイ時の初期化
 void ObjectManager::playStart()
 {
+	//一度でもプレイしていたら以降の処理を行なわない
 	if (m_playCount >= 1)
 	{
 		return;
@@ -113,6 +131,7 @@ CCSprite* ObjectManager::initBackground()
 
 	//背景画像を追加
 	CCSprite * background = CCSprite::create("background0.png");
+	//画面中央に配置
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
 	//MainSceneのインスタンスを呼び出す
 	//MainSceneへ追加
@@ -178,5 +197,4 @@ void ObjectManager::fadeInState()
 	back->setOpacity(0);
 	CCSpawn *fadeIn2 = CCSpawn::create(CCFadeIn::create(1), CCMoveTo::create(1, ccp(screenSize.width / 2, screenSize.height / 2.0)), NULL);
 	back->runAction(fadeIn2);
-
 }

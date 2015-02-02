@@ -10,7 +10,6 @@
 
 
 #include "GameState.h"
-#include "MainScene.h"
 #include "ObjectManager.h"
 
 GameState::GameState(){}

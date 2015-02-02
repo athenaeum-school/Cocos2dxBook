@@ -91,11 +91,6 @@ private:
 
 	//EnemyHitクラスのHitCheck()を呼び出す仮想関数をoverride
 	void activateHitCheck() override;
-
-	/**	死亡しているか攻撃済みか
-	*	@return	真偽
-	*/
-	bool isDeadOrAttacked();
 	
 };
 
