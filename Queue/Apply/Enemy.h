@@ -40,10 +40,9 @@ public:
 protected:
 
 	/**	敵NPC初期設定
-	*	@param type	敵NPCの種類
-	*	@param xPos	配置するx軸の座標
-	*	@param yPos	配置するy軸の座標
-	*	@return	生成された敵NPC
+	*	@param type 敵NPCの種類
+	*	@param xPos 配置するx軸の座標
+	*	@param yPos 配置するy軸の座標
 	*/
 	virtual void initEnemy(enemyType type, float xPos, float yPos);
 
