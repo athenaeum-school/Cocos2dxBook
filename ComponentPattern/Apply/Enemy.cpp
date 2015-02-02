@@ -26,7 +26,7 @@ m_isAttacked(true)
 
 Enemy::~Enemy(){}
 
-Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
+void Enemy::initEnemy(enemyType type, float xPos, float yPos)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -49,8 +49,6 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	OM::getInstance()->addEnemyCount();
 	//vectorコンテナに追加
 	OM::getInstance()->addGameObject(this);
-	
-	return this;
 }
 
 void Enemy::onStateEnter()
@@ -155,6 +153,6 @@ void Enemy::attack()
 		EnemyAttack::create(this);
 		//攻撃済みのフラグを立てる
 		setIsAttacked(true);
-		//AudioComponentで効果音を再生するフラグ
+		//AudioComponentで効果音を再生するフラグを真に
 		this->setIsAttackingEnemySE(true);
 }

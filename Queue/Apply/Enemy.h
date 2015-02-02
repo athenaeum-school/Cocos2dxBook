@@ -45,7 +45,7 @@ protected:
 	*	@param yPos	配置するy軸の座標
 	*	@return	生成された敵NPC
 	*/
-	virtual Enemy* initEnemy(enemyType type, float xPos, float yPos);
+	virtual void initEnemy(enemyType type, float xPos, float yPos);
 
 
 	/**	敵NPCの画像とステータス設定（派生クラスで実装する純粋仮想関数）

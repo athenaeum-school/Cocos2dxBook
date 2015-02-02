@@ -26,7 +26,7 @@ m_isAttacked(true)
 
 Enemy::~Enemy(){}
 
-Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
+void Enemy::initEnemy(enemyType type, float xPos, float yPos)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -49,8 +49,6 @@ Enemy* Enemy::initEnemy(enemyType type, float xPos, float yPos)
 	OM::getInstance()->addEnemyCount();
 	//vectorƒRƒ“ƒeƒi‚É’Ç‰Á
 	OM::getInstance()->addGameObject(this);
-	
-	return this;
 }
 
 void Enemy::onStateEnter()
