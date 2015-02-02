@@ -28,7 +28,7 @@ EnemyRatOne* EnemyRatOne::create(float xPos, float yPos)
 	if (enemy)
 	{
 		enemy->initWithFile("enemy_rat1.png");
-		enemy = static_cast<EnemyRatOne *>(enemy->activateSettings(xPos, yPos));
+		enemy->activateSettings(xPos, yPos);
 		enemy->autorelease();
 		//MainSceneのインスタンスを呼び出し、そこに追加
 		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
@@ -40,12 +40,11 @@ EnemyRatOne* EnemyRatOne::create(float xPos, float yPos)
 	return NULL;
 }
 
-Enemy* EnemyRatOne::activateSettings(float xPos, float yPos)
+void EnemyRatOne::activateSettings(float xPos, float yPos)
 {
 	//Enemyクラスの、initEnemy(),initStatus(),setIdleAction()を呼び出し、
 	//敵NPCの設定をする
 	this->initStatus(kTag_rat1, RAT_ONE_HP, RAT_ONE_MAXHP, RAT_ONE_ATKPOWER);
 	this->initEnemy(xPos, yPos);
 	this->setIdleAction(-0.2, 0.2);
-	return this;
 }

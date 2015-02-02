@@ -32,9 +32,8 @@ private:
 	*	敵NPCの設定をする純粋仮想関数
 	*	@param xPos 敵NPCのx軸配置座標
 	*	@param yPos 敵NPCのy軸配置座標
-	*	@return 設定済みの敵NPC
 	*/
-	Enemy* activateSettings(float xPos, float yPos) override;
+	void activateSettings(float xPos, float yPos) override;
 
 	EnemyVampire();
 	~EnemyVampire();

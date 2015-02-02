@@ -28,7 +28,7 @@ EnemyVampire* EnemyVampire::create(float xPos, float yPos)
 	if (enemy)
 	{
 		enemy->initWithFile("enemy_vampire.png");
-		enemy = static_cast<EnemyVampire *>(enemy->activateSettings(xPos, yPos));
+		enemy->activateSettings(xPos, yPos);
 		enemy->autorelease();
 		//MainSceneのインスタンスを呼び出し、そこに追加
 		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
@@ -40,12 +40,11 @@ EnemyVampire* EnemyVampire::create(float xPos, float yPos)
 	return NULL;
 }
 
-Enemy* EnemyVampire::activateSettings(float xPos, float yPos)
+void EnemyVampire::activateSettings(float xPos, float yPos)
 {
 	//Enemyクラスの、initEnemy(),initStatus(),setIdleAction()を呼び出し、
 	//敵NPCの設定をする
 	this->initStatus(kTag_vampire, VAMPIRE_HP, VAMPIRE_MAXHP, VAMPIRE_ATKPOWER);
 	this->initEnemy(xPos, yPos);
 	this->setIdleAction(0.2, -0.2);
-	return this;
 }

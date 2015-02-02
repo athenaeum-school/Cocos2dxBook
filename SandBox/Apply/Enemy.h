@@ -43,16 +43,14 @@ protected:
 	*	敵NPCの設定をする純粋仮想関数
 	*	@param xPos 敵NPCのx軸配置座標
 	*	@param yPos 敵NPCのy軸配置座標
-	*	@return 設定済みの敵NPC
 	*/
-	virtual Enemy* activateSettings(float xPos, float yPos) = 0;
+	virtual void activateSettings(float xPos, float yPos) = 0;
 	
 	/**	敵NPC初期設定
 	*	@param xPos 配置するx軸の座標
 	*	@param yPos 配置するy軸の座標
-	*	@return 生成された敵NPC
 	*/
-	virtual Enemy* initEnemy(float xPos, float yPos);
+	virtual void initEnemy(float xPos, float yPos);
 
 	/**	敵NPCの画像とステータス設定
 	*	@param type 敵NPCの種類
