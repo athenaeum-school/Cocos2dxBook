@@ -103,7 +103,7 @@ void AudioQueue::playAudio(const char *fileName)
 		this->playBackgroundMusic(fileName, true);
 	}
 
-	this->playEffect(fileName);
+	this->playEffect(&front->fileName);
 	dequeue();
 }
 
