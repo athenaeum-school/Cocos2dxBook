@@ -14,7 +14,6 @@
 
 #include <cocos2d.h>
 #include "AudioComponent.h"
-#include "SimpleAudioEngine.h"
 
 class ConcreteAudioComponent : public AudioComponent
 {

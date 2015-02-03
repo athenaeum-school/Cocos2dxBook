@@ -116,13 +116,11 @@ void Enemy::onStateExit()
 
 void Enemy::stateUpdate(float dt)
 {
-	//リザルト状態なら、以降の処理を行なわない
-	if (isResultState())
+	if (this->m_pAudio)
 	{
-		return;
+		//AudioComponentから効果音を呼び出す
+		this->m_pAudio->update(dt, this);
 	}
-	//AudioComponentから効果音を呼び出す
-	this->m_pAudio->update(dt, this);
 
 	if (this->m_isDead)
 	{
