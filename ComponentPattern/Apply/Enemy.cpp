@@ -81,7 +81,7 @@ void Enemy::onStateEnter()
 	}
 	else if (this->isResultState())
 	{
-		
+	
 	}
 }
 
@@ -108,11 +108,19 @@ void Enemy::onStateExit()
 		OM::getInstance()->setEnemyCount(0);
 		//敵NPCを見えなくさせるアクション
 		this->runAction(CCFadeOut::create(0));
+		//AudioComponentの削除
+		delete this->m_pAudio;
+		m_pAudio = NULL;
 	}
 }
 
 void Enemy::stateUpdate(float dt)
 {
+	//リザルト状態なら、以降の処理を行なわない
+	if (isResultState())
+	{
+		return;
+	}
 	//AudioComponentから効果音を呼び出す
 	this->m_pAudio->update(dt, this);
 
@@ -153,6 +161,6 @@ void Enemy::attack()
 		EnemyAttack::create(this);
 		//攻撃済みのフラグを立てる
 		setIsAttacked(true);
-		//AudioComponentで効果音を再生するフラグを真に
+		//AudioComponentで効果音を再生するフラグ
 		this->setIsAttackingEnemySE(true);
 }

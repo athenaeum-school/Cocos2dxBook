@@ -16,10 +16,9 @@ EnemyAttack* willYard
 USING_NS_CC;
 using namespace CocosDenshion;
 
-EnemyAttack::EnemyAttack()
-	:m_atkPower(0)
+EnemyAttack::EnemyAttack():
+m_atkPower(0)
 {}
-
 
 EnemyAttack::~EnemyAttack(){}
 
@@ -74,6 +73,8 @@ void EnemyAttack::attack(Enemy *enemy)
 {
 	//呼び出した敵NPCの攻撃力を代入
 	setAtkPower(enemy->getAtkPower());
+	//プレイヤーインスタンスを取得
+	Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 	//タイプによって、攻撃方法を変える
 	switch (enemy->getEnemyType())
 	{
@@ -88,7 +89,6 @@ void EnemyAttack::attack(Enemy *enemy)
 
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
-				Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 				//ウィスプの座標へ0.7秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(0.7f, ccp(wisp->getPositionX(), wisp->getPositionY()));
 				//スプライトの切り替えと移動を同時に行なう
@@ -110,7 +110,6 @@ void EnemyAttack::attack(Enemy *enemy)
 
 				CCAnimate *attackAnime = CCAnimate::create(attackEffect);
 
-				Player *wisp = static_cast<Player *>(MS::getInstance()->getChildByTag(kTag_wisp));
 				//ウィスプの座標へ1.0秒かけて移動
 				CCMoveTo *attackMove = CCMoveTo::create(1.0f, ccp(wisp->getPositionX(), wisp->getPositionY()));
 				//スプライトの切り替えと移動を同時に行なう

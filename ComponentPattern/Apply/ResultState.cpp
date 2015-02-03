@@ -15,7 +15,7 @@
 #include "MainScene.h"
 #include "ObjectManager.h"
 #include "HudLayer.h"
-#include "SimpleAudioEngine.h"
+#include "ConcreteAudioComponent.h"
 
 USING_NS_CC;
 
@@ -26,7 +26,7 @@ const std::string ResultState::s_resultID = "RESULT";
 ResultState::ResultState():
 m_timer(0)
 {
-	m_pAudio = new AudioComponent();
+	m_pAudio = new ConcreteAudioComponent();
 }
 
 ResultState::~ResultState()
@@ -122,7 +122,7 @@ void ResultState::onResult()
 void ResultState::retry(CCObject *pSender)
 {
 	//AudioComponent‚©‚çŒø‰Ê‰¹‚ðŒÄ‚Ño‚·
-	m_pAudio->pushButtonSE();
+	m_pAudio->playAudio(this);
 	resultToNormal();
 }
 
@@ -130,7 +130,7 @@ void ResultState::retry(CCObject *pSender)
 void ResultState::back(CCObject *pSender)
 {
 	//AudioComponent‚©‚çŒø‰Ê‰¹‚ðŒÄ‚Ño‚·
-	m_pAudio->pushButtonSE();
+	m_pAudio->playAudio(this);
 	//BGM‚ð’âŽ~
 	m_pAudio->stopBackgroundMusic();
 	resultToTitle();

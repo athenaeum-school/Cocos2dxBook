@@ -139,8 +139,5 @@ void EnemyHit::died()
 		this->removeHpBar();
 		//AudioComponent‚ÅŒø‰Ê‰¹‚ðÄ¶‚·‚éƒtƒ‰ƒO
 		this->setIsPlayDyingSE(true);
-		//AudioComponent‚Ìíœ
-		delete this->m_pAudio;
-		m_pAudio = NULL;
 	}
 }

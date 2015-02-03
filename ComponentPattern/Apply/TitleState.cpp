@@ -14,7 +14,7 @@
 #include "MainScene.h"
 #include "ObjectManager.h"
 #include "HudLayer.h"
-#include "AudioComponent.h"
+#include "ConcreteAudioComponent.h"
 
 USING_NS_CC;
 
@@ -23,10 +23,11 @@ using namespace CocosDenshion;
 const std::string TitleState::s_titleID = "TITLE";
 
 TitleState::TitleState():
+m_isPlayBGM(false),
 m_timer(0),
 m_pAudio(NULL)
 {
-	m_pAudio = new AudioComponent();
+	m_pAudio = new ConcreteAudioComponent();
 }
 
 TitleState::~TitleState() 
@@ -57,7 +58,8 @@ bool TitleState::onStateExit()
 	//プレイスタート時の処理
 	OM::getInstance()->playStart();
 	//BGMを再生
-	m_pAudio->playBGM();
+	setIsPlayBGM(true);
+	m_pAudio->playAudio(this);
 	return true;
 }
 
@@ -102,6 +104,6 @@ void TitleState::initBackground(CCSize screenSize)
 //ボタン押下時、プレイヤーターンへ遷移するコールバック関数
 void TitleState::play(CCObject *pSender)
 {
-	m_pAudio->titleToNormalSE();
+	m_pAudio->playAudio(this);
 	titleToNormal();
 }

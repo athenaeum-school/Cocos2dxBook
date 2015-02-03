@@ -54,7 +54,9 @@ public:
 	//ƒvƒŒƒC‰ñ”‚ğXV
 	void addPlayCount();
 
-	//”wŒi‚ğ’Ç‰Á
+	/**	”wŒi‚ğ’Ç‰Á
+	*	@return ”wŒi
+	*/
 	cocos2d::CCSprite* initBackground();
 
 	/**	‹¤—LHP‚É’Ç‰Á
@@ -86,6 +88,7 @@ private:
     static ObjectManager* s_pInstance;
     std::vector<GameObject*> m_gameObjects;
 	
+	//‰¹Œ¹‚ğ€”õ
 	void initAudio();
 
     ObjectManager();

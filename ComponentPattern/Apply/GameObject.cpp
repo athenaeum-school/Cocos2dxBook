@@ -13,7 +13,7 @@
 #include "MainScene.h"
 #include "ObjectManager.h"
 #include "HudLayer.h"
-
+#include "ConcreteAudioComponent.h"
 
 USING_NS_CC;
 
@@ -32,7 +32,7 @@ m_acceleration(ccp(0, 0)),
 m_pHpBar(NULL),
 m_pAudio(NULL)
 {
-	m_pAudio = new AudioComponent();
+	m_pAudio = new ConcreteAudioComponent();
 }
 
 GameObject::~GameObject()

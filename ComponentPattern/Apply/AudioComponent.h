@@ -16,40 +16,27 @@
 #include "SimpleAudioEngine.h"
 
 class GameObject;
+class GameState;
 
 class AudioComponent : public CocosDenshion::SimpleAudioEngine
 {
 public:
 
-	/**	効果音の判定	
+	/**	効果音の再生	
 	*	@param obj ゲームオブジェクト（Playerまたは敵NPC） 
 	*/
-	void update(float dt, GameObject *obj);
+	virtual void update(float dt, GameObject *obj) = 0;
 
-	void titleToNormalSE();
-	void playBGM();
-	void pushButtonSE();
-	
-	AudioComponent();
-	~AudioComponent();
-
-private:
-
-	bool isStart();
-	void initAudio();
-	void collisionBlockSE();
-	void collisionFastSE();
-	void enemyDamageSE();
-	void wispDyingSE();
-	void enemyDyingSE();
-
-	/**	攻撃効果音の判定（敵NPC）
-	*	@param obj ゲームオブジェクト（敵NPC）
+	/**	効果音の再生（状態で判定）
+	*	@param states 各状態（タイトル、リザルト画面等）
 	*/
-	void switchEnemyAttackSE(GameObject * obj);
+	virtual void playAudio(GameState *states) = 0;
 
-	void enemyRatsAttackSE();
-	void enemyVampireAttackSE();
+	virtual ~AudioComponent();
+
+protected:
+
+	AudioComponent();
 
 };
 

@@ -20,6 +20,8 @@ class TitleState : public GameState
 {
 public:
 
+	CC_SYNTHESIZE(bool, m_isPlayBGM, IsPlayBGM);
+
 	bool onStateEnter() override;
 	bool onStateExit() override;
 	void stateUpdate(float dt) override;
