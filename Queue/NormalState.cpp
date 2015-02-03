@@ -29,7 +29,7 @@ const float TO_RESULT = 200;
 //高速衝突判定の基準速度
 const float HIT_SPEED = 10;
 
-NormalState::NormalState() :
+NormalState::NormalState():
 m_pWisp(NULL)
 {
 	std::cout << "NormalState::NormalState() normal state constructor\n";

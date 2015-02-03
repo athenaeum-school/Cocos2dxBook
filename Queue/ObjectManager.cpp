@@ -21,7 +21,7 @@ using namespace CocosDenshion;
 //シングルトンの初期化
 ObjectManager* ObjectManager::s_pInstance = 0;
 
-ObjectManager::ObjectManager() :
+ObjectManager::ObjectManager():
 m_raidHp(0),
 m_enemyCount(0),
 m_playCount(0),
