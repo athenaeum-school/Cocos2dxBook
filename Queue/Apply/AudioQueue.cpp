@@ -96,10 +96,6 @@ void AudioQueue::playAudio(const std::string &name)
 			//Œø‰Ê‰¹Ä¶’†‚É“¯‚¶ƒtƒ@ƒCƒ‹–¼‚Ì‰¹Œ¹‚ðŒ©‚Â‚¯‚½‚ç’†’f
 			return;
 		}
-		else
-		{
-			break;
-		}
 		p = p->next;
 	}
 	playSE();
