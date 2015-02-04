@@ -19,7 +19,7 @@
 #include "EnemyFactory.h"
 #include "AudioQueue.h"
 
-class ObjectManager : public cocos2d::CCLayer
+class ObjectManager : public cocos2d::CCNode
 {
 public:
     

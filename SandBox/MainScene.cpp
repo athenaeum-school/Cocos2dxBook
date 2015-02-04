@@ -32,10 +32,6 @@ CCScene* MainScene::createScene()
 	MainScene *layer = MainScene::create();
 	scene->addChild(layer);
 	
-	ObjectManager *om = ObjectManager::getInstance();
-	om->init();
-	scene->addChild(om);
-	
 	HudLayer *hud = HudLayer::getInstance();
 	hud->init();
 	scene->addChild(hud);
@@ -51,6 +47,8 @@ bool MainScene::init()
     }
     
 	MainScene::s_pInstance = this;
+
+	OM::getInstance()->init();
 
 	//シングルタップモード
 	this->setTouchMode(kCCTouchesOneByOne);
