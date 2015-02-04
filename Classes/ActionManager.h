@@ -64,7 +64,7 @@ public:
 	*	@param enemyHit “GNPC
 	*/
 	void enemyDamageAction(EnemyHit *enemy);
-
+	
 	//‚‘¬Õ“Ë‚ÌŒø‰Ê‰¹
 	void hitFastSE();
 

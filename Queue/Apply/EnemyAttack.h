@@ -20,10 +20,10 @@ class EnemyAttack : public cocos2d::CCSprite
 public:
 
 	CC_SYNTHESIZE(int, m_atkPower, AtkPower);
-
+	
 	/**	“GNPC‚ÌUŒ‚‚ğ¶¬
 	*	@param enemy UŒ‚‚ğs‚È‚¤NPC
-	*	@return	¶¬‚³‚ê‚½UŒ‚
+	*	@return ¶¬‚³‚ê‚½UŒ‚
 	*/
 	static EnemyAttack* create(Enemy *enemy);
 

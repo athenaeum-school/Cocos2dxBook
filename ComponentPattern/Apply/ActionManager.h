@@ -64,10 +64,7 @@ public:
 	*	@param enemyHit 敵NPC
 	*/
 	void enemyDamageAction(EnemyHit *enemy);
-
-	//高速衝突時の効果音
-	void hitFastSE();
-
+	
 	/**	敵NPCの待機アクション
 	*	@param enemy 敵NPC
 	*	@param start y軸の座標（はじめに揺れる方向）
