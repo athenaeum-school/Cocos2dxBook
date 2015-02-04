@@ -72,7 +72,8 @@ void TitleState::onNormal()
 	//背景画像の設定
 	initBackground(screenSize);
 	//スタートボタン
-	CCMenuItemImage *playButton = CCMenuItemImage::create(
+	CCMenuItemImage *playButton =
+		CCMenuItemImage::create(
 		"title_button_normal.png",
 		"title_button_selected.png",
 		this,
@@ -98,6 +99,5 @@ void TitleState::play(CCObject *pSender)
 {
 	//AudioQueueから効果音を再生
 	OM::getInstance()->getAudioQueue()->enqueue(SE_NAME);
-	OM::getInstance()->getAudioQueue()->playAudio(SE_NAME);
 	titleToNormal();
 }

@@ -11,9 +11,6 @@
 
 #include "AudioQueue.h"
 
-//ƒLƒ…[‚ÌŽn‚ß‚É’Ç‰Á‚·‚é
-const std::string INIT_QUEUE = "initQueue";
-
 AudioQueue::AudioQueue()
 {
 	init();
@@ -35,7 +32,6 @@ void AudioQueue::init()
 	this->preloadEffect("se_maoudamashii_retro18.mp3");
 	this->preloadEffect("se_maoudamashii_battle18.mp3");
 	this->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
-	enqueue(INIT_QUEUE);
 }
 
 void AudioQueue::enqueue(const std::string &name)
