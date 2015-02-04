@@ -18,7 +18,7 @@
 #include "GameObject.h"
 #include "EnemyFactory.h"
 
-class ObjectManager : public cocos2d::CCLayer
+class ObjectManager : public cocos2d::CCNode
 {
 public:
     
