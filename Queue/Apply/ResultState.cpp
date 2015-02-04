@@ -20,6 +20,8 @@ USING_NS_CC;
 
 //状態のID
 const std::string ResultState::s_resultID = "RESULT";
+//効果音ファイル名
+const std::string SE_NAME = "se_maoudamashii_system28.mp3";
 
 ResultState::ResultState():
 m_timer(0)
@@ -49,8 +51,7 @@ bool ResultState::onStateEnter()
 	this->objectStateEnter();
 	//retryとbackボタンを表示
 	onResult();
-	//AudioQueueに音源を追加
-	OM::getInstance()->getAudioQueue()->enqueue("se_maoudamashii_system28.mp3");
+
 	return true;
 }
 
@@ -60,7 +61,7 @@ bool ResultState::onStateExit()
 	Hud::getInstance()->removeChildByTag(kTag_retry);
 	//ゲームオブジェクトのonStateExit()を実行
 	this->objectStateExit();
-	OM::getInstance()->setIsReady(false);
+	OM::getInstance()->setIsReady(true);
 	OM::getInstance()->setRaidHp(0);
 	//プレイヤーのHPラベルを非表示に
 	Hud::getInstance()->setHpLabelVisible(false);
@@ -113,15 +114,15 @@ void ResultState::onResult()
 
 //ボタン押下時、NormalStateへ遷移するコールバック関数
 void ResultState::retry(CCObject *pSender){
-	//効果音を再生
-	OM::getInstance()->getAudioQueue()->playAudio("se_maoudamashii_system28.mp3");
+	//AudioQueueに音源を追加
+	OM::getInstance()->getAudioQueue()->enqueue(SE_NAME);
 	resultToNormal();
 }
 
 //ボタン押下時、TitleStateへ遷移するコールバック関数
 void ResultState::back(CCObject *pSender){
-	//効果音を再生
-	OM::getInstance()->getAudioQueue()->playAudio("se_maoudamashii_system28.mp3");
+	//AudioQueueに音源を追加
+	OM::getInstance()->getAudioQueue()->enqueue(SE_NAME);
 	//BGMを停止
 	OM::getInstance()->getAudioQueue()->stopAudio();
 	resultToTitle();

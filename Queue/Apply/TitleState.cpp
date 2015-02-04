@@ -17,10 +17,12 @@
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
-
 using namespace CocosDenshion;
+
 //状態のID
 const std::string TitleState::s_titleID = "TITLE";
+//効果音ファイル名
+const std::string SE_NAME = "se_maoudamashii_element_fire07.mp3";
 
 TitleState::TitleState():
 m_timer(0)
@@ -48,9 +50,8 @@ bool TitleState::onStateExit()
 	Hud::getInstance()->removeChildByTag(ktag_touch);
 	//プレイスタート時の処理
 	OM::getInstance()->playStart();
-	//BGMをAudioQueueに追加し、再生
-	OM::getInstance()->getAudioQueue()->enqueue("game_maoudamashii_7_rock46.mp3");
-	OM::getInstance()->getAudioQueue()->playAudio("game_maoudamashii_7_rock46.mp3");
+	//BGMを再生
+	OM::getInstance()->getAudioQueue()->playBGM();
 	return true;
 }
 
@@ -96,7 +97,7 @@ void TitleState::initBackground(CCSize screenSize)
 void TitleState::play(CCObject *pSender)
 {
 	//AudioQueueから効果音を再生
-	OM::getInstance()->getAudioQueue()->enqueue("se_maoudamashii_element_fire07.mp3");
-	OM::getInstance()->getAudioQueue()->playAudio("se_maoudamashii_element_fire07.mp3");
+	OM::getInstance()->getAudioQueue()->enqueue(SE_NAME);
+	OM::getInstance()->getAudioQueue()->playAudio(SE_NAME);
 	titleToNormal();
 }

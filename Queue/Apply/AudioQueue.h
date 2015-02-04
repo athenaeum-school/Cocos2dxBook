@@ -12,11 +12,12 @@
 #ifndef __WillYard__AudioQueue__
 #define __WillYard__AudioQueue__
 
+#include "cocos2d.h"
 #include "SimpleAudioEngine.h"
 
 struct node
 {
-	char fileName;
+	std::string name;
 	struct node *next;
 };
 
@@ -25,9 +26,10 @@ class AudioQueue : public CocosDenshion::SimpleAudioEngine
 public:
 
 	void init();
-	void enqueue(const char *fileName);
+	void enqueue(const std::string &name);
 	void dequeue();
-	void playAudio(const char *fileName);
+	void playAudio(const std::string &name);
+	void playBGM();
 	void stopAudio();
 
 	AudioQueue();

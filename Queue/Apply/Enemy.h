@@ -48,7 +48,7 @@ protected:
 
 
 	/**	敵NPCの画像とステータス設定（派生クラスで実装する純粋仮想関数）
-	*	@param type	敵NPCの種類
+	*	@param type 敵NPCの種類
 	*	@return	画像ファイル名
 	*/
 	virtual std::string initStatus(enemyType type) = 0;

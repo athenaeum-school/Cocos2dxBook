@@ -21,7 +21,7 @@ using namespace CocosDenshion;
 //シングルトンの初期化
 ObjectManager* ObjectManager::s_pInstance = 0;
 
-ObjectManager::ObjectManager() :
+ObjectManager::ObjectManager():
 m_raidHp(0),
 m_enemyCount(0),
 m_playCount(0),
@@ -52,8 +52,8 @@ void ObjectManager::update(float dt)
 {
 	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
-		m_pAudioQueue->enqueue(soundEvents((*it)).c_str());
-		m_pAudioQueue->playAudio(soundEvents((*it)).c_str());
+		m_pAudioQueue->enqueue(soundEvents((*it)));
+		m_pAudioQueue->playAudio(soundEvents((*it)));
 	}
 	m_pStateMachine->update(dt);
 }
@@ -238,8 +238,7 @@ CCSprite* ObjectManager::initBackground()
 	CCSprite * background = CCSprite::create("background0.png");
 	//画面中央に配置
 	background->setPosition(ccp(screenSize.width / 2.0, screenSize.height / 2.0));
-	//MainSceneのインスタンスを呼び出す
-	//MainSceneへ追加
+	//MainSceneのインスタンスを呼び出し、そこへ追加
 	MS::getInstance()->addChild(background, z_background, kTag_background);
 	return background;
 }

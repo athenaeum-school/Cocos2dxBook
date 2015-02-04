@@ -11,6 +11,9 @@
 
 #include "AudioQueue.h"
 
+//ƒLƒ…[‚ÌŽn‚ß‚É’Ç‰Á‚·‚é
+const std::string INIT_QUEUE = "initQueue";
+
 AudioQueue::AudioQueue()
 {
 	init();
@@ -32,23 +35,23 @@ void AudioQueue::init()
 	this->preloadEffect("se_maoudamashii_retro18.mp3");
 	this->preloadEffect("se_maoudamashii_battle18.mp3");
 	this->preloadBackgroundMusic("game_maoudamashii_7_rock46.mp3");
-	enqueue("initQueue");
+	enqueue(INIT_QUEUE);
 }
 
-void AudioQueue::enqueue(const char *fileName)
+void AudioQueue::enqueue(const std::string &name)
 {
 	if (tail == NULL)
 	{
 		tail = new node;
 		tail->next = NULL;
-		tail->fileName = (*fileName);
+		tail->name = name;
 		front = tail;
 	}
 	else
 	{
 		node* tmp = new node;
 		tail->next = tmp;
-		tmp->fileName = (*fileName);
+		tmp->name = name;
 		tmp->next = NULL;
 
 		tail = tmp;
@@ -81,7 +84,7 @@ void AudioQueue::dequeue()
 	}
 }
 
-void AudioQueue::playAudio(const char *fileName)
+void AudioQueue::playAudio(const std::string &name)
 {
 	if (front == tail)
 	{
@@ -90,21 +93,23 @@ void AudioQueue::playAudio(const char *fileName)
 	node *p = front;
 	while (p != NULL)
 	{
-		if (&p->fileName == fileName)
+		if (p->name == name)
 		{
 			//“¯‚¶ƒtƒ@ƒCƒ‹–¼‚Ì‰¹Œ¹‚ðŒ©‚Â‚¯‚½‚ç’†’f
-			return;
+			break;
 		}
 		p = p->next;
 	}
-	//BGM‚Ìê‡AÄ¶ˆ—‚ð•Ï‚¦‚é
-	if (fileName == "game_maoudamashii_7_rock46.mp3")
-	{
-		this->playBackgroundMusic(&front->fileName, true);
-	}
-
-	this->playEffect(&front->fileName);
+	
+	this->playEffect(front->name.c_str());
 	dequeue();
+}
+
+void AudioQueue::playBGM()
+{
+	//”wŒi‰¹‚ÍŒJ‚è•Ô‚µÄ¶‚ðs‚È‚¤‚½‚ßA
+	//dequeue()‚ª”½‰f‚³‚ê‚È‚¢‚æ‚¤‚Éê—pˆ—
+	this->playBackgroundMusic("game_maoudamashii_7_rock46.mp3", true);
 }
 
 void AudioQueue::stopAudio()
