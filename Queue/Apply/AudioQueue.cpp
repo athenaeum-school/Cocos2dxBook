@@ -11,7 +11,8 @@
 
 #include "AudioQueue.h"
 
-AudioQueue::AudioQueue()
+AudioQueue::AudioQueue():
+m_isPlay(false)
 {
 	init();
 }
@@ -57,7 +58,8 @@ void AudioQueue::enqueue(const std::string &name)
 void AudioQueue::dequeue()
 {
 	node* tmp = front;
-
+	//効果音再生終了フラグを真に
+	m_isPlay = false;
 	if (tmp == NULL)
 	{
 		//キューに待ち（要素）はなし
@@ -89,15 +91,18 @@ void AudioQueue::playAudio(const std::string &name)
 	node *p = front;
 	while (p != NULL)
 	{
-		if (p->name == name)
+		if (p->name == name && m_isPlay)
 		{
-			//同じファイル名の音源を見つけたら中断
+			//効果音再生中に同じファイル名の音源を見つけたら中断
+			return;
+		}
+		else
+		{
 			break;
 		}
 		p = p->next;
 	}
-	
-	this->playEffect(front->name.c_str());
+	playSE();
 	dequeue();
 }
 
@@ -111,4 +116,11 @@ void AudioQueue::playBGM()
 void AudioQueue::stopAudio()
 {
 	this->stopBackgroundMusic();
+}
+
+void AudioQueue::playSE()
+{
+	//効果音再生中フラグを真に
+	m_isPlay = true;
+	this->playEffect(front->name.c_str());
 }

@@ -39,6 +39,9 @@ private:
 
 	node *front;
 	node *tail;
+	bool m_isPlay;
+
+	void playSE();
 	
 };
 
