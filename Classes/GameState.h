@@ -15,7 +15,7 @@
 #include "cocos2d.h"
 #include "GameObject.h"
 
-class GameState : public cocos2d::CCSprite
+class GameState : public cocos2d::CCNode
 {
 public:
 
