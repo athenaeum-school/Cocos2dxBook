@@ -46,6 +46,17 @@ void AudioQueue::enqueue(const std::string &name)
 	}
 	else
 	{
+		node *p = front;
+		while (p != NULL)
+		{
+			if (p->name == name && m_isPlay)
+			{
+				//効果音再生中に同じファイル名の音源を見つけたら中断
+				return;
+			}
+			p = p->next;
+		}
+
 		node* tmp = new node;
 		tail->next = tmp;
 		tmp->name = name;
@@ -87,16 +98,6 @@ void AudioQueue::playAudio(const std::string &name)
 	if (front == tail)
 	{
 		return;
-	}
-	node *p = front;
-	while (p != NULL)
-	{
-		if (p->name == name && m_isPlay)
-		{
-			//効果音再生中に同じファイル名の音源を見つけたら中断
-			return;
-		}
-		p = p->next;
 	}
 	playSE();
 	dequeue();
