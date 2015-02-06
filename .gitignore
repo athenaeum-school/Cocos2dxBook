@@ -4,7 +4,6 @@ proj.winrt/MyFirstGame.vcxproj
 *.idb
 *.lastbuildstate
 *.sdf
-*.xml
 *.xaml
 proj.blackberry/
 proj.ios/

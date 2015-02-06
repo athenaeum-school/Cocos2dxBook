@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Config>
+  <LEVEL1>
+    <OBJECTS>
+      <image fileName="enemy_rat1.png" ID="ratOne"/>
+      <image fileName="enemy_rat2.png" ID="ratTwo"/>
+      <image fileName="enemy_vampire.png" ID="vampire"/>
+      <object hp="50" atkPower="5" xPos="0.2" yPos="0.4" enemyType="1" imageID="ratOne" />
+      <object hp="80" atkPower="10" xPos="0.8" yPos="0.4" enemyType="2" imageID="ratTwo" />
+      <object hp="120" atkPower="20" xPos="0.5" yPos="1.0" enemyType="3" imageID="vampire" />
+    </OBJECTS>
+  </LEVEL1>
+</Config>
