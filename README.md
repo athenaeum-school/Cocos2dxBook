@@ -7,7 +7,7 @@ Cocos2dxBook
 windows7 64bit SP1<br>
 Visual Studio Community 2013 Update 4<br>
 Cocos2d-x v2.2.6<br>
-*Xcodeでの動作はサポートしておりません。
+*他の開発環境での動作確認はしておりません。
 
 
 概要：<br>
