@@ -33,7 +33,7 @@ class Enemy : public EnemyHit
 public:
 
 	/**	敵NPCを生成
-	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
+	*	@param enemyType パーサーで設定をした敵NPC情報
 	*	@return 敵NPC
 	*/
 	static Enemy* create(EnemyType *enemyType);
@@ -50,13 +50,13 @@ public:
 protected:
 
 	/**	敵NPC初期設定
-	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
+	*	@param enemyType パーサーで設定をした敵NPC情報
 	*/
 	void initEnemy(EnemyType *enemyType);
 
 
 	/**	敵NPCの画像とステータス設定
-	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
+	*	@param enemyType パーサーで設定をした敵NPC情報
 	*	@return	画像ファイル名
 	*/
 	std::string initStatus(EnemyType *enemyType);
@@ -102,7 +102,7 @@ public:
 	*	@param atkPower 攻撃力
 	*	@param xPos 配置座標（x軸）
 	*	@param yPos 配置座標(y軸)
-	*	@param enemysType 敵NPCの種類	
+	*	@param enemysTypeTag 敵NPCの種類	
 	*	@param imageID 設定する画像ファイル
 	*/
 	EnemyType(int hp, int atkPower, float xPos, float yPos, int enemyTypeTag, std::string &imageID) :
