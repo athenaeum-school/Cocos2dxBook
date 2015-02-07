@@ -11,11 +11,9 @@
 
 #include "ObjectParser.h"
 #include "TypeObject.h"
-#include "ObjectManager.h"
 
 USING_NS_CC;
 using namespace std;
-using namespace tinyxml2;
 
 bool ConfigParser::parseConfig(const char *configFile, std::vector<GameObject*> *pObjects)
 {

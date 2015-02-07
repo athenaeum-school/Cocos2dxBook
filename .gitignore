@@ -3,11 +3,9 @@ proj.winrt/MyFirstGame.vcxproj
 *.exp
 *.idb
 *.lastbuildstate
-*.sdf
-*.xaml
+Resources_backup/
 proj.blackberry/
 proj.ios/
-Resources/
 proj.mac/
 proj.android/
 proj.linux/
@@ -16,7 +14,6 @@ proj.wp8/
 proj.wp8-xaml/
 proj.marmalade/
 proj.tizen/
-proj.win32/
 Classes/SubClass_Enemy_Apply1/
 Classes/SubClass_Enemy_Apply2_public/
 Classes/SubClass_Enemy_Apply2_protected/
