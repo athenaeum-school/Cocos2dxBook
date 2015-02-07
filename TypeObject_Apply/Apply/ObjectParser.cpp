@@ -10,7 +10,7 @@
 
 
 #include "ObjectParser.h"
-#include "Enemy.h"
+#include "TypeObject.h"
 #include "ObjectManager.h"
 
 USING_NS_CC;
@@ -58,7 +58,7 @@ void ConfigParser::parseObjects(TiXmlElement *pObjectRoot)
 			int atkPower;
 			double xPos;
 			double yPos;
-			int enemysType;
+			int enemyTypeTag;
 			string fileNameAfterImageID;
 			string fileName;
 			string id;
@@ -67,7 +67,7 @@ void ConfigParser::parseObjects(TiXmlElement *pObjectRoot)
 			el->Attribute("atkPower", &atkPower);
 			el->Attribute("xPos", &xPos);
 			el->Attribute("yPos", &yPos);
-			el->Attribute("enemyType", &enemysType);
+			el->Attribute("enemyTypeTag", &enemyTypeTag);
 			fileNameAfterImageID = el->LastAttribute()->Value();
 
 			for (TiXmlElement* el = pObjectRoot->FirstChildElement(); el != NULL; el = el->NextSiblingElement())
@@ -83,8 +83,8 @@ void ConfigParser::parseObjects(TiXmlElement *pObjectRoot)
 				}
 			}
 			
-			EnemyTypeObject* enemyTypeObject = new EnemyTypeObject(hp, atkPower, xPos, yPos, enemysType, fileNameAfterImageID);
-			Enemy* enemy = enemyTypeObject->createEnemy();
+			EnemyType* enemyType = new EnemyType(hp, atkPower, xPos, yPos, enemyTypeTag, fileNameAfterImageID);
+			Enemy* enemy = enemyType->createEnemy();
 			OM::getInstance()->addGameObject(enemy);
 		}
 	}

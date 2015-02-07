@@ -1,5 +1,5 @@
 /*
-* Enemy.cpp
+* TypeObject.cpp
 * willYard
 *
 * All Rights Reserved by Athenaeum Society
@@ -9,7 +9,7 @@
 */
 
 
-#include "Enemy.h"
+#include "TypeObject.h"
 #include "EnemyAttack.h"
 #include "Player.h"
 #include "MainScene.h"
@@ -26,13 +26,13 @@ m_isAttacked(true)
 
 Enemy::~Enemy(){}
 
-Enemy* Enemy::create(EnemyTypeObject *enemyTypeObject)
+Enemy* Enemy::create(EnemyType *enemyType)
 {
 	//エネミー生成
 	Enemy * enemy = new Enemy();
 	if (enemy)
 	{
-		enemy->initEnemy(enemyTypeObject);
+		enemy->initEnemy(enemyType);
 		enemy->autorelease();
 		//MainSceneのインスタンスを呼び出し、そこに追加
 		MS::getInstance()->addChild(enemy, z_enemy, kTag_enemy);
@@ -44,20 +44,20 @@ Enemy* Enemy::create(EnemyTypeObject *enemyTypeObject)
 	return NULL;
 }
 
-void Enemy::initEnemy(EnemyTypeObject *enemyTypeObject)
+void Enemy::initEnemy(EnemyType *enemyType)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 
 	//敵NPCのステータスを追加
-	//引数のstatusInit()は純粋仮想関数であり、派生クラス（敵NPCタイプ）に応じて、実装を変える
-	this->initWithFile(initStatus(enemyTypeObject).c_str());
-	this->setPosition(ccp(screenSize.width * enemyTypeObject->getXPOS(), screenSize.height * enemyTypeObject->getYPOS() - this->getRadius() * 1.0));
+	this->initWithFile(initStatus(enemyType).c_str());
+	//配置座標を設定
+	this->setPosition(ccp(screenSize.width * enemyType->getXPOS(), screenSize.height * enemyType->getYPOS() - this->getRadius() * 1.0));
 	//フェードインのため、透明に
 	this->setOpacity(0);
 	//移動しながらフェードインするアクション
 	CCSpawn *fadeIn = CCSpawn::create(CCFadeIn::create(1), CCMoveBy::create(1, ccp(0, screenSize.height * 0.6 - this->getRadius() * 10.0)), NULL);
 	this->runAction(fadeIn);
-	//待機アクション（純粋仮想関数）
+	//待機アクション
 	setIdleAction();
 	//HPバーを追加
 	Hud::getInstance()->initHpBar(this);
@@ -65,19 +65,17 @@ void Enemy::initEnemy(EnemyTypeObject *enemyTypeObject)
 	OM::getInstance()->addRaidHp(this->getHP());
 	//エネミーカウント増加
 	OM::getInstance()->addEnemyCount();
-	//vectorコンテナに追加
-	//OM::getInstance()->addGameObject(this);
 }
 
-std::string Enemy::initStatus(EnemyTypeObject *enemyTypeObject)
+std::string Enemy::initStatus(EnemyType *enemyType)
 {
 	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
 	//EnemyConfigの設定に応じて、ステータスを設定
-	std::string fileName = enemyTypeObject->getimageID();
-	int hp = enemyTypeObject->getHp();
-	int atkPower = enemyTypeObject->getAtkPower();
-	enemyType enemysType = static_cast<enemyType>(enemyTypeObject->getEnemyType());
-	this->setEnemyType(enemysType);
+	std::string fileName = enemyType->getimageID();
+	int hp = enemyType->getHp();
+	int atkPower = enemyType->getAtkPower();
+	enemyTypeTag typeTag = static_cast<enemyTypeTag>(enemyType->getEnemyTypeTag());
+	this->setEnemyTypeTag(typeTag);
 	this->setHP(hp);
 	this->setMaxHP(hp);
 	this->setAtkPower(atkPower);

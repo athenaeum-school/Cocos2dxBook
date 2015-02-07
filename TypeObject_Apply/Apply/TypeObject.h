@@ -1,5 +1,5 @@
 /*
-* Enemy.h
+* TypeObject.h
 * willYard
 *
 * All Rights Reserved by Athenaeum Society
@@ -17,7 +17,7 @@
 #include "EnemyHit.h"
 
 //敵NPCの種別
-enum enemyType
+enum enemyTypeTag
 {
 	kTag_rat1 = 1,
 	kTag_rat2,
@@ -26,7 +26,7 @@ enum enemyType
 
 };
 
-class EnemyTypeObject;
+class EnemyType;
 
 class Enemy : public EnemyHit 
 {
@@ -36,10 +36,10 @@ public:
 	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
 	*	@return 敵NPC
 	*/
-	static Enemy* create(EnemyTypeObject *enemyTypeObject);
+	static Enemy* create(EnemyType *enemyType);
 
 	CC_SYNTHESIZE(bool, m_isAttacked, IsAttacked);
-	CC_SYNTHESIZE(enemyType, m_enemyType, EnemyType);
+	CC_SYNTHESIZE(enemyTypeTag, m_enemyTypeTag, EnemyTypeTag);
 	
 	void onStateEnter() override;
 	void onStateExit() override;
@@ -52,14 +52,14 @@ protected:
 	/**	敵NPC初期設定
 	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
 	*/
-	void initEnemy(EnemyTypeObject *enemyTypeObject);
+	void initEnemy(EnemyType *enemyType);
 
 
 	/**	敵NPCの画像とステータス設定
 	*	@param enemyTypeObject パーサーで設定をした敵NPC情報
 	*	@return	画像ファイル名
 	*/
-	std::string initStatus(EnemyTypeObject *enemyTypeObject);
+	std::string initStatus(EnemyType *enemyType);
 
 	//待機時のアクション
 	void setIdleAction();
@@ -87,7 +87,7 @@ private:
 
 };
 
-class EnemyTypeObject
+class EnemyType
 {
 public:
 
@@ -105,12 +105,12 @@ public:
 	*	@param enemysType 敵NPCの種類	
 	*	@param imageID 設定する画像ファイル
 	*/
-	EnemyTypeObject(int hp, int atkPower, float xPos, float yPos, int enemysType, std::string &imageID):
+	EnemyType(int hp, int atkPower, float xPos, float yPos, int enemyTypeTag, std::string &imageID) :
 		m_hp(hp),
 		m_atkPower(atkPower),
 		m_xPos(xPos),
 		m_yPos(yPos),
-		m_enemyType(enemysType),
+		m_enemyTypeTag(enemyTypeTag),
 		m_imageID(imageID)
 	{}
 
@@ -118,7 +118,7 @@ public:
 	int getAtkPower(){ return m_atkPower; }
 	float getXPOS(){ return m_xPos; }
 	float getYPOS(){ return m_yPos; }
-	int getEnemyType(){ return m_enemyType; }
+	int getEnemyTypeTag(){ return m_enemyTypeTag; }
 	const std::string& getimageID(){ return m_imageID; }
 
 private:
@@ -127,7 +127,7 @@ private:
 	int m_atkPower;
 	float m_xPos;
 	float m_yPos;
-	int m_enemyType;
+	int m_enemyTypeTag;
 	std::string m_imageID;
 
 };
