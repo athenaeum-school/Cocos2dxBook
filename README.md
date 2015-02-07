@@ -16,8 +16,8 @@ ___
 7.「ソリューションエクスプローラー」内の「win32」→main.cppを開き、<br>
 「eglView->setFrameSize(480, 320)」を「eglView->setFrameSize(320, 480)」にします。<br>
 8.リビルドとビルドを行いアプリケーションを立ち上げます。<br>
-以上でプレイが出来ます。<br>
-  **正誤表**<br>
+以上でプレイが出来ます。<br>  
+**正誤表**<br>
 ___
 この度、本書の以下の部分に誤りがありました。<br>
 お詫びして、訂正いたします。<br>
@@ -67,8 +67,8 @@ Cocos2d-x v2.2.6<br>
 については、Classes内のファイルを「オリジナル」とし、オリジナルに各パターンフォルダ内の  
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
 TypeObject_Applyに関しては、「オリジナル」から
-  *Enemy  
-*EnemyRatOne  
+ *Enemy <br> 
+ *EnemyRatOne  
 *EnemyRatTwo<br>
 *EnemyVampire  
 *EnemyFactory  
