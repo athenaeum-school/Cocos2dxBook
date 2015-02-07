@@ -1,7 +1,7 @@
 Cocos2dxBook
 ============
 #####本プロジェクトは「Cocos2d-xでC++ゲームデザインパターンを学ぼう: Design For Cocos2d-x」のサンプルです。<br>
-各パターンや導入の解説、詳細については書籍をご覧ください。<br>
+各パターンや導入の解説、詳細については書籍をご覧ください。<br>  
 <a href="http://www.amazon.co.jp/Cocos2d-x%E3%81%A7C-%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E3%82%92%E5%AD%A6%E3%81%BC%E3%81%86-Design-For-Cocos2d-x-ebook/dp/B00T9VLWPI/ref=zg_bs_3229700051_2" title="Cocos2d-xでC++ゲームデザインパターンを学ぼう" target="_blank">Cocos2d-xでC++ゲームデザインパターンを学ぼう: Design For Cocos2d-x [Kindle版]</a><br>  
 ####_サンプルゲームの起動_<br>
 ___
