@@ -61,9 +61,9 @@ Cocos2d-x v2.2.6<br>
   Before 適用前  
   の差分です。  
   
-  *ComponentPattern  
-  *Queue  
-  *SandBox  
+  「ComponentPattern」  
+  「Queue」  
+  「SandBox」  
   
 については、Classes内のファイルを「オリジナル」とし、オリジナルに各パターンフォルダ内の  
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
