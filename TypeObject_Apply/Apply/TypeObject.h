@@ -102,7 +102,7 @@ public:
 	*	@param atkPower 攻撃力
 	*	@param xPos 配置座標（x軸）
 	*	@param yPos 配置座標(y軸)
-	*	@param enemysTypeTag 敵NPCの種類	
+	*	@param enemyTypeTag 敵NPCの種類	
 	*	@param imageID 設定する画像ファイル
 	*/
 	EnemyType(int hp, int atkPower, float xPos, float yPos, int enemyTypeTag, std::string &imageID) :
