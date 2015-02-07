@@ -10,8 +10,8 @@ ___
 コピー&ペーストします。（全て上書きしてください。）<br>
 4.Visual Studioを起動し、2.のプロジェクト内の「ゲーム名.sln」を起動します。<br>
 5.「ソリューションエクスプローラー」内の「2.のプロジェクト名」→「Classes」を右クリックして表示される<br>
-「追加」→「既存の項目」をクリックします。<br>
-![image](tutorial_images/vs_addFiles.jpg)<br>
+「追加」→「既存の項目」をクリックします。<br>  
+![image](tutorial_images/vs_addFiles.jpg)<br>  
 6.2.のプロジェクトの「Classes」フォルダ内のファイルを全て選択し、右下の「追加（A）」をクリックし、追加します。<br>
 7.「ソリューションエクスプローラー」内の「win32」→main.cppを開き、<br>
 「eglView->setFrameSize(480, 320)」を「eglView->setFrameSize(320, 480)」にします。<br>
@@ -24,21 +24,21 @@ ___
 _・Cocos2d-x開発環境の構築_<br>
 4.ビルド、実行（windows7）<br>
 誤「ログで確認出来たファイルを変更してください。」<br>
-正「mciplayer.h以外のログで確認出来たファイルを変更してください。」<br>
+正「mciplayer.h以外のログで確認出来たファイルを変更してください。」<br>  
 
 
 ###サンプルゲーム
-___
+___<br>
 タイトル：willYard<br>
-ジャンル：引っ張りアクションゲーム<br>
+ジャンル：引っ張りアクションゲーム<br>  
 
-  <a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/blob/develop/tutorial_images/playImage.jpg" align="center"></a><br>
+  <a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/blob/develop/tutorial_images/playImage.jpg" align="center"></a><br>  
 
   開発環境：<br>
 windows7 64bit SP1<br>
 Visual Studio Community 2013 Update 4<br>
 Cocos2d-x v2.2.6<br>
-*他の開発環境での動作確認はしておりません。
+*他の開発環境での動作確認はしておりません。<br>
 
 
 概要：<br>
@@ -55,7 +55,8 @@ Cocos2d-x v2.2.6<br>
   ___
   _デザインパターン名のフォルダについて_  
   
-  ・各パターン名フォルダ直下のクラスはClasses内と同一のものです。（Classesのバックアップとお考えください。）  
+  ・各パターン名フォルダ直下のクラスはClasses内と同一のものです。<br>
+  （Classesのバックアップとお考えください。）  <br>  
   Apply 適用後  
   Before 適用前  
   の差分です。  
@@ -66,7 +67,7 @@ Cocos2d-x v2.2.6<br>
   
 については、Classes内のファイルを「オリジナル」とし、オリジナルに各パターンフォルダ内の  
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
-TypeObject_Applyに関しては、「オリジナル」から
+TypeObject_Applyに関しては、「オリジナル」から<br>  
  *Enemy <br> 
  *EnemyRatOne  
 *EnemyRatTwo<br>
@@ -74,12 +75,12 @@ TypeObject_Applyに関しては、「オリジナル」から
 *EnemyFactory  
 
 を削除してから、「Apply」内をコピー＆ペーストしてください。  
-全てゲームの動作は変わりませんが、各パターンを実装しています。  
+全てゲームの動作は変わりませんが、各パターンを実装しています。<br>  
 
 _サンプルゲームの画像、音楽素材について_<br>
 ___
 下記のサイトから利用しています。
-利用規約に関しては、こちらからご確認ください。
+利用規約に関しては、こちらからご確認ください。<br>
 
 <a href="http://piposozai.blog76.fc2.com/" title="画像素材/ぴぽや" target="_blank">画像素材/ぴぽや</a>  
 <a href="http://maoudamashii.jokersounds.com/" title="音楽素材/魔王魂" target="_blank">音楽素材/魔王魂</a>
