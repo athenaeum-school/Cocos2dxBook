@@ -37,4 +37,5 @@ Cocos2d-x v2.2.6<br>
 リトライボタンとバックボタンが表示され、<br>
 リトライはもう一度プレイ、バックはタイトル画面へそれぞれ移動する。<br>
 
+<a href="http://piposozai.blog76.fc2.com/" title="画像素材/ぴぽや" target="_blank">画像素材/ぴぽや</a>
 <a href="http://maoudamashii.jokersounds.com/" title="音楽素材/魔王魂" target="_blank">音楽素材/魔王魂</a>
