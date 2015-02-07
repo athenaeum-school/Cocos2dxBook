@@ -115,7 +115,7 @@ void ObjectManager::playStart()
 	//ウィスプ生成
 	Player::create();
 	//敵NPC生成とパーサーから設定
-	m_pConfigParser->parseConfig("EnemyConfig.xml");
+	m_pConfigParser->parseConfig("EnemyConfig.xml", &m_gameObjects);
 	//背景生成
 	initBackground();
 }
@@ -172,7 +172,7 @@ void ObjectManager::reset()
 	{
 		wisp->resetWisp();
 		//敵NPC生成とパーサーから設定
-		m_pConfigParser->parseConfig("EnemyConfig.xml");
+		m_pConfigParser->parseConfig("EnemyConfig.xml", &m_gameObjects);
 		fadeInState();
 	}
 }

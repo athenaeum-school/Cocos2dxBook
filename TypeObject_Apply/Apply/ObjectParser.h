@@ -22,14 +22,14 @@ class ConfigParser
 {
 public:
 
-	bool parseConfig(const char *configFile);
+	bool parseConfig(const char *configFile, std::vector<GameObject*> *pObjects);
 	
 	ConfigParser() {}
 	~ConfigParser() {}
 
 private:
 
-	void parseObjects(TiXmlElement *pObjectRoot);
+	void parseObjects(TiXmlElement *pObjectRoot, std::vector<GameObject*> *pObjects);
 
 };
 

@@ -17,7 +17,7 @@ USING_NS_CC;
 using namespace std;
 using namespace tinyxml2;
 
-bool ConfigParser::parseConfig(const char *configFile)
+bool ConfigParser::parseConfig(const char *configFile, std::vector<GameObject*> *pObjects)
 {
 	TiXmlDocument xmlDoc;
 	xmlDoc.LoadFile(configFile);
@@ -44,11 +44,11 @@ bool ConfigParser::parseConfig(const char *configFile)
 		}
 	}
 
-	parseObjects(pObjectRoot);
+	parseObjects(pObjectRoot, pObjects);
 	return true;
 }
 
-void ConfigParser::parseObjects(TiXmlElement *pObjectRoot)
+void ConfigParser::parseObjects(TiXmlElement *pObjectRoot, std::vector<GameObject*> *pObjects)
 {
 	for (TiXmlElement* el = pObjectRoot->FirstChildElement(); el != NULL; el = el->NextSiblingElement())
 	{		
@@ -85,7 +85,7 @@ void ConfigParser::parseObjects(TiXmlElement *pObjectRoot)
 			
 			EnemyType* enemyType = new EnemyType(hp, atkPower, xPos, yPos, enemyTypeTag, fileNameAfterImageID);
 			Enemy* enemy = enemyType->createEnemy();
-			OM::getInstance()->addGameObject(enemy);
+			pObjects->push_back(enemy);
 		}
 	}
 }
