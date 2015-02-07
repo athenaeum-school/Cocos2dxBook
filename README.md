@@ -67,14 +67,14 @@ Cocos2d-x v2.2.6<br>
   
 については、Classes内のファイルを「オリジナル」とし、オリジナルに各パターンフォルダ内の  
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
-TypeObject_Applyに関しては、「オリジナル」から<br>  
+「TypeObject_Apply」に関しては、「オリジナル」から<br>  
  *Enemy <br> 
  *EnemyRatOne  
 *EnemyRatTwo<br>
 *EnemyVampire  
 *EnemyFactory  
 
-を削除してから、「Apply」内をコピー＆ペーストしてください。  
+の .h .cppを削除してから、「Apply」内をコピー＆ペーストしてください。  
 全てゲームの動作は変わりませんが、各パターンを実装しています。<br>  
 
 _サンプルゲームの画像、音楽素材について_<br>
