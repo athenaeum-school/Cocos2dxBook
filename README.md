@@ -12,14 +12,12 @@ ___
 5.「ソリューションエクスプローラー」内の「2.のプロジェクト名」→「Classes」を右クリックして表示される<br>
 「追加」→「既存の項目」をクリックします。<br>
 ![image](tutorial_images/vs_addFiles.jpg)<br>
-
-6. 2.のプロジェクトの「Classes」フォルダ内のファイルを全て選択し、右下の「追加（A）」をクリックし、追加します。<br>
+6.2.のプロジェクトの「Classes」フォルダ内のファイルを全て選択し、右下の「追加（A）」をクリックし、追加します。<br>
 7.「ソリューションエクスプローラー」内の「win32」→main.cppを開き、<br>
 「eglView->setFrameSize(480, 320)」を「eglView->setFrameSize(320, 480)」にします。<br>
 8.リビルドとビルドを行いアプリケーションを立ち上げます。<br>
 以上でプレイが出来ます。<br>
-
-**正誤表**<br>
+  **正誤表**<br>
 ___
 この度、本書の以下の部分に誤りがありました。<br>
 お詫びして、訂正いたします。<br>
@@ -34,9 +32,9 @@ ___
 タイトル：willYard<br>
 ジャンル：引っ張りアクションゲーム<br>
 
-<a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/blob/develop/tutorial_images/playImage.jpg" align="center"></a><br>
+  <a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/blob/develop/tutorial_images/playImage.jpg" align="center"></a><br>
 
-開発環境：<br>
+  開発環境：<br>
 windows7 64bit SP1<br>
 Visual Studio Community 2013 Update 4<br>
 Cocos2d-x v2.2.6<br>
@@ -68,8 +66,8 @@ Cocos2d-x v2.2.6<br>
   
 については、Classes内のファイルを「オリジナル」とし、オリジナルに各パターンフォルダ内の  
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
-TypeObject_Applyに関しては、「オリジナル」から  
-*Enemy  
+TypeObject_Applyに関しては、「オリジナル」から
+  *Enemy  
 *EnemyRatOne  
 *EnemyRatTwo<br>
 *EnemyVampire  
