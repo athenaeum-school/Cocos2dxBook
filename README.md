@@ -10,7 +10,7 @@ Cocos2dxBook
 4.Visual Studioを起動し、2.のプロジェクト内の「ゲーム名.sln」を起動します。<br>
 5.「ソリューションエクスプローラー」内の「2.のプロジェクト名」→「Classes」を右クリックして表示される<br>
 「追加」→「既存の項目」をクリックします。<br>
-<a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/tree/develop/tutorial_images/vs_addFiles.jpg" align="left" height="300" width="500" ></a>  
+<a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/tree/develop/tutorial_images/vs_addFiles.jpg" align="left" height="345" width="1050" ></a><br>
 6. 2.のプロジェクトの「Classes」フォルダ内のファイルを全て選択し、右下の「追加（A）」をクリックし、追加します。<br>
 7.「ソリューションエクスプローラー」内の「win32」→main.cppを開き、<br>
 「eglView->setFrameSize(480, 320)」を「eglView->setFrameSize(320, 480)」にします。<br>
