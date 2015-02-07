@@ -53,10 +53,16 @@ Cocos2d-x v2.2.6<br>
 こちらのHPが0になるか、敵を全滅させるとステージクリア。
 リトライボタンとバックボタンが表示され、<br>
 リトライはもう一度プレイ、バックはタイトル画面へそれぞれ移動する。<br>  
+  ##デザインパターンサンプル（導入例）
+  ___
   __デザインパターン名のフォルダについて__  
-  ___各パターン名フォルダ直下のクラスはClasses内と同一のものです。（Classesのバックアップとお考えください。）__
+  
+  _各パターン名フォルダ直下のクラスはClasses内と同一のものです。（Classesのバックアップとお考えください。）_  
+  *Apply 適用後  
+  *Before 適用前  
+  の差分です。
   ___  
-  ____デザインパターンの導入例です。____  
+  
   *ComponentPattern  
   *Queue  
   *SandBox  
@@ -65,10 +71,10 @@ Cocos2d-x v2.2.6<br>
 「Apply」フォルダ内をコピー＆ペーストし、すべて上書きすると、動作します。  
 TypeObject_Applyに関しては、「オリジナル」から  
 *Enemy
-EnemyRatOne  
-EnemyRatTwo  
-EnemyVampire  
-EnemyFactory  
+*EnemyRatOne  
+*EnemyRatTwo  
+*EnemyVampire  
+*EnemyFactory  
 
 を削除してから、「Apply」内をコピー＆ペーストしてください。  
 全てゲームの動作は変わりませんが、各パターンを実装しています。  
