@@ -10,12 +10,21 @@ Cocos2dxBook
 4.Visual Studioを起動し、2.のプロジェクト内の「ゲーム名.sln」を起動します。<br>
 5.「ソリューションエクスプローラー」内の「2.のプロジェクト名」→「Classes」を右クリックして表示される<br>
 「追加」→「既存の項目」をクリックします。<br>
-<a href="url"><img src="https://github.com/athenaeum-school/Cocos2dxBook/tree/develop/tutorial_images/vs_addFiles.jpg" align="left" height="300" width="500" ></a>  
+![image](tutorial_images/vs_addFiles.jpg)<br>
 6. 2.のプロジェクトの「Classes」フォルダ内のファイルを全て選択し、右下の「追加（A）」をクリックし、追加します。<br>
 7.「ソリューションエクスプローラー」内の「win32」→main.cppを開き、<br>
 「eglView->setFrameSize(480, 320)」を「eglView->setFrameSize(320, 480)」にします。<br>
 8.リビルドとビルドを行いアプリケーションを立ち上げます。<br>
 以上でプレイが出来ます。<br>
+
+**正誤表**<br>
+この度、本書の以下の部分に誤りがありました。<br>
+お詫びして、訂正いたします。<br>
+_・Cocos2d-x開発環境の構築_<br>
+4.ビルド、実行（windows7）<br>
+誤「ログで確認出来たファイルを変更してください。」<br>
+正「mciplayer.h以外のログで確認出来たファイルを変更してください。」
+
 
 タイトル：willYard<br>
 ジャンル：引っ張りアクションゲーム<br>
@@ -37,6 +46,7 @@ Cocos2d-x v2.2.6<br>
 こちらのHPが0になるか、敵を全滅させるとステージクリア。
 リトライボタンとバックボタンが表示され、<br>
 リトライはもう一度プレイ、バックはタイトル画面へそれぞれ移動する。<br>
+
 
 <a href="http://piposozai.blog76.fc2.com/" title="画像素材/ぴぽや" target="_blank">画像素材/ぴぽや</a>  
 <a href="http://maoudamashii.jokersounds.com/" title="音楽素材/魔王魂" target="_blank">音楽素材/魔王魂</a>
