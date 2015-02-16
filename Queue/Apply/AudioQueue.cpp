@@ -69,7 +69,7 @@ void AudioQueue::enqueue(const std::string &name)
 void AudioQueue::dequeue()
 {
 	node* tmp = front;
-	//効果音再生終了フラグを真に
+	//効果音再生中フラグを偽に
 	m_isPlay = false;
 	if (tmp == NULL)
 	{
